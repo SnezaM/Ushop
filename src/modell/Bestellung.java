@@ -3,17 +3,22 @@ package modell;
 import modell.Lieferart;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
- * @author Katrin, 1309572
+ * <b>Klasse Bestellung:</b>
+ * <p>Dient der Erstellung von Bestellungen. Eine Bestellung enthält mindestens eine Position.<br>
+ * Postion verwendet {@link Produkt}.</p>
+ * 
+ * @see Position, Produkt
+ * @author Katrin Rohrmüller (1309572)
  *
  */
 public class Bestellung {
-	private UUID bestellungID;
+	private UUID bestellungsID;
 	private double gesamtpreis;
 	private int anzahl;
-	private List<Position> positionen;
 	private boolean abgeschlossen;
 	private String vermerk;
 	private Lieferart lieferart;
@@ -24,14 +29,13 @@ public class Bestellung {
 	/**
 	 * Konstruktor. (Instanz fuer noch nicht abgeschlossene Bestellungen)
 	 * @param gesamtpreis Gesamtpreis der Bestellung.
-	 * @param positionen Liste mit den Positionen der Bestellung.
-	 * @param kundenID KundenID des Kunden der die Bestellung tätigt.
+	 * @param kundenID KundenID des Kunden der die Bestellung taetigt.
+	 * @param anzahl Anzahl der Positionen der Bestellung.
 	 */
-	public Bestellung(double gesamtpreis, List<Position> positionen, int kundenID) {
-		this.bestellungID = UUID.randomUUID();
+	public Bestellung(double gesamtpreis, int kundenID, int anzahl) {
+		this.bestellungsID = UUID.randomUUID();
 		this.gesamtpreis = gesamtpreis;
-		this.anzahl = positionen.size();
-		this.positionen = positionen;
+		this.anzahl = anzahl;
 		this.abgeschlossen = false;
 		this.vermerk = null;
 		this.lieferart = null;
@@ -41,10 +45,10 @@ public class Bestellung {
 	
 	/**
 	 * Retourniert die BestellungsID.
-	 * @return bestellungID
+	 * @return bestellungsID
 	 */
 	public UUID getBestellungID() {
-		return bestellungID;
+		return bestellungsID;
 	}
 
 	/**
@@ -62,15 +66,6 @@ public class Bestellung {
 	 */
 	public int getAnzahl() {
 		return anzahl;
-	}
-
-
-	/**
-	 * Retourniert eine Liste mit den Positionen
-	 * @return positionen
-	 */
-	public List<Position> getPositionen() {
-		return positionen;
 	}
 
 
@@ -135,19 +130,9 @@ public class Bestellung {
 		this.anzahl = anzahl;
 	}
 
-
 	/**
-	 * Setzt die Liste der Positionen für die Bestellung.
-	 * @param positionen Liste mit Positionen, die gesetzt werden soll.
-	 */
-	public void setPositionen(List<Position> positionen) {
-		this.positionen = positionen;
-	}
-
-
-	/**
-	 * Setzt den Status für abgeschlossen für die Bestellung.
-	 * @param abgeschlossen Status, der für abgeschlossen gesetzt werden soll.
+	 * Setzt den Status fuer abgeschlossen fuer die Bestellung.
+	 * @param abgeschlossen Status, der fuer abgeschlossen gesetzt werden soll.
 	 */
 	public void setAbgeschlossen(boolean abgeschlossen) {
 		this.abgeschlossen = abgeschlossen;
@@ -182,7 +167,7 @@ public class Bestellung {
 
 
 	/**
-	 * Setzt die KundenID des Bestellers für die Bestellung.
+	 * Setzt die KundenID des Bestellers fuer die Bestellung.
 	 * @param kundenID KundenID, die gestzt werden soll.
 	 */
 	public void setKundenID(int kundenID) {
@@ -194,8 +179,8 @@ public class Bestellung {
 	 */
 	@Override
 	public String toString() {
-		return "Bestellung [" + (bestellungID != null ? "BestellungID=" + bestellungID + ", " : "") + "KundenID="
-				+ kundenID + ", Anzahl=" + anzahl + ", " + (positionen != null ? "Positionen=" + positionen + ", " : "")
+		return "Bestellung [" + (bestellungsID != null ? "BestellungID=" + bestellungsID + ", " : "") + "KundenID="
+				+ kundenID + ", Anzahl=" + anzahl + ", "
 				+ "Gesamtpreis=" + gesamtpreis + ",Abgeschlossen=" + abgeschlossen + ", "
 				+ (datum != null ? "Datum=" + datum + ", " : "")
 				+ (lieferart != null ? "Lieferart=" + lieferart + ", " : "")

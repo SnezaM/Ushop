@@ -4,30 +4,30 @@
 package modell;
 
 /**
- * @author Katrin, 1309572
  * 
- * Klasse zur Erstellung von Positionen. Eine Positionen ist Bestandteile einer Bestellung.
- * <p>Postion verwendet {@link Produkt}.</p>
+ * <b>Klasse Position:</b>
+ * <p>Dient der Erstellung von Positionen. Eine Positionen ist Bestandteile einer Bestellung.<br>
+ * Postion verwendet {@link Produkt}.</p>
  * 
- * @see Bestellung
- *
+ * @see Bestellung, Produkt
+ * @author Katrin Rohrmüller (1309572)
  */
 public class Position {
 	private int positionID;
-	private Produkt artikel;
+	private int produktID;
 	private int menge;
 	private double gesamtpreis;
 	
 	/**
 	 * Konstruktor.
 	 * @param positionID Postionsnummer der Postion.
-	 * @param artikel Produkt der Positon.
+	 * @param produktID ProduktID des Produkts der Positon.
 	 * @param gesamtpreis Gesamtwert der Position.
 	 * @param menge Menge der Position.
 	 */
-	public Position(int positionID, Produkt artikel, int menge, double gesamtpreis) {
-		this.positionID = positionID;
-		this.artikel = artikel;	
+	public Position(int produktID, int menge, double gesamtpreis) {
+		this.positionID = 0;
+		this.produktID = produktID;	
 		this.menge = menge;
 		this.gesamtpreis = gesamtpreis;
 	}
@@ -57,11 +57,11 @@ public class Position {
 	}
 
 	/**
-	 * Retourniert den Artikel der Position.
-	 * @return artikel
+	 * Retourniert die ProduktID der Position.
+	 * @return produktID
 	 */
-	public Produkt getArtikel() {
-		return artikel;
+	public int getArtikel() {
+		return produktID;
 	}
 
 	/**
@@ -89,11 +89,11 @@ public class Position {
 	}
 
 	/**
-	 * Setzt den Artikel der Position.
-	 * @param artikel artikel, der gesetzt werden soll
+	 * Setzt die ProduktID der Position.
+	 * @param produktID produktID, der gesetzt werden soll
 	 */
-	public void setArtikel(Produkt artikel) {
-		this.artikel = artikel;
+	public void setArtikel(int produktID) {
+		this.produktID = produktID;
 	}
 
 	/* (non-Javadoc)
@@ -101,7 +101,7 @@ public class Position {
 	 */
 	@Override
 	public String toString() {
-		return "Position [PositionID=" + positionID + ", Menge=" + menge + ", "
-				+ (artikel != null ? "Artikel=" + artikel + ", " : "") + "Gesamtpreis=" + gesamtpreis + "]";
+		return "Position [positionID=" + positionID + ", menge=" + menge + ", produktID=" + produktID + ", gesamtpreis="
+				+ gesamtpreis + "]";
 	}	
 }
