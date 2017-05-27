@@ -33,7 +33,7 @@ public class Position {
 	}
 
 	/**
-	 * Retourniert die Positionsnummer.
+	 * Retourniert die Positionsnummer der Position.
 	 * @return positionID
 	 */
 	public int getPostionID() {
@@ -41,7 +41,7 @@ public class Position {
 	}
 
 	/**
-	 * Retourniert die Menge.
+	 * Retourniert die Menge der Position.
 	 * @return menge
 	 */
 	public int getMenge() {
@@ -49,7 +49,7 @@ public class Position {
 	}
 
 	/**
-	 * Retourniert den Gesamtpreis.
+	 * Retourniert den Gesamtpreis der Position.
 	 * @return gesamtpreis
 	 */
 	public double getGesamtpreis() {
@@ -57,7 +57,7 @@ public class Position {
 	}
 
 	/**
-	 * Retourniert den Artikel.
+	 * Retourniert den Artikel der Position.
 	 * @return artikel
 	 */
 	public Produkt getArtikel() {
@@ -65,7 +65,7 @@ public class Position {
 	}
 
 	/**
-	 * Setzt die Positionsnummer.
+	 * Setzt die Positionsnummer der Position.
 	 * @param positionID postionID, die gesetzt werden soll
 	 */
 	public void setPostionID(int positionID){
@@ -73,7 +73,7 @@ public class Position {
 	}
 
 	/**
-	 * Setzt die Menge.
+	 * Setzt die Menge der Position.
 	 * @param menge menge, die gesetzt werden soll
 	 */
 	public void setMenge(int menge) {
@@ -81,7 +81,7 @@ public class Position {
 	}
 
 	/**
-	 * Setzt den Gesamtpreis.
+	 * Setzt den Gesamtpreis der Position.
 	 * @param gesamtpreis gesamtpreis, der gesetzt werden soll
 	 */
 	public void setGesamtpreis(double gesamtpreis) {
@@ -89,10 +89,19 @@ public class Position {
 	}
 
 	/**
-	 * Setzt den Artikel.
+	 * Setzt den Artikel der Position.
 	 * @param artikel artikel, der gesetzt werden soll
 	 */
 	public void setArtikel(Produkt artikel) {
 		this.artikel = artikel;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Position [PositionID=" + positionID + ", Menge=" + menge + ", "
+				+ (artikel != null ? "Artikel=" + artikel + ", " : "") + "Gesamtpreis=" + gesamtpreis + "]";
+	}	
 }

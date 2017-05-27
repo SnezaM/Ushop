@@ -38,7 +38,14 @@ public class Bestellung {
 		this.datum = null;
 		this.kundenID = kundenID;
 	}
-
+	
+	/**
+	 * Retourniert die BestellungsID.
+	 * @return bestellungID
+	 */
+	public UUID getBestellungID() {
+		return bestellungID;
+	}
 
 	/**
 	 * Retourniert den Gesamtpreis der Bestellung.
@@ -182,6 +189,16 @@ public class Bestellung {
 		this.kundenID = kundenID;
 	}
 	
-	//TODO updateAnzahl() entferne setAnzahl(int anzahl)
-	//TODO toString()
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Bestellung [" + (bestellungID != null ? "BestellungID=" + bestellungID + ", " : "") + "KundenID="
+				+ kundenID + ", Anzahl=" + anzahl + ", " + (positionen != null ? "Positionen=" + positionen + ", " : "")
+				+ "Gesamtpreis=" + gesamtpreis + ",Abgeschlossen=" + abgeschlossen + ", "
+				+ (datum != null ? "Datum=" + datum + ", " : "")
+				+ (lieferart != null ? "Lieferart=" + lieferart + ", " : "")
+				+ (vermerk != null ? "Vermerk=" + vermerk : "") + "]";
+	}
 }
