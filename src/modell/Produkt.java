@@ -1,5 +1,5 @@
 /**
- * Das Package Modell dient fuer alle Akteure die Akionen und Verwaltungen durchfuehren koennen 
+ * Das Package Modell dient fuer alle Akteure, Produkte und Produktgrupen die für den Ushop benoetigt werden.
  */
 package modell;
 
@@ -45,7 +45,7 @@ public class Produkt {
 	 */
 	@Override
 	public String toString(){
-		return "Produkt [Name=" + produktname + ", Preis="  + preis + ", Beschreibung=" + beschreibung  +
+		return "Produkt [ProduktID="+ produktID +", Name=" + produktname + ", Preis="  + preis + ", Beschreibung=" + beschreibung  +
 				", AdminID: "+ adminID +", ProduktgruppeID.: "+produktgruppeID+"]";  
 						  
 	}

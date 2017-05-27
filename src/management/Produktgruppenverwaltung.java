@@ -44,7 +44,6 @@ public class Produktgruppenverwaltung {
      * @return true falls die Aktion erfolgreich abgeschlossen wurde
      */
     public boolean produkgruppeAnlegen(String produktgruppenname, String bezeichnung, int adminID) {
-    	System.out.println("Produktgruppe speichern");
 		return dao.speichereProduktgruppe(new Produktgruppe(produktgruppenname, bezeichnung, adminID));
     }
     
@@ -53,8 +52,7 @@ public class Produktgruppenverwaltung {
      * @return Liste aller Produktgruppen in der Datenbank
      */
         public List<Produktgruppe> getAlleProduktgruppen(){
-        	System.out.println("Produktgruppe alle Produkte");
-    		return dao.getProduktgruppeList();
+        	return dao.getProduktgruppeList();
     		
     	}
         
@@ -65,7 +63,6 @@ public class Produktgruppenverwaltung {
      * @return die gesuchte Produktgruppe falls sie in der Datenbank vorhanden ist
      */
         public Produktgruppe getProdukgruppeByProduktID(int produktgruppeID){
-        	System.out.println("Produktgruppe By ID");
      		return dao.getProduktgruppeByID(produktgruppeID);
      	}
         
@@ -76,7 +73,6 @@ public class Produktgruppenverwaltung {
      * @return true oder false
      */
         public boolean loescheProduktgruppe(int produktgruppeID){
-        	System.out.println("Produktgruppe loeschen");
     		return dao.loescheProduktgruppetByID(produktgruppeID);
     	}
             
