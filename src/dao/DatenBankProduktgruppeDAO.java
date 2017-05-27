@@ -1,5 +1,5 @@
 /**
- * Das Paket dient zum persistenten speichern und lesen der Produkte in der 
+ * Das Paket dient zum persistenten speichern und lesen in der 
  * Datenbank um spaeter wieder darauf zugreifen zu koennen.
  * 
  */
@@ -129,6 +129,7 @@ public class DatenBankProduktgruppeDAO implements ProduktgruppeDAO{
 					while(result.next()){
 					
 						Produktgruppe p = new Produktgruppe(result.getString("Produktgruppenname"),result.getString("Bezeichnung"),result.getInt("AdminID"));
+						p.setProduktgruppeID(result.getInt("ProduktgruppeID"));
 						produktegruppeList.add(p);
 					}
 			}catch(Exception e){
@@ -157,7 +158,7 @@ public class DatenBankProduktgruppeDAO implements ProduktgruppeDAO{
 				return null;
 			}
 			Produktgruppe p = new Produktgruppe(result.getString("Produktgruppenname"),result.getString("Bezeichnung"),result.getInt("AdminID"));
-			
+			p.setProduktgruppeID(result.getInt("ProduktgruppeID"));
 			return p;
 		}catch(Exception e){
 			System.out.println("DatenBankProduktDAO:getProduktByProduktID: Funktioniert nicht auf Grund des Fehlers:("+e.getMessage()+")");
