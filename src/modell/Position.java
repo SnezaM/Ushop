@@ -10,7 +10,7 @@ package modell;
  * Postion verwendet {@link Produkt}.</p>
  * 
  * @see Bestellung, Produkt
- * @author Katrin Rohrmüller (1309572)
+ * @author Katrin Rohrmueller (1309572)
  */
 public class Position {
 	private int positionID;
@@ -20,7 +20,6 @@ public class Position {
 	
 	/**
 	 * Konstruktor.
-	 * @param positionID Postionsnummer der Postion.
 	 * @param produktID ProduktID des Produkts der Positon.
 	 * @param gesamtpreis Gesamtwert der Position.
 	 * @param menge Menge der Position.

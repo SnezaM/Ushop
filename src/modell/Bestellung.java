@@ -8,11 +8,11 @@ import java.util.UUID;
 
 /**
  * <b>Klasse Bestellung:</b>
- * <p>Dient der Erstellung von Bestellungen. Eine Bestellung enthält mindestens eine Position.<br>
+ * <p>Dient der Erstellung von Bestellungen. Eine Bestellung enthaelt mindestens eine Position.<br>
  * Postion verwendet {@link Produkt}.</p>
  * 
  * @see Position, Produkt
- * @author Katrin Rohrmüller (1309572)
+ * @author Katrin Rohrmueller (1309572)
  *
  */
 public class Bestellung {
