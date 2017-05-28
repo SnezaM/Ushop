@@ -4,7 +4,6 @@
 package dao;
 
 import java.util.List;
-import java.util.UUID;
 
 import modell.Bestellung;
 import modell.Position;
@@ -15,7 +14,7 @@ import modell.Position;
  * Definiert Methoden fuer den Datenbankzugriff im Bezug auf Bestellungen.
  * </p>
  * 
- * @see Bestellung
+ * @see {@link Bestellung}
  * @author Katrin Rohrmueller (1309572)
  *
  */
@@ -40,7 +39,7 @@ public interface BestellungsDAO {
 	 *            Position, die zur Bestellungs hinzugefuegt werden soll.
 	 * @return true bei erfolgreichen Hinzufuegen, sonst false
 	 */
-	public boolean addPositionToBestellung(UUID bestellungsID, Position position);
+	public boolean addPositionToBestellung(int bestellungsID, Position position);
 
 	/**
 	 * <b>Liefert die Bestellung mit der uebergebenen ID retour</b>
@@ -54,7 +53,7 @@ public interface BestellungsDAO {
 	 *            BestellungsID, der Bestellung, die gesucht wird.
 	 * @return Bestellung mit der uebergebenen ID
 	 */
-	public Bestellung getBestellungByID(UUID bestellungsID);
+	public Bestellung getBestellungByID(int bestellungsID);
 
 	/**
 	 * <b>Liefert eine Liste mit allen Bestellungen eines Kunden retour</b>
@@ -92,7 +91,7 @@ public interface BestellungsDAO {
 	 *            PositionsID, der zu entfernenden Instanz
 	 * @return true bei erfolgreichem Entfernen, sonst false
 	 */
-	public boolean removePositionFromBestellung(UUID bestellungsID, int positionID);
+	public boolean removePositionFromBestellung(int bestellungsID, int positionID);
 
 	/**
 	 * <b>Speichert die uebergebene Bestellung in der DB.</b>
@@ -123,9 +122,12 @@ public interface BestellungsDAO {
 	 * 
 	 * @param bestellung
 	 *            Bestellung, die aktualiesiert werden soll
+	 * @param date
+	 *            Datum, das als Bestellungsdatum eingetragen wird (Format:
+	 *            "YYYY-MM-DD")
 	 * @return true bei erfolgreichen Aktualisieren, sonst false
 	 */
-	public boolean updateBestellung(Bestellung bestellung);
+	public boolean updateBestellung(Bestellung bestellung, String date);
 
 	/**
 	 * <b>Aktualisiert die Menge und den Gesamtpreis der Position mit der
@@ -141,10 +143,12 @@ public interface BestellungsDAO {
 	 * gesucht und bei dieser wird die Menge auf den uebergebenen Preis gesetzt
 	 * und der Preis entsprechend angepasst.
 	 * </p>
+	 * 
 	 * @param bestellungsID
 	 * @param positionsID
 	 * @param menge
+	 * @param preis
 	 * @return
 	 */
-	public boolean updateMengeFromPosition(UUID bestellungsID, int positionsID, int menge);
+	public boolean updateMengeFromPosition(int bestellungsID, int positionsID, int menge, double preis);
 }

@@ -9,7 +9,7 @@ package modell;
  * <p>Dient der Erstellung von Positionen. Eine Positionen ist Bestandteile einer Bestellung.<br>
  * Postion verwendet {@link Produkt}.</p>
  * 
- * @see Bestellung, Produkt
+ * @see {@link Bestellung}, {@link Produkt}
  * @author Katrin Rohrmueller (1309572)
  */
 public class Position {
