@@ -48,6 +48,14 @@
 			
 		<br />
 		
+		<form action="ProduktSuche" method="post">
+		<div class="form-group">
+		<label for="produktname">Produkt: </label>
+		<input type="text" class="form-control" id="produktname" name="produktname"  data-validation="length" data-validation-length="min1" data-validation-error-msg="Bitte geben Sie einen gültigen Produkt ein!" required>
+		</div>
+		<button type="submit" class="btn btn-default">Suchen</button>
+		 </form>
+		
 		
 		<div id="box1">
 			<form action="LoginController" method="post">
