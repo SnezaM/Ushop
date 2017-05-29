@@ -15,6 +15,8 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import modell.Kunde;
 import modell.Produkt;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -60,7 +62,7 @@ public class DatenBankProduktDAO implements ProduktDAO{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Verbindungsaufbau zur Datenbank nicht möglich auf Grund des Fehlers: ("+e.getMessage()+")");
+			System.out.println("Verbindungsaufbau zur Datenbank nicht mï¿½glich auf Grund des Fehlers: ("+e.getMessage()+")");
 		}
 		
 	}
@@ -177,4 +179,30 @@ public class DatenBankProduktDAO implements ProduktDAO{
 				return null;
 			}	
 		}
+
+/**
+ * 
+ */
+@Override
+public Produkt getProduktByName(String pname) {
+	
+	List<Produkt> produktliste = this.getProduktList();
+	Produkt gesuchterprodukt =null;
+	
+	try{
+		for (Produkt p : produktliste){
+			if(p.getProduktname().equals(pname)){
+				gesuchterprodukt = p;
+			}
+		}
+	}catch (Exception e) {
+		System.out.println("DatenBankProduktDAO:methode:getProduktByName: Fehler!");
+		return null;
+	
+	}
+	return gesuchterprodukt;
+	
 }
+
+}
+
