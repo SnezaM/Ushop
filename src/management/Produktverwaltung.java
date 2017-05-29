@@ -9,6 +9,7 @@ import java.util.List;
 
 import dao.DatenBankProduktDAO;
 import dao.ProduktDAO;
+import modell.Kunde;
 import modell.Produkt;
 
 
@@ -104,6 +105,12 @@ public class Produktverwaltung {
     	}
     	return produktSuchList;
     }
+    
+    public Produkt getProduktByName(String pname){
+		return dao.getProduktByName(pname);
+		
+	}
+    
     
     
 }
