@@ -19,6 +19,27 @@ import modell.Position;
  *
  */
 public interface BestellungsDAO {
+
+	/**
+	 * <b>Speichert die uebergebene Bestellung in der DB.</b>
+	 * <p>
+	 * Die Bestellung wird nur anhand der fuer einen Warenkorb noetigen Fakten
+	 * in der DB gespeichert. Die Instanzen abgeschlossen, vermerk, lieferart
+	 * und datum, werden nicht uebernommen sondern als null-Values eingetragen.
+	 * Diese koennen spaeter mittels
+	 * {@link #updateBestellung(Bestellung, String)} in eine abgeschlossene
+	 * Bestellung umgewandelt werden.
+	 * </p>
+	 * 
+	 * @param bestellung
+	 *            Bestellung, die gespeichert werden soll.
+	 * @param kundenID
+	 *            ID des Kunden, dessen Warenkorb gespeichert wird.
+	 * @return true, falls die Bestellung gesepeichert werden konnte, sonst
+	 *         false.
+	 */
+	public boolean createBestellung(Bestellung bestellung, int kundenID);
+
 	/**
 	 * <b>Fuegt der Bestellung mit der uebergebenen ID, die uebergebene Position
 	 * hinzu</b>
@@ -30,7 +51,29 @@ public interface BestellungsDAO {
 	 *            Position, die zur Bestellungs hinzugefuegt werden soll.
 	 * @return true bei erfolgreichen Hinzufuegen, sonst false
 	 */
-	public boolean addPositionToBestellung(int bestellungsID, Position position);
+	public boolean createPosition(int bestellungsID, Position position);
+
+	/**
+	 * <b>Entfernt die Bestellung mit der entsprechenden ID aus der
+	 * Datenbank.</b>
+	 * 
+	 * @param bestellungsID
+	 *            BestellungsID, der Bestellung, die geloescht werden soll.
+	 * @return true bei erfolgreichem Entfernen, sonst false.
+	 */
+	public boolean deleteBestellung(int bestellungsID);
+
+	/**
+	 * <b>Entfernt die Position mit der entsprechenden PositionsID aus der
+	 * Bestellung mit der uebergeben BestellungsID</b>
+	 * 
+	 * @param bestellungsID
+	 *            BestellungsID, der Bestellung mit zu loeschender Position.
+	 * @param positionID
+	 *            PositionsID, der zu entfernenden Instanz.
+	 * @return true bei erfolgreichem Entfernen, sonst false.
+	 */
+	public boolean deletePosition(int bestellungsID, int positionID);
 
 	/**
 	 * <b>Liefert die Bestellung mit der uebergebenen ID retour</b>
@@ -45,37 +88,6 @@ public interface BestellungsDAO {
 	 * @return Bestellung mit der uebergebenen ID
 	 */
 	public Bestellung getBestellungByID(int bestellungsID);
-
-	/**
-	 * <b>Liefert eine Liste mit allen Bestellungen eines Kunden retour</b>
-	 * <p>
-	 * Mithilfe der uebergebenen KundenID wird die Datenbank nach Bestellungen
-	 * fuer den Kunden durchsucht und eine Liste mit allen entsprechenden
-	 * Bestellungen retourniert. Sollten keine Bestellungen vorhanden sein, wird
-	 * eine leere Liste retourniert.
-	 * </p>
-	 * 
-	 * @param kundenID
-	 *            KundenID, des Kunden fuer den Bestellungen gesucht werden
-	 *            sollen.
-	 * @return Liste mit Bestellungen des Kunden mit der entsprechenden ID
-	 */
-	public List<Bestellung> getBestellungListByKundenID(int kundenID);
-
-	/**
-	 * <b>Liefert eine Liste mit allen Positionen einer Bestellung retour</b>
-	 * <p>
-	 * Mithilfe der uebergebenen BestellungsID wird die Datenbank nach
-	 * Positionen zur Bestellung durchsucht und eine Liste mit allen
-	 * entsprechenden Positionen retourniert. Sollten keine Position vorhanden
-	 * sein, wird eine leere Liste retourniert.
-	 * </p>
-	 * 
-	 * @param bestellungsID
-	 *            BestellungsID, der Positionen, die gesucht werden.
-	 * @return Liste mit Positon der Bestellung mit der entsprechenden ID
-	 */
-	public List<Position> getPositionListByBestellungID(int bestellungsID);
 
 	/**
 	 * <b>Liefert die Position mit der uebergebenen ID aus der Bestellung mit
@@ -97,31 +109,50 @@ public interface BestellungsDAO {
 	public Position getPositionByID(int bestellungsID, int positionID);
 
 	/**
-	 * <b>Entfernt die Position mit der entsprechenden PositionsID aus der
-	 * Bestellung mit der uebergeben BestellungsID</b>
-	 * 
-	 * @param bestellungsID
-	 *            BestellungsID, der Bestellung mit zu loeschender Position
-	 * @param positionID
-	 *            PositionsID, der zu entfernenden Instanz
-	 * @return true bei erfolgreichem Entfernen, sonst false
-	 */
-	public boolean removePositionFromBestellung(int bestellungsID, int positionID);
-
-	/**
-	 * <b>Speichert die uebergebene Bestellung in der DB.</b>
+	 * <b>Liefert den Warenkorb des Kunden anhand der uebergebenen KundenID
+	 * retour.</b>
 	 * <p>
-	 * Die Bestellung wird nur anhand der fuer einen Warenkorb noetigen Fakten
-	 * in der DB gespeichert. Die Instanzen abgeschlossen, vermerk, lieferart
-	 * und datum, werden nicht uebernommen sondern als null-Values eingetragen.
+	 * Mithilfe der uebergebenen KundenID wird die Bestellung in der Datenbank
+	 * gesucht, deren Bestellungsstatus nicht abgeschlossen ist. Wo also
+	 * abgeschlossen false ist.
 	 * </p>
 	 * 
-	 * @param bestellung
-	 *            Bestellung, die gespeichert werden soll.
-	 * @return true, falls die Bestellung gesepeichert werden konnte, sonst
-	 *         false
+	 * @param kundenID
+	 *            ID des Kunden, dessen Warenkorb retourniert werden soll.
+	 * @return Warenkorb des Kunden
 	 */
-	public boolean speichereWarenkorb(Bestellung bestellung);
+	public Bestellung getWarenkorb(int kundenID);
+
+	/**
+	 * <b>Liefert eine Liste mit allen Bestellungen eines Kunden retour</b>
+	 * <p>
+	 * Mithilfe der uebergebenen KundenID wird die Datenbank nach Bestellungen
+	 * fuer den Kunden durchsucht und eine Liste mit allen entsprechenden
+	 * Bestellungen retourniert. Sollten keine Bestellungen vorhanden sein, wird
+	 * eine leere Liste retourniert.
+	 * </p>
+	 * 
+	 * @param kundenID
+	 *            KundenID, des Kunden fuer den Bestellungen gesucht werden
+	 *            sollen.
+	 * @return Liste mit Bestellungen des Kunden mit der entsprechenden ID
+	 */
+	public List<Bestellung> readBestellungenByKundenID(int kundenID);
+
+	/**
+	 * <b>Liefert eine Liste mit allen Positionen einer Bestellung retour</b>
+	 * <p>
+	 * Mithilfe der uebergebenen BestellungsID wird die Datenbank nach
+	 * Positionen zur Bestellung durchsucht und eine Liste mit allen
+	 * entsprechenden Positionen retourniert. Sollten keine Position vorhanden
+	 * sein, wird eine leere Liste retourniert.
+	 * </p>
+	 * 
+	 * @param bestellungsID
+	 *            BestellungsID, der Positionen, die gesucht werden.
+	 * @return Liste mit Positon der Bestellung mit der entsprechenden ID
+	 */
+	public List<Position> readPositionenByBestellungID(int bestellungsID);
 
 	/**
 	 * <b>Aktualisiert die uebergebene Bestellungs in der Datenbank</b>
@@ -140,12 +171,16 @@ public interface BestellungsDAO {
 	 *            "YYYY-MM-DD")
 	 * @return true bei erfolgreichen Aktualisieren, sonst false
 	 */
-	public boolean speichereBestellung(Bestellung bestellung, String date);
+	public boolean updateBestellung(Bestellung bestellung, String date);
 
 	/**
 	 * <b>Aktualisiert die Menge und den Gesamtpreis der Position mit der
 	 * uebergebenen PositionsID in der Bestellung mit der entsprechenden
-	 * BestellungsID anhand der uebergebenen Daten</b>
+	 * BestellungsID anhand der uebergebenen Daten.</b>
+	 * <p>
+	 * Hinweis: Eine Aenderung des Produktes innerhalb einer Position ist nicht
+	 * moeglich. Ebenso kann auch die ID nicht geaendert werden.
+	 * </p>
 	 * 
 	 * @param bestellungsID
 	 *            BestellungsID, der Bestellung mit der Position die anzupassen
@@ -158,5 +193,5 @@ public interface BestellungsDAO {
 	 *            Preis, der eingesetzt werden soll
 	 * @return true bei erfolgreichen Aendern, sonst false
 	 */
-	public boolean updateMengeFromPosition(int bestellungsID, int positionsID, int menge, double preis);
+	public boolean updatePosition(int bestellungsID, int positionsID, int menge, double preis);
 }

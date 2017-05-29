@@ -15,23 +15,19 @@ package modell;
 public class Bestellung {
 	private int bestellungsID;
 	private double gesamtpreis;
-	private int anzahl;
 	private boolean abgeschlossen;
 	private String datum;
 	private String vermerk;
 	private Lieferart lieferart;
-	private int kundenID;
 	private static int counter = 0;
 
 	/**
-	 * Konstruktor. 
+	 * Konstruktor.
 	 * 
 	 * @param bestellungsID
 	 *            ID der Bestellung.
 	 * @param gesamtpreis
 	 *            Gesamtpreis der Bestellung.
-	 * @param anzahl
-	 *            Anzahl der Positionen in einer Bestellung.
 	 * @param abgeschlossen
 	 *            Status der Bestellung. (true = abgeschlossen, else false)
 	 * @param datum
@@ -40,20 +36,16 @@ public class Bestellung {
 	 *            Vermerk der Bestellung.
 	 * @param lieferart
 	 *            Lieferart der Bestellung.
-	 * @param kundenID
-	 *            ID des Kunden, der der Bestellung zugeordnet ist.
 	 */
-	public Bestellung(int bestellungsID, double gesamtpreis, int anzahl, boolean abgeschlossen, String datum,
-			String vermerk, Lieferart lieferart, int kundenID) {
+	public Bestellung(int bestellungsID, double gesamtpreis, boolean abgeschlossen, String datum, String vermerk,
+			Lieferart lieferart) {
 		super();
 		this.bestellungsID = bestellungsID;
 		this.gesamtpreis = gesamtpreis;
-		this.anzahl = anzahl;
 		this.abgeschlossen = abgeschlossen;
 		this.datum = datum;
 		this.vermerk = vermerk;
 		this.lieferart = lieferart;
-		this.kundenID = kundenID;
 	}
 
 	/**
@@ -70,12 +62,10 @@ public class Bestellung {
 	public Bestellung(double gesamtpreis, int kundenID, int anzahl) {
 		this.bestellungsID = counter;
 		this.gesamtpreis = gesamtpreis;
-		this.anzahl = anzahl;
 		this.abgeschlossen = false;
 		this.datum = null;
 		this.vermerk = null;
 		this.lieferart = null;
-		this.kundenID = kundenID;
 		counter++;
 	}
 
@@ -95,15 +85,6 @@ public class Bestellung {
 	 */
 	public double getGesamtpreis() {
 		return gesamtpreis;
-	}
-
-	/**
-	 * Retourniert die Anzahl der Positionen der Bestellung.
-	 * 
-	 * @return anzahl
-	 */
-	public int getAnzahl() {
-		return anzahl;
 	}
 
 	/**
@@ -144,15 +125,6 @@ public class Bestellung {
 	}
 
 	/**
-	 * Retourniert die KundenID des Bestellers.
-	 * 
-	 * @return kundenID
-	 */
-	public int getKundenID() {
-		return kundenID;
-	}
-
-	/**
 	 * Setzt den Gesamtpreis der Bestellung.
 	 * 
 	 * @param gesamtpreis
@@ -160,16 +132,6 @@ public class Bestellung {
 	 */
 	public void setGesamtpreis(double gesamtpreis) {
 		this.gesamtpreis = gesamtpreis;
-	}
-
-	/**
-	 * Setzt die Anzahl der Positionen einer Bestellung.
-	 * 
-	 * @param anzahl
-	 *            Anzahl der Positionen, die gesetzt werden soll.
-	 */
-	public void setAnzahl(int anzahl) {
-		this.anzahl = anzahl;
 	}
 
 	/**
@@ -212,16 +174,6 @@ public class Bestellung {
 		this.lieferart = lieferart;
 	}
 
-	/**
-	 * Setzt die KundenID des Bestellers fuer die Bestellung.
-	 * 
-	 * @param kundenID
-	 *            KundenID, die gestezt werden soll.
-	 */
-	public void setKundenID(int kundenID) {
-		this.kundenID = kundenID;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -229,9 +181,9 @@ public class Bestellung {
 	 */
 	@Override
 	public String toString() {
-		return "Bestellung [BestellungID=" + bestellungsID + ", KundenID=" + kundenID + ", Anzahl Positionen=" + anzahl
-				+ ", Gesamtpreis=" + gesamtpreis + ", Abgeschlossen=" + abgeschlossen
-				+ (datum != null ? ", Datum=" + datum : "") + (lieferart != null ? ", Lieferart=" + lieferart : "")
+		return "Bestellung [BestellungID=" + bestellungsID + ", Gesamtpreis=" + gesamtpreis + ", Abgeschlossen="
+				+ abgeschlossen + (datum != null ? ", Datum=" + datum : "")
+				+ (lieferart != null ? ", Lieferart=" + lieferart : "")
 				+ (vermerk != null ? ", Vermerk=" + vermerk : "") + "]";
 	}
 }

@@ -30,24 +30,24 @@ public class DBBestellungsDAO implements BestellungsDAO {
 
 	public static final String alleBestellungenKunde = "SELECT * FROM Bestellung WHERE kundenid = ?";
 	public static final String ladeBestellungID = "SELECT * FROM Bestellung WHERE bestellungid = ?";
+	public static final String ladeWarenkorb = "SELECT * FROM Bestellung WHERE kundenid = ? AND abgeschlossen=false";
 	public static final String ladePositionenVonBestellung = "SELECT * FROM Position WHERE bestellungid = ?";
 	public static final String ladePositionID = "SELECT * FROM Position WHERE bestellungid = ? AND positionid=?";
-	
-	public static final String speichereWarenkorb = "INSERT INTO Bestellung (bestellungid,gesamtpreis,anzahl,"
-			+ "abgeschlossen,kundenid) VALUES(?,?,?,false,?)";
 
+	public static final String speichereWarenkorb = "INSERT INTO Bestellung (bestellungid,gesamtpreis,"
+			+ "abgeschlossen,kundenid) VALUES(?,?,false,?)";
 	public static final String speicherePosition = "INSERT INTO Position (positionid, menge, preisposition, "
 			+ "bestellungid, produktid) VALUES (?, ?, ?, ?, ?)";
-	//ToDo String mit '' und Datum als 'YYYY-MM-DD'
+	
 	public static final String updateBestellung = "UPDATE Bestellung SET abgeschlossen=true, lieferart=?, datum=? "
 			+ "WHERE bestellungid=?";
-
 	public static final String updateBestellungMitVermerk = "UPDATE Bestellung SET abgeschlossen=true, vermerk=?, "
 			+ "lieferart=?, datum=? WHERE bestellungid=?";
-	public static final String updatePositionID = "UPDATE Position SET positionid=? WHERE positionid=? AND bestellungid=?";
 	public static final String updatePositionMenge = "UPDATE Position SET menge=?, preisposition=? WHERE positionid=? AND bestellungid=?";
+
 	public static final String entfernePosition = "DELETE FROM Position WHERE positionid=? AND bestellungid=?";
-	
+	public static final String entferneBestellung = "DELETE FROM Bestellung WHERE bestellungid=?";
+
 	// Variable zum Verbindungsaufbau zur Datenbank
 	private Connection c = null;
 	// Variable fuer Enums
@@ -76,12 +76,35 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see dao.BestellungsDAO#speichereWarenkorb(modell.Bestellung)
+	 */
+	public boolean createBestellung(Bestellung b, int kundenID) {
+		try {
+			if (b == null) {
+				return false;
+			}
+			PreparedStatement preparedStatement = c.prepareStatement(speichereWarenkorb);
+			preparedStatement.setInt(1, b.getBestellungID());
+			preparedStatement.setDouble(2, b.getGesamtpreis());
+			preparedStatement.setInt(3, kundenID);
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see dao.BestellungsDAO#addPositionToBestellung(java.util.int,
 	 *      modell.Position)
 	 */
-	public boolean addPositionToBestellung(int bestellungsID, Position position) {
+	public boolean createPosition(int bestellungsID, Position position) {
 		try {
-			if(position == null){
+			if (position == null) {
 				return false;
 			}
 			PreparedStatement preparedStatement = c.prepareStatement(speicherePosition);
@@ -90,6 +113,43 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.setDouble(3, position.getGesamtpreis());
 			preparedStatement.setInt(4, bestellungsID);
 			preparedStatement.setInt(5, position.getArtikel());
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see dao.BestellungsDAO#deleteBestellung(int)
+	 */
+	public boolean deleteBestellung(int bestellungsID) {
+		try {
+			PreparedStatement preparedStatement = c.prepareStatement(entferneBestellung);
+			preparedStatement.setInt(1, bestellungsID);
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see dao.BestellungsDAO#removePositionFromBestellung(java.util.int, int)
+	 */
+	public boolean deletePosition(int bestellungsID, int positionID) {
+		try {
+			PreparedStatement preparedStatement = c.prepareStatement(entfernePosition);
+			preparedStatement.setInt(1, positionID);
+			preparedStatement.setInt(2, bestellungsID);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
@@ -113,14 +173,12 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			while (resultSet != null && resultSet.next()) {
 				int id = resultSet.getInt(1);
 				double preis = resultSet.getDouble(2);
-				int anzahl = resultSet.getInt(3);
-				boolean abgeschlossen = resultSet.getBoolean(4);
-				String vermerk = resultSet.getString(5);
-				String lieferartDB = resultSet.getString(6);
-				String datum = resultSet.getString(7);
-				int kundenid = resultSet.getInt(8);
+				boolean abgeschlossen = resultSet.getBoolean(3);
+				String vermerk = resultSet.getString(4);
+				String lieferartDB = resultSet.getString(5);
+				String datum = resultSet.getString(6);
 				Lieferart lieferart = this.entryToEnumeration.entryToLieferart(lieferartDB);
-				bestellung = new Bestellung(id, preis, anzahl, abgeschlossen, datum, vermerk, lieferart, kundenid);
+				bestellung = new Bestellung(id, preis, abgeschlossen, datum, vermerk, lieferart);
 			}
 			preparedStatement.close();
 			return bestellung;
@@ -133,40 +191,6 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see dao.BestellungsDAO#getBestellungListByKundenID(int)
-	 */
-	public List<Bestellung> getBestellungListByKundenID(int kundenID) {
-		try {
-			PreparedStatement preparedStatement = c.prepareStatement(alleBestellungenKunde);
-			preparedStatement.setInt(1, kundenID);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			
-			List<Bestellung> alleBestellungenKunde = new ArrayList<>();
-			Bestellung bestellung = null;
-			
-			while (resultSet != null && resultSet.next()) {
-				int id = resultSet.getInt(1);
-				double preis = resultSet.getDouble(2);
-				int anzahl = resultSet.getInt(3);
-				boolean abgeschlossen = resultSet.getBoolean(4);
-				String vermerk = resultSet.getString(5);
-				String lieferartDB = resultSet.getString(6);
-				String datum = resultSet.getString(7);
-				int kundenid = resultSet.getInt(8);
-				Lieferart lieferart = this.entryToEnumeration.entryToLieferart(lieferartDB);
-				bestellung = new Bestellung(id, preis, anzahl, abgeschlossen, datum, vermerk, lieferart, kundenid);
-				alleBestellungenKunde.add(bestellung);
-			}
-			preparedStatement.close();
-			return alleBestellungenKunde;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
 	 * @see dao.BestellungsDAO#getPositionByID(int, int)
 	 */
 	public Position getPositionByID(int bestellungsID, int positionID) {
@@ -190,20 +214,82 @@ public class DBBestellungsDAO implements BestellungsDAO {
 		}
 		return null;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see dao.BestellungsDAO#getWarenkorb(int)
+	 */
+	public Bestellung getWarenkorb(int kundenID){
+		try {
+			PreparedStatement preparedStatement = c.prepareStatement(ladeWarenkorb);
+			preparedStatement.setInt(1, kundenID);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			Bestellung bestellung = null;
+			while (resultSet != null && resultSet.next()) {
+				int id = resultSet.getInt(1);
+				double preis = resultSet.getDouble(2);
+				boolean abgeschlossen = resultSet.getBoolean(3);
+				String vermerk = resultSet.getString(4);
+				String lieferartDB = resultSet.getString(5);
+				String datum = resultSet.getString(6);
+				Lieferart lieferart = this.entryToEnumeration.entryToLieferart(lieferartDB);
+				bestellung = new Bestellung(id, preis, abgeschlossen, datum, vermerk, lieferart);
+			}
+			preparedStatement.close();
+			return bestellung;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * {@inheritDoc}
-	 * @see dao.BestellungsDAO#getPositionListByBestellungID(int)
+	 * 
+	 * @see dao.BestellungsDAO#readBestellungenByKundenID(int)
 	 */
-	public List<Position> getPositionListByBestellungID(int bestellungsID) {
+	public List<Bestellung> readBestellungenByKundenID(int kundenID) {
+		try {
+			PreparedStatement preparedStatement = c.prepareStatement(alleBestellungenKunde);
+			preparedStatement.setInt(1, kundenID);
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			List<Bestellung> alleBestellungenKunde = new ArrayList<>();
+			Bestellung bestellung = null;
+
+			while (resultSet != null && resultSet.next()) {
+				int id = resultSet.getInt(1);
+				double preis = resultSet.getDouble(2);
+				boolean abgeschlossen = resultSet.getBoolean(3);
+				String vermerk = resultSet.getString(4);
+				String lieferartDB = resultSet.getString(5);
+				String datum = resultSet.getString(6);
+				Lieferart lieferart = this.entryToEnumeration.entryToLieferart(lieferartDB);
+				bestellung = new Bestellung(id, preis, abgeschlossen, datum, vermerk, lieferart);
+				alleBestellungenKunde.add(bestellung);
+			}
+			preparedStatement.close();
+			return alleBestellungenKunde;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see dao.BestellungsDAO#readPositionenByBestellungID(int)
+	 */
+	public List<Position> readPositionenByBestellungID(int bestellungsID) {
 		try {
 			PreparedStatement preparedStatement = c.prepareStatement(ladePositionenVonBestellung);
 			preparedStatement.setInt(1, bestellungsID);
 			ResultSet resultSet = preparedStatement.executeQuery();
-			
+
 			List<Position> allePositionenBestellung = new ArrayList<>();
 			Position position = null;
-			
+
 			while (resultSet != null && resultSet.next()) {
 				int id = resultSet.getInt(1);
 				int menge = resultSet.getInt(2);
@@ -223,64 +309,20 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see dao.BestellungsDAO#removePositionFromBestellung(java.util.int, int)
-	 */
-	public boolean removePositionFromBestellung(int bestellungsID, int positionID) {
-		try {
-			PreparedStatement preparedStatement = c.prepareStatement(entfernePosition);
-			preparedStatement.setInt(1, positionID);
-			preparedStatement.setInt(2, bestellungsID);
-			preparedStatement.execute();
-			preparedStatement.close();
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see dao.BestellungsDAO#speichereWarenkorb(modell.Bestellung)
-	 */
-	public boolean speichereWarenkorb(Bestellung b) {
-		try {
-			if(b == null){
-				return false;
-			}
-			PreparedStatement preparedStatement = c.prepareStatement(speichereWarenkorb);
-			preparedStatement.setInt(1, b.getBestellungID());
-			preparedStatement.setDouble(2, b.getGesamtpreis());
-			preparedStatement.setInt(3, b.getAnzahl());
-			preparedStatement.setInt(4, b.getKundenID());
-			preparedStatement.execute();
-			preparedStatement.close();
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see dao.BestellungsDAO#speichereBestellung(modell.Bestellung)
 	 */
-	public boolean speichereBestellung(Bestellung bestellung, String date) {
+	public boolean updateBestellung(Bestellung bestellung, String date) {
 		try {
-			if(bestellung == null){
+			if (bestellung == null) {
 				return false;
 			}
 			PreparedStatement preparedStatement;
-			if(bestellung.getVermerk() == null){
+			if (bestellung.getVermerk() == null) {
 				preparedStatement = c.prepareStatement(updateBestellung);
 				preparedStatement.setString(1, bestellung.getLieferart().toString());
 				preparedStatement.setDate(2, Date.valueOf(date));
 				preparedStatement.setInt(3, bestellung.getBestellungID());
-			}
-			else {
+			} else {
 				preparedStatement = c.prepareStatement(updateBestellungMitVermerk);
 				preparedStatement.setString(1, bestellung.getVermerk());
 				preparedStatement.setString(2, bestellung.getLieferart().toString());
@@ -301,7 +343,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	 * 
 	 * @see dao.BestellungsDAO#updateMengeFromPosition(java.util.int, int, int)
 	 */
-	public boolean updateMengeFromPosition(int bestellungsID, int positionID, int menge, double preis) {
+	public boolean updatePosition(int bestellungsID, int positionID, int menge, double preis) {
 		try {
 			PreparedStatement preparedStatement = c.prepareStatement(updatePositionMenge);
 			preparedStatement.setInt(1, menge);
