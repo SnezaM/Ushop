@@ -20,13 +20,15 @@ public class Position {
 	
 	/**
 	 * Konstruktor.
+	 * @param positionID ID der Position.
 	 * @param produktID ProduktID des Produkts der Positon.
-	 * @param gesamtpreis Gesamtwert der Position.
 	 * @param menge Menge der Position.
+	 * @param gesamtpreis Gesamtwert der Position.
 	 */
-	public Position(int produktID, int menge, double gesamtpreis) {
-		this.positionID = 0;
-		this.produktID = produktID;	
+	public Position(int positionID, int produktID, int menge, double gesamtpreis) {
+		super();
+		this.positionID = positionID;
+		this.produktID = produktID;
 		this.menge = menge;
 		this.gesamtpreis = gesamtpreis;
 	}
@@ -65,7 +67,7 @@ public class Position {
 
 	/**
 	 * Setzt die Positionsnummer der Position.
-	 * @param positionID postionID, die gesetzt werden soll
+	 * @param positionID PostionID, die gesetzt werden soll.
 	 */
 	public void setPostionID(int positionID){
 		this.positionID = positionID;
@@ -73,7 +75,7 @@ public class Position {
 
 	/**
 	 * Setzt die Menge der Position.
-	 * @param menge menge, die gesetzt werden soll
+	 * @param menge Menge, die gesetzt werden soll.
 	 */
 	public void setMenge(int menge) {
 		this.menge = menge;
@@ -81,7 +83,7 @@ public class Position {
 
 	/**
 	 * Setzt den Gesamtpreis der Position.
-	 * @param gesamtpreis gesamtpreis, der gesetzt werden soll
+	 * @param gesamtpreis Gesamtpreis, der gesetzt werden soll.
 	 */
 	public void setGesamtpreis(double gesamtpreis) {
 		this.gesamtpreis = gesamtpreis;
@@ -89,7 +91,7 @@ public class Position {
 
 	/**
 	 * Setzt die ProduktID der Position.
-	 * @param produktID produktID, der gesetzt werden soll
+	 * @param produktID ProduktID, die gesetzt werden soll.
 	 */
 	public void setArtikel(int produktID) {
 		this.produktID = produktID;
@@ -100,7 +102,7 @@ public class Position {
 	 */
 	@Override
 	public String toString() {
-		return "Position [positionID=" + positionID + ", menge=" + menge + ", produktID=" + produktID + ", gesamtpreis="
+		return "Position [PositionID=" + positionID + ", Menge=" + menge + ", ProduktID=" + produktID + ", Gesamtpreis="
 				+ gesamtpreis + "]";
 	}	
 }

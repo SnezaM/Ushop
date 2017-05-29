@@ -17,13 +17,48 @@ public class Bestellung {
 	private double gesamtpreis;
 	private int anzahl;
 	private boolean abgeschlossen;
+	private String datum;
 	private String vermerk;
 	private Lieferart lieferart;
 	private int kundenID;
 	private static int counter = 0;
 
 	/**
-	 * Konstruktor. (Instanz fuer noch nicht abgeschlossene Bestellungen)
+	 * Konstruktor. 
+	 * 
+	 * @param bestellungsID
+	 *            ID der Bestellung.
+	 * @param gesamtpreis
+	 *            Gesamtpreis der Bestellung.
+	 * @param anzahl
+	 *            Anzahl der Positionen in einer Bestellung.
+	 * @param abgeschlossen
+	 *            Status der Bestellung. (true = abgeschlossen, else false)
+	 * @param datum
+	 *            Datum der Bestellung.
+	 * @param vermerk
+	 *            Vermerk der Bestellung.
+	 * @param lieferart
+	 *            Lieferart der Bestellung.
+	 * @param kundenID
+	 *            ID des Kunden, der der Bestellung zugeordnet ist.
+	 */
+	public Bestellung(int bestellungsID, double gesamtpreis, int anzahl, boolean abgeschlossen, String datum,
+			String vermerk, Lieferart lieferart, int kundenID) {
+		super();
+		this.bestellungsID = bestellungsID;
+		this.gesamtpreis = gesamtpreis;
+		this.anzahl = anzahl;
+		this.abgeschlossen = abgeschlossen;
+		this.datum = datum;
+		this.vermerk = vermerk;
+		this.lieferart = lieferart;
+		this.kundenID = kundenID;
+	}
+
+	/**
+	 * Konstruktor. (Instanz fuer noch nicht abgeschlossene Bestellungen bzw.
+	 * Warenkorb)
 	 * 
 	 * @param gesamtpreis
 	 *            Gesamtpreis der Bestellung.
@@ -37,6 +72,7 @@ public class Bestellung {
 		this.gesamtpreis = gesamtpreis;
 		this.anzahl = anzahl;
 		this.abgeschlossen = false;
+		this.datum = null;
 		this.vermerk = null;
 		this.lieferart = null;
 		this.kundenID = kundenID;
@@ -81,6 +117,15 @@ public class Bestellung {
 	}
 
 	/**
+	 * Retourniert das Datum der Bestellung.
+	 * 
+	 * @return the datum
+	 */
+	public String getDatum() {
+		return datum;
+	}
+
+	/**
 	 * Retourniert den Vermerk einer Bestellung.
 	 * 
 	 * @return vermerk
@@ -121,7 +166,7 @@ public class Bestellung {
 	 * Setzt die Anzahl der Positionen einer Bestellung.
 	 * 
 	 * @param anzahl
-	 *            the anzahl to set
+	 *            Anzahl der Positionen, die gesetzt werden soll.
 	 */
 	public void setAnzahl(int anzahl) {
 		this.anzahl = anzahl;
@@ -135,6 +180,16 @@ public class Bestellung {
 	 */
 	public void setAbgeschlossen(boolean abgeschlossen) {
 		this.abgeschlossen = abgeschlossen;
+	}
+
+	/**
+	 * Setzt das Datum der Bestellung. Diese ist im Format YYYY-MM-DD anzugeben.
+	 * 
+	 * @param datum
+	 *            Datum, das gesetzt werden soll.
+	 */
+	public void setDatum(String datum) {
+		this.datum = datum;
 	}
 
 	/**
@@ -161,7 +216,7 @@ public class Bestellung {
 	 * Setzt die KundenID des Bestellers fuer die Bestellung.
 	 * 
 	 * @param kundenID
-	 *            KundenID, die gestzt werden soll.
+	 *            KundenID, die gestezt werden soll.
 	 */
 	public void setKundenID(int kundenID) {
 		this.kundenID = kundenID;
@@ -174,9 +229,9 @@ public class Bestellung {
 	 */
 	@Override
 	public String toString() {
-		return "Bestellung [BestellungID=" + bestellungsID + "KundenID=" + kundenID + ", Anzahl=" + anzahl + ", "
-				+ "Gesamtpreis=" + gesamtpreis + ",Abgeschlossen=" + abgeschlossen + ", "
-				+ (lieferart != null ? "Lieferart=" + lieferart + ", " : "")
-				+ (vermerk != null ? "Vermerk=" + vermerk : "") + "]";
+		return "Bestellung [BestellungID=" + bestellungsID + ", KundenID=" + kundenID + ", Anzahl Positionen=" + anzahl
+				+ ", Gesamtpreis=" + gesamtpreis + ", Abgeschlossen=" + abgeschlossen
+				+ (datum != null ? ", Datum=" + datum : "") + (lieferart != null ? ", Lieferart=" + lieferart : "")
+				+ (vermerk != null ? ", Vermerk=" + vermerk : "") + "]";
 	}
 }

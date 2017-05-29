@@ -22,15 +22,6 @@ public interface BestellungsDAO {
 	/**
 	 * <b>Fuegt der Bestellung mit der uebergebenen ID, die uebergebene Position
 	 * hinzu</b>
-	 * <p>
-	 * Die Datenbank wird mit Hilfe der uebergebenen BestellungsID nach der
-	 * Bestellung durchsucht. Sollte keine entsprechende Bestellung vorhanden
-	 * sein, wird der Vorgang abgebrochen und false retourniert. Ist die
-	 * Bestellung vorhanden wird ueberprueft, ob die Bestellungs bereits
-	 * abgeschlossen wurde, falls ja wird false retourniert und der Vorgang
-	 * abgebrochen, sonst wird die Position mit der naechstmoechlichen
-	 * PositionsID in der Datenbank gespeichert und true retourniert.
-	 * </p>
 	 * 
 	 * @param bestellungsID
 	 *            BestellungsID, der Bestellung, die um die Position ergaenzt
@@ -72,18 +63,42 @@ public interface BestellungsDAO {
 	public List<Bestellung> getBestellungListByKundenID(int kundenID);
 
 	/**
+	 * <b>Liefert eine Liste mit allen Positionen einer Bestellung retour</b>
+	 * <p>
+	 * Mithilfe der uebergebenen BestellungsID wird die Datenbank nach
+	 * Positionen zur Bestellung durchsucht und eine Liste mit allen
+	 * entsprechenden Positionen retourniert. Sollten keine Position vorhanden
+	 * sein, wird eine leere Liste retourniert.
+	 * </p>
+	 * 
+	 * @param bestellungsID
+	 *            BestellungsID, der Positionen, die gesucht werden.
+	 * @return Liste mit Positon der Bestellung mit der entsprechenden ID
+	 */
+	public List<Position> getPositionListByBestellungID(int bestellungsID);
+
+	/**
+	 * <b>Liefert die Position mit der uebergebenen ID aus der Bestellung mit
+	 * der uebergebenen ID retour</b>
+	 * <p>
+	 * Mithilfe der uebergebenen BestellungsID und PositionsID wird die
+	 * Datenbank nach der korrekten Position durchsucht und diese wird sodann
+	 * retourniert. Sollte keine entsprechende Position vorhanden sein wird null
+	 * retourniert.
+	 * </p>
+	 * 
+	 * @param bestellungsID
+	 *            BestellungsID, der Bestellung, die gesucht wird.
+	 * @param positionID
+	 *            PositionsID, der gesuchten Position.
+	 * @return Position mit der uebergebenen ID aus Bestellung mit der
+	 *         uebergebenen ID
+	 */
+	public Position getPositionByID(int bestellungsID, int positionID);
+
+	/**
 	 * <b>Entfernt die Position mit der entsprechenden PositionsID aus der
 	 * Bestellung mit der uebergeben BestellungsID</b>
-	 * <p>
-	 * Die Datenbank wird mit Hilfe der uebergebenen BestellungsID nach der
-	 * Bestellung durchsucht. Sollte keine entsprechende Bestellung vorhanden
-	 * sein, wird der Vorgang abgebrochen und false retourniert. Ist die
-	 * Bestellung vorhanden wird ueberprueft, ob die Bestellungs bereits
-	 * abgeschlossen wurde, falls ja wird false retourniert und der Vorgang
-	 * abgebrochen, sonst wird nach der Position mit der entsprechenden ID
-	 * gesucht und diese wird entfernt. Andernfalls wird der false retourniert
-	 * und der Vorgang wird abgebrochen.
-	 * </p>
 	 * 
 	 * @param bestellungsID
 	 *            BestellungsID, der Bestellung mit zu loeschender Position
@@ -96,10 +111,9 @@ public interface BestellungsDAO {
 	/**
 	 * <b>Speichert die uebergebene Bestellung in der DB.</b>
 	 * <p>
-	 * Eine uebergebene Bestellung wird in der Datenbank gespeichert. Zuvor wird
-	 * ueberprueft, ob es eine Bestellung mit derselben ID gibt, wenn ja kann
-	 * die Bestellung nicht gespeichert werden und der Vorgang wird abgebrochen.
-	 * In diesem Fall liefert die Methode false als Ergebnis retour.
+	 * Die Bestellung wird nur anhand der fuer einen Warenkorb noetigen Fakten
+	 * in der DB gespeichert. Die Instanzen abgeschlossen, vermerk, lieferart
+	 * und datum, werden nicht uebernommen sondern als null-Values eingetragen.
 	 * </p>
 	 * 
 	 * @param bestellung
@@ -107,18 +121,17 @@ public interface BestellungsDAO {
 	 * @return true, falls die Bestellung gesepeichert werden konnte, sonst
 	 *         false
 	 */
-	public boolean speichereBestellung(Bestellung bestellung);
+	public boolean speichereWarenkorb(Bestellung bestellung);
 
 	/**
 	 * <b>Aktualisiert die uebergebene Bestellungs in der Datenbank</b>
 	 * <p>
-	 * Die Datenbank wird mit Hilfe der BestellungsID der uebergebenen
-	 * Bestellung nach der Bestellung durchsucht. Sollte keine entsprechende
-	 * Bestellung vorhanden sein, wird der Vorgang abgebrochen und false
-	 * retourniert. Ist die Bestellung vorhanden wird ueberprueft, ob die
-	 * Bestellungs bereits abgeschlossen wurde, falls ja wird false retourniert
-	 * und der Vorgang abgebrochen, sonst wird die Bestellung in der Datenbank
-	 * mit den Daten aus der uebergebenen Bestellung aktualisiert.
+	 * Wenn die uebergebene Bestellung in der DB vorhanden ist wird diese in den
+	 * Variablen lieferart, datum und vermerk anhand der uebergebenen Bestellung
+	 * aktualisiert. Die Variable abgeschlossen wird auf true gesetzt. Wenn Sie
+	 * nicht vorhanden ist, wird kein Update und keine Speicherung
+	 * durchgefuehrt.
+	 * </p>
 	 * 
 	 * @param bestellung
 	 *            Bestellung, die aktualiesiert werden soll
@@ -127,28 +140,23 @@ public interface BestellungsDAO {
 	 *            "YYYY-MM-DD")
 	 * @return true bei erfolgreichen Aktualisieren, sonst false
 	 */
-	public boolean updateBestellung(Bestellung bestellung, String date);
+	public boolean speichereBestellung(Bestellung bestellung, String date);
 
 	/**
 	 * <b>Aktualisiert die Menge und den Gesamtpreis der Position mit der
 	 * uebergebenen PositionsID in der Bestellung mit der entsprechenden
-	 * BestellungsID</b>
-	 * <p>
-	 * Die Datenbank wird mit Hilfe der uebergebenen BestellungsID nach der
-	 * Bestellung durchsucht. Sollte keine entsprechende Bestellung vorhanden
-	 * sein, wird der Vorgang abgebrochen und false retourniert. Ist die
-	 * Bestellung vorhanden wird ueberprueft, ob die Bestellungs bereits
-	 * abgeschlossen wurde, falls ja wird false retourniert und der Vorgang
-	 * abgebrochen, sonst wird nach der Position mit der entsprechenden ID
-	 * gesucht und bei dieser wird die Menge auf den uebergebenen Preis gesetzt
-	 * und der Preis entsprechend angepasst.
-	 * </p>
+	 * BestellungsID anhand der uebergebenen Daten</b>
 	 * 
 	 * @param bestellungsID
+	 *            BestellungsID, der Bestellung mit der Position die anzupassen
+	 *            ist
 	 * @param positionsID
+	 *            PositionsID, der Position die anzupassen ist
 	 * @param menge
+	 *            Menge, die eingesetzt werden soll
 	 * @param preis
-	 * @return
+	 *            Preis, der eingesetzt werden soll
+	 * @return true bei erfolgreichen Aendern, sonst false
 	 */
 	public boolean updateMengeFromPosition(int bestellungsID, int positionsID, int menge, double preis);
 }
