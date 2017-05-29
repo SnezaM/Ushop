@@ -61,7 +61,7 @@ public class SuchproduktController {
 				request.getSession(true).setAttribute("zeigePreis", pPreis);
 				request.getSession(true).setAttribute("zeigeBeschr", pBesch);
 				
-				response.sendRedirect(request.getContextPath() + "/Suche.jsp");
+				response.sendRedirect(request.getContextPath() + "/GesuchteProdukte.jsp");
 				response.setContentType("text/html");
 				return;
 			}
