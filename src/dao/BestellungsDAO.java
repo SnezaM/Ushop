@@ -24,9 +24,9 @@ public interface BestellungsDAO {
 	 * <b>Speichert die uebergebene Bestellung in der DB.</b>
 	 * <p>
 	 * Die Bestellung wird nur anhand der fuer einen Warenkorb noetigen Fakten
-	 * in der DB gespeichert. Die Instanzen abgeschlossen, vermerk, lieferart
-	 * und datum, werden nicht uebernommen sondern als null-Values eingetragen.
-	 * Diese koennen spaeter mittels
+	 * in der DB gespeichert. Abgeschlossen wird auf false gesetzt. Die
+	 * Instanzen vermerk, lieferart und datum, werden nicht uebernommen sondern
+	 * als null-Values eingetragen. Diese koennen spaeter mittels
 	 * {@link #updateBestellung(Bestellung, String)} in eine abgeschlossene
 	 * Bestellung umgewandelt werden.
 	 * </p>
@@ -114,7 +114,8 @@ public interface BestellungsDAO {
 	 * <p>
 	 * Mithilfe der uebergebenen KundenID wird die Bestellung in der Datenbank
 	 * gesucht, deren Bestellungsstatus nicht abgeschlossen ist. Wo also
-	 * abgeschlossen false ist.
+	 * abgeschlossen false ist. Wir kein Warenkorb gefunden wird null
+	 * retourniert.
 	 * </p>
 	 * 
 	 * @param kundenID
@@ -194,4 +195,14 @@ public interface BestellungsDAO {
 	 * @return true bei erfolgreichen Aendern, sonst false
 	 */
 	public boolean updatePosition(int bestellungsID, int positionsID, int menge, double preis);
+
+	/**
+	 * <b>Aktualisiert den Gesamtpreis einer Bestellung mit der uerbergebenen
+	 * BestellungsID anhand des uebergebenen Wertes.</b>
+	 * 
+	 * @param bestellungsID
+	 * @param wert
+	 * @return
+	 */
+	public boolean updatePriceBestellung(int bestellungsID, double wert);
 }

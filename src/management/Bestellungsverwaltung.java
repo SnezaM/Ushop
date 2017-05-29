@@ -23,10 +23,6 @@ public class Bestellungsverwaltung {
 	private static Bestellungsverwaltung BestellungsverwaltungInstance = null;
 	private BestellungsDAO dao;
 
-	private Bestellungsverwaltung() {
-		dao = new DBBestellungsDAO();
-	}
-
 	/**
 	 * Ruft den Konstruktor zur Bestellungsverwaltung auf.
 	 * 
@@ -37,6 +33,94 @@ public class Bestellungsverwaltung {
 		if (BestellungsverwaltungInstance == null)
 			BestellungsverwaltungInstance = new Bestellungsverwaltung();
 		return BestellungsverwaltungInstance;
+	}
+
+	private Bestellungsverwaltung() {
+		dao = new DBBestellungsDAO();
+	}
+
+	/**
+	 * Fuegt die uebergebene Bestellung/Warenkorb in die Datenbank hinzu. Dabei
+	 * werden die noetigen Instanzen gesetzt um den Warenkorb als Bestellung zu
+	 * sehen. Sollte das hinzufuegen scheitern wird false retourniert sonst
+	 * true.
+	 * 
+	 * @param bestellung
+	 *            Bestellung, die hinzugefuegt werden soll
+	 * @param date
+	 *            Datum, das als Bestellungsdatum eingetragen wird (Format:
+	 *            "YYYY-MM-DD")
+	 * @return true falls die Position erfolgreich hinzugefuegt wurde, sonst
+	 *         false.
+	 */
+	public boolean addBestellung(Bestellung bestellung, String date) {
+		return dao.updateBestellung(bestellung, date);
+	}
+
+	/**
+	 * Fuegt die uebergebene Position der Bestellung mit der ensprechenden ID
+	 * hinzu. Sollte keine Bestellung mit der ID vorhanden sein oder das
+	 * hinzufuegen scheitern wird false retourniert sonst true. Auch der
+	 * Gesamtpreis der entsprechenden Bestellung wird angepasst.
+	 * 
+	 * @param bestellungsID
+	 *            ID der Bestellung, der die Position hinzugefuegt werden soll.
+	 * @param position
+	 *            Position, die hinzugefuegt werden soll.
+	 * @return true falls die Position erfolgreich hinzugefuegt wurde, sonst
+	 *         false.
+	 */
+	public boolean addPositionToBestellung(int bestellungsID, Position position) {
+		Bestellung bestellung = dao.getBestellungByID(bestellungsID);
+		if (bestellung == null) {
+			return false;
+		}
+		if (dao.createPosition(bestellungsID, position)) {
+			Double neuerPreis = bestellung.getGesamtpreis() + position.getGesamtpreis();
+			if (dao.updatePriceBestellung(bestellungsID, neuerPreis)) {
+				return true;
+			}
+			dao.deletePosition(bestellungsID, position.getPostionID());
+		}
+		return false;
+	}
+
+	/**
+	 * Fuegt den uebergebene Warenkorb mit der entsprechenden KundenID in die
+	 * Datenbank hinzu. Sollte das hinzufuegen scheitern wird false retourniert
+	 * sonst true.
+	 * 
+	 * @param bestellung
+	 *            Warenkorb der hinzugefuegt werden soll.
+	 * @param kundenID
+	 *            ID des Kunden, dessen Warenkorb hinzugefuegt werden soll.
+	 * @return true falls der Warenkorb erfolgreich hinzugefuegt wurde, sonst
+	 *         false.
+	 */
+	public boolean addWarenkorb(Bestellung bestellung, int kundenID) {
+		return dao.createBestellung(bestellung, kundenID);
+	}
+
+	/**
+	 * Aendert die Menge einer Position auf den uebergebenen Wert fuer Menge und
+	 * passt auch automatisch den Preis an. Sollte die Position nicht vorhanden
+	 * sein wird null retourniert.
+	 * 
+	 * @param bestellungsID
+	 *            ID der Bestellung in der die Position enthalten sein soll.
+	 * @param positionID
+	 *            ID der Position, die geaendert werden soll.
+	 * @param menge
+	 *            Menge, auf die geaendert werden soll.
+	 * @return true falls die Aenderung erfolgreich durchgefuehrt wurde, sonst
+	 *         false.
+	 */
+	public boolean aenderePosition(int bestellungsID, int positionID, int menge) {
+		Position position = dao.getPositionByID(bestellungsID, positionID);
+		if (position == null)
+			return false;
+		double preis = position.getGesamtpreis() / position.getMenge() * menge;
+		return dao.updatePosition(bestellungsID, positionID, menge, preis);
 	}
 
 	/**
@@ -93,29 +177,24 @@ public class Bestellungsverwaltung {
 
 	/**
 	 * Retourniert den Warenkorb des Kunden, dessen ID mit der uebergebenen ID
-	 * uebereinstimmt.
+	 * uebereinstimmt. Sollte kein Warenkorb vorhanden sein, wird ein neuer
+	 * angelegt.
 	 * 
 	 * @param kundenID
 	 *            ID des Kunden, dessen Warenkorb gesucht werden soll.
 	 * @return Warenkorb des Kunden.
+	 * @throws Exception 
 	 */
-	public Bestellung getWarenkorb(int kundenID) {
-		return dao.getWarenkorb(kundenID);
-	}
-
-	/**
-	 * Entfernt die Positionen mit der entsprechenden ID aus der Bestellung mit
-	 * der entsprechenden ID. Sollte keine Bestellung oder Position mit der ID
-	 * vorhanden sein wird false retourniert.
-	 * 
-	 * @param bestellungsID
-	 *            ID der Bestellung in der die Position enthalten sein soll.
-	 * @param positionID
-	 *            ID der Position, die geloescht werden soll.
-	 * @return true falls die Position erfolgreich entfernt wurde, sonst false.
-	 */
-	public boolean removePositionFromBestellung(int bestellungsID, int positionID) {
-		return dao.deletePosition(bestellungsID, positionID);
+	public Bestellung getWarenkorb(int kundenID) throws Exception {
+		Bestellung warenkorb = dao.getWarenkorb(kundenID);
+		if (warenkorb == null) {
+			Bestellung neuerWarenkorb = new Bestellung();
+			if(!dao.createBestellung(neuerWarenkorb, kundenID)){
+				throw new Exception("Unerwarteter Fehler! Warenkorb kann nicht generiert werden.");
+			}
+			return neuerWarenkorb;
+		}
+		return warenkorb;
 	}
 
 	/**
@@ -138,74 +217,17 @@ public class Bestellungsverwaltung {
 	}
 
 	/**
-	 * Aendert die Menge einer Position auf den uebergebenen Wert fuer Menge und
-	 * passt auch automatisch den Preis an. Sollte die Position nicht vorhanden
-	 * sein wird null retourniert.
+	 * Entfernt die Positionen mit der entsprechenden ID aus der Bestellung mit
+	 * der entsprechenden ID. Sollte keine Bestellung oder Position mit der ID
+	 * vorhanden sein wird false retourniert.
 	 * 
 	 * @param bestellungsID
 	 *            ID der Bestellung in der die Position enthalten sein soll.
 	 * @param positionID
-	 *            ID der Position, die geaendert werden soll.
-	 * @param menge
-	 *            Menge, auf die geaendert werden soll.
-	 * @return true falls die Aenderung erfolgreich durchgefuehrt wurde, sonst
-	 *         false.
+	 *            ID der Position, die geloescht werden soll.
+	 * @return true falls die Position erfolgreich entfernt wurde, sonst false.
 	 */
-	public boolean aenderePosition(int bestellungsID, int positionID, int menge) {
-		Position position = dao.getPositionByID(bestellungsID, positionID);
-		if (position == null)
-			return false;
-		double preis = position.getGesamtpreis() / position.getMenge() * menge;
-		return dao.updatePosition(bestellungsID, positionID, menge, preis);
-	}
-
-	/**
-	 * Fuegt die uebergebene Position der Bestellung mit der ensprechenden ID
-	 * hinzu. Sollte keine Bestellung mit der ID vorhanden sein oder das
-	 * hinzufuegen scheitern wird false retourniert sonst true.
-	 * 
-	 * @param bestellungsID
-	 *            ID der Bestellung, der die Position hinzugefuegt werden soll.
-	 * @param position
-	 *            Position, die hinzugefuegt werden soll.
-	 * @return true falls die Position erfolgreich hinzugefuegt wurde, sonst
-	 *         false.
-	 */
-	public boolean addPositionToBestellung(int bestellungsID, Position position) {
-		return dao.createPosition(bestellungsID, position);
-	}
-
-	/**
-	 * Fuegt den uebergebene Warenkorb mit der entsprechenden KundenID in die
-	 * Datenbank hinzu. Sollte das hinzufuegen scheitern wird false retourniert
-	 * sonst true.
-	 * 
-	 * @param bestellung
-	 *            Warenkorb der hinzugefuegt werden soll.
-	 * @param kundenID
-	 *            ID des Kunden, dessen Warenkorb hinzugefuegt werden soll.
-	 * @return true falls der Warenkorb erfolgreich hinzugefuegt wurde, sonst
-	 *         false.
-	 */
-	public boolean addWarenkorb(Bestellung bestellung, int kundenID) {
-		return dao.createBestellung(bestellung, kundenID);
-	}
-
-	/**
-	 * Fuegt die uebergebene Bestellung/Warenkorb in die Datenbank hinzu. Dabei
-	 * werden die noetigen Instanzen gesetzt um den Warenkorb als Bestellung zu
-	 * sehen. Sollte das hinzufuegen scheitern wird false retourniert sonst
-	 * true.
-	 * 
-	 * @param bestellung
-	 *            Bestellung, die hinzugefuegt werden soll
-	 * @param date
-	 *            Datum, das als Bestellungsdatum eingetragen wird (Format:
-	 *            "YYYY-MM-DD")
-	 * @return true falls die Position erfolgreich hinzugefuegt wurde, sonst
-	 *         false.
-	 */
-	public boolean addBestellung(Bestellung bestellung, String date) {
-		return dao.updateBestellung(bestellung, date);
+	public boolean removePositionFromBestellung(int bestellungsID, int positionID) {
+		return dao.deletePosition(bestellungsID, positionID);
 	}
 }

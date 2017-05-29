@@ -39,7 +39,6 @@ public class Bestellung {
 	 */
 	public Bestellung(int bestellungsID, double gesamtpreis, boolean abgeschlossen, String datum, String vermerk,
 			Lieferart lieferart) {
-		super();
 		this.bestellungsID = bestellungsID;
 		this.gesamtpreis = gesamtpreis;
 		this.abgeschlossen = abgeschlossen;
@@ -51,17 +50,10 @@ public class Bestellung {
 	/**
 	 * Konstruktor. (Instanz fuer noch nicht abgeschlossene Bestellungen bzw.
 	 * Warenkorb)
-	 * 
-	 * @param gesamtpreis
-	 *            Gesamtpreis der Bestellung.
-	 * @param kundenID
-	 *            KundenID des Kunden der die Bestellung taetigt.
-	 * @param anzahl
-	 *            Anzahl der Positionen der Bestellung.
 	 */
-	public Bestellung(double gesamtpreis, int kundenID, int anzahl) {
+	public Bestellung() {
 		this.bestellungsID = counter;
-		this.gesamtpreis = gesamtpreis;
+		this.gesamtpreis = 0;
 		this.abgeschlossen = false;
 		this.datum = null;
 		this.vermerk = null;

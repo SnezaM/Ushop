@@ -34,11 +34,11 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	public static final String ladePositionenVonBestellung = "SELECT * FROM Position WHERE bestellungid = ?";
 	public static final String ladePositionID = "SELECT * FROM Position WHERE bestellungid = ? AND positionid=?";
 
-	public static final String speichereWarenkorb = "INSERT INTO Bestellung (bestellungid,gesamtpreis,"
-			+ "abgeschlossen,kundenid) VALUES(?,?,false,?)";
+	public static final String speichereWarenkorb = "INSERT INTO Bestellung (bestellungid, abgeschlossen, kundenid) VALUES(?,false,?)";
 	public static final String speicherePosition = "INSERT INTO Position (positionid, menge, preisposition, "
 			+ "bestellungid, produktid) VALUES (?, ?, ?, ?, ?)";
-	
+
+	public static final String updatePriceBestellung = "UPDATE Bestellung SET gesamtpreis=? WHERE bestellungid = ?";
 	public static final String updateBestellung = "UPDATE Bestellung SET abgeschlossen=true, lieferart=?, datum=? "
 			+ "WHERE bestellungid=?";
 	public static final String updateBestellungMitVermerk = "UPDATE Bestellung SET abgeschlossen=true, vermerk=?, "
@@ -85,8 +85,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			}
 			PreparedStatement preparedStatement = c.prepareStatement(speichereWarenkorb);
 			preparedStatement.setInt(1, b.getBestellungID());
-			preparedStatement.setDouble(2, b.getGesamtpreis());
-			preparedStatement.setInt(3, kundenID);
+			preparedStatement.setInt(2, kundenID);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
@@ -214,12 +213,13 @@ public class DBBestellungsDAO implements BestellungsDAO {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see dao.BestellungsDAO#getWarenkorb(int)
 	 */
-	public Bestellung getWarenkorb(int kundenID){
+	public Bestellung getWarenkorb(int kundenID) {
 		try {
 			PreparedStatement preparedStatement = c.prepareStatement(ladeWarenkorb);
 			preparedStatement.setInt(1, kundenID);
@@ -350,6 +350,24 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.setDouble(2, preis);
 			preparedStatement.setInt(3, positionID);
 			preparedStatement.setInt(4, bestellungsID);
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see dao.BestellungsDAO#updatePriceBestellung(int, double)
+	 */
+	public boolean updatePriceBestellung(int bestellungsID, double wert){
+		try {
+			PreparedStatement preparedStatement = c.prepareStatement(updatePriceBestellung);
+			preparedStatement.setDouble(1, wert);
+			preparedStatement.setInt(2, bestellungsID);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
