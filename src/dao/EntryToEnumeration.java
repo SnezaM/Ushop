@@ -32,7 +32,7 @@ public class EntryToEnumeration {
 		}
 
 		switch (lieferartDB) {
-		case "STANDARDVERSAND":
+		case "Standardversand":
 			lieferart = Lieferart.Standardversand;
 			break;
 		case "DHL":
@@ -44,7 +44,7 @@ public class EntryToEnumeration {
 		case "GLS":
 			lieferart = Lieferart.GLS;
 			break;
-		case "POST":
+		case "Post":
 			lieferart = Lieferart.Post;
 			break;
 		default:

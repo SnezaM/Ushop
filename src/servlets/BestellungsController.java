@@ -3,7 +3,10 @@
  */
 package servlets;
 
+import java.io.IOException;
+
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Katrin Rohrmueller (1309572)
  *
  */
+@WebServlet("/BestellungsController")
 public class BestellungsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -31,17 +35,29 @@ public class BestellungsController extends HttpServlet {
 	}
 
 	/**
+	 * @throws IOException
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getSession().invalidate();
+		request.getRequestDispatcher("Login.jsp").include(request, response);
+		response.setContentType("text/html");
 	}
 	
 	/**
+	 * @throws IOException 
 	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-		doGet(request, response);
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getParameter("bestellungenAnzeigenKunde")!=null){			
+			response.sendRedirect(request.getContextPath() + "/MeineBestellungen.jsp");
+			response.setContentType("text/html");	
+			return;
+		}
+		else{
+			response.sendRedirect(request.getContextPath() + "/HauptseiteKunde.jsp");
+			response.setContentType("text/html");
+			return;
+		}
 	}
-
 }

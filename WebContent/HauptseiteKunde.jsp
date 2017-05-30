@@ -51,7 +51,7 @@
 		
 		<div id="box1">
 			<form action="LoginController" method="post">
-			<input class="btn btn-primary" name="logout" type="submit" value="logout"/>
+			<input class="btn btn-primary" name="logout" type="submit" value="Logout"/>
 			</form>
 		</div>
 		
@@ -59,5 +59,12 @@
 	<form action="Produktkundencontroller" method="post">
 		<input class="btn btn-primary" name="produkteAnzeigenkunde" type="submit" value="Produkte anzeigen"/><br/>
 	</form>
-			
+	<br>
+	<form action="Warenkorbcontroller" method="post">
+		<input class="btn btn-primary" name="warenkorbAnzeigenKunde" type="submit" value="Warenkorb anzeigen"/><br/>
+	</form>
+	<br>
+	<form action="BestellungsController" method="post">
+		<input class="btn btn-primary" name="bestellungenAnzeigenKunde" type="submit" value="Meine Bestellungen anzeigen"/><br/>
+	</form>		
 </html>
