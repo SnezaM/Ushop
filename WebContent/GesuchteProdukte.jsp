@@ -7,7 +7,7 @@
  <%
 	if(session.getAttribute("produktname")==null || session.getAttribute("produktname").equals("null")  ){
 		System.out.println("Hauptseite: kein Produkt eingegeben");
-		response.sendRedirect("HauptseiteKunde.jsp");
+		response.sendRedirect("Login.jsp");
 	}
 %>
 <!-- Arreze Fetahaj a1146976-->
@@ -49,7 +49,7 @@
 <div class="jumbotron">
 
 	<h1>Alle Produkte:</h1>
-	<form action="Produktverwaltungscontroller" method="Post">
+	<form action="Suchproduktcontroller" method="Post">
 	<table class="table">
 	
 		<tr><th>Name</th>

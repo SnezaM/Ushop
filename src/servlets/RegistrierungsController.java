@@ -43,7 +43,7 @@ import modell.Kunde;
 		}
 
 		/**
-		 * Hier wird geprüft ob die eingegebenen Daten korrekt sind, falls ja, war die Registrieren erfolgreich und es wird zur Hauptseite verwiesen,
+		 * Hier wird geprï¿½ft ob die eingegebenen Daten korrekt sind, falls ja, war die Registrieren erfolgreich und es wird zur Hauptseite verwiesen,
 		 * falls nein, dann wird die jeweilige Fehlermeldung ausgegeben.
 		 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 		 */
@@ -52,7 +52,7 @@ import modell.Kunde;
 			
 			
 			
-			if(request.getParameter("username")==null){//registrierbutton gedrückt
+			if(request.getParameter("username")==null){//registrierbutton gedrï¿½ckt
 				System.out.println("RegistrierController: keinUsername:Weiterleiten zum Registrieren!");
 				request.getRequestDispatcher("KundeRegistrieren.jsp").include(request, response);
 				response.setContentType("text/html");
@@ -86,7 +86,7 @@ import modell.Kunde;
 				}
 				
 				if(username.length()<2  || password.length()<2 ){
-					request.getSession(true).setAttribute("fehler", "Username od. Passwort zu kurz(mindestens 5 Zeichen benötigt)!");
+					request.getSession(true).setAttribute("fehler", "Username od. Passwort zu kurz(mindestens 5 Zeichen benï¿½tigt)!");
 					System.out.println("RegistrierungsController: Pwd od. Username  <  2 Zeichen!");
 					request.getRequestDispatcher("KundeRegistrieren.jsp").include(request, response);
 					response.setContentType("text/html");
@@ -102,7 +102,7 @@ import modell.Kunde;
 					return;
 				}
 				
-				//Username enthält Abstände
+				//Username enthï¿½lt Abstï¿½nde
 				if(username.length()!=username.replaceAll(" ","").length()){
 					request.getSession(true).setAttribute("fehler", "Fehler: Username darf keine Leerzeichen enthalten!");
 					System.out.println("RegistrierungsController: Leerzeichen im Username!");
@@ -111,7 +111,7 @@ import modell.Kunde;
 				}
 				
 				
-				//Nachdem Benutzer angelegt wurde, wird er automatisch(nicht über Login) zur Hauptseite.jsp weitergeleitet.
+				//Nachdem Benutzer angelegt wurde, wird er automatisch(nicht ï¿½ber Login) zur Hauptseite.jsp weitergeleitet.
 				if(b.kundeAnlegen(email, vorname, nachname, username, passwordW, strasse, plz, hausNr)){
 					Kunde k = b.getKundeByUName(username);
 					HttpSession session = request.getSession(true);
@@ -133,6 +133,8 @@ import modell.Kunde;
 					System.out.println("RegistrierungsController: Person konnte nicht angelegt werden: "+vorname+" "+nachname+" "+email+" "+strasse+" "+username+" "+password);
 					request.getSession(true).setAttribute("fehler", "Fehler: Der Username ist leider schon vergeben!");
 					response.sendRedirect("KundeRegistrieren.jsp");
+					
+					request.getSession(true).setAttribute("fehler", "Kein Produkt mit diesen Namen gefunden");
 				}
 			}
 			

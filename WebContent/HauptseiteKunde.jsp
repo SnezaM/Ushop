@@ -6,6 +6,7 @@
 		response.sendRedirect("Login.jsp");
 	}
 %>
+
 <!-- Snezana Milutinovic a1349326-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -51,9 +52,9 @@
 		<form action="SuchproduktController" method="post">
 		<div class="form-group">
 		<label for="produktname">Produkt: </label>
-		<input type="text" class="form-control" id="produktname" name="produktname"  data-validation="length" data-validation-length="min1" data-validation-error-msg="Bitte geben Sie einen gültigen Produkt ein!" required>
+		<input class="form-control" type="text" id="produktname" name="produktname"  data-validation="length" data-validation-length="min1" data-validation-error-msg="Bitte geben Sie einen gültigen Produkt ein!" required>
 		</div>
-		<button type="submit" class="btn btn-default">Suchen</button>
+		<button class="btn btn-primary" type="submit" value="Gesuchte Produkte" >Suchen</button>
 		 </form>
 		
 		

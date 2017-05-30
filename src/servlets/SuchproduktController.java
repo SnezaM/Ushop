@@ -72,7 +72,7 @@ public class SuchproduktController {
 		}
 		
 		System.out.println(" Weiterleiten zu den Produkten!");
-		request.getRequestDispatcher("Login.jsp").include(request, response);
+		request.getRequestDispatcher("HauptseiteKunde.jsp").include(request, response);
 		response.setContentType("text/html");
 		
 	}
