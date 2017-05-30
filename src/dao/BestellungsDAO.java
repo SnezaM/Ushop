@@ -25,20 +25,18 @@ public interface BestellungsDAO {
 	 * <p>
 	 * Die Bestellung wird nur anhand der fuer einen Warenkorb noetigen Fakten
 	 * in der DB gespeichert. Abgeschlossen wird auf false gesetzt. Die
-	 * Instanzen vermerk, lieferart und datum, werden nicht uebernommen sondern
+	 * Instanzen vermerk, lieferart und datum, werden nicht gesetzt sondern
 	 * als null-Values eingetragen. Diese koennen spaeter mittels
-	 * {@link #updateBestellung(Bestellung, String)} in eine abgeschlossene
+	 * {@link #updateWarenkorbToBestellung(Bestellung, String)} in eine abgeschlossene
 	 * Bestellung umgewandelt werden.
 	 * </p>
 	 * 
-	 * @param bestellung
-	 *            Bestellung, die gespeichert werden soll.
 	 * @param kundenID
 	 *            ID des Kunden, dessen Warenkorb gespeichert wird.
 	 * @return true, falls die Bestellung gesepeichert werden konnte, sonst
 	 *         false.
 	 */
-	public boolean createBestellung(Bestellung bestellung, int kundenID);
+	public boolean createWarenkorb(int kundenID);
 
 	/**
 	 * <b>Fuegt der Bestellung mit der uebergebenen ID, die uebergebene Position
@@ -172,7 +170,7 @@ public interface BestellungsDAO {
 	 *            "YYYY-MM-DD")
 	 * @return true bei erfolgreichen Aktualisieren, sonst false
 	 */
-	public boolean updateBestellung(Bestellung bestellung, String date);
+	public boolean updateWarenkorbToBestellung(Bestellung bestellung, String date);
 
 	/**
 	 * <b>Aktualisiert die Menge und den Gesamtpreis der Position mit der

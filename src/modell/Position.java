@@ -19,6 +19,13 @@ public class Position {
 	private double gesamtpreis;
 	
 	/**
+	 * Konstruktor. Default.
+	 */
+	public Position(){
+		
+	}
+	
+	/**
 	 * Konstruktor.
 	 * @param positionID ID der Position.
 	 * @param produktID ProduktID des Produkts der Positon.
@@ -26,7 +33,6 @@ public class Position {
 	 * @param gesamtpreis Gesamtwert der Position.
 	 */
 	public Position(int positionID, int produktID, int menge, double gesamtpreis) {
-		super();
 		this.positionID = positionID;
 		this.produktID = produktID;
 		this.menge = menge;

@@ -34,9 +34,9 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	public static final String ladePositionenVonBestellung = "SELECT * FROM Position WHERE bestellungid = ?";
 	public static final String ladePositionID = "SELECT * FROM Position WHERE bestellungid = ? AND positionid=?";
 
-	public static final String speichereWarenkorb = "INSERT INTO Bestellung (bestellungid, abgeschlossen, kundenid) VALUES(?,false,?)";
-	public static final String speicherePosition = "INSERT INTO Position (positionid, menge, preisposition, "
-			+ "bestellungid, produktid) VALUES (?, ?, ?, ?, ?)";
+	public static final String speichereWarenkorb = "INSERT INTO Bestellung (abgeschlossen, kundenid) VALUES(false,?)";
+	public static final String speicherePosition = "INSERT INTO Position (menge, preisposition, "
+			+ "bestellungid, produktid) VALUES (?, ?, ?, ?)";
 
 	public static final String updatePriceBestellung = "UPDATE Bestellung SET gesamtpreis=? WHERE bestellungid = ?";
 	public static final String updateBestellung = "UPDATE Bestellung SET abgeschlossen=true, lieferart=?, datum=? "
@@ -67,7 +67,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			c.setAutoCommit(true);
 			entryToEnumeration = new EntryToEnumeration();
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e);
 			System.out.println("Verbindungsaufbau zur Datenbank nicht moeglich: (" + e.getMessage() + ")");
 		}
 
@@ -78,19 +78,15 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	 * 
 	 * @see dao.BestellungsDAO#speichereWarenkorb(modell.Bestellung)
 	 */
-	public boolean createBestellung(Bestellung b, int kundenID) {
+	public boolean createWarenkorb(int kundenID) {
 		try {
-			if (b == null) {
-				return false;
-			}
 			PreparedStatement preparedStatement = c.prepareStatement(speichereWarenkorb);
-			preparedStatement.setInt(1, b.getBestellungID());
-			preparedStatement.setInt(2, kundenID);
+			preparedStatement.setInt(1, kundenID);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return false;
 	}
@@ -107,16 +103,15 @@ public class DBBestellungsDAO implements BestellungsDAO {
 				return false;
 			}
 			PreparedStatement preparedStatement = c.prepareStatement(speicherePosition);
-			preparedStatement.setInt(1, position.getPostionID());
-			preparedStatement.setInt(2, position.getMenge());
-			preparedStatement.setDouble(3, position.getGesamtpreis());
-			preparedStatement.setInt(4, bestellungsID);
-			preparedStatement.setInt(5, position.getArtikel());
+			preparedStatement.setInt(1, position.getMenge());
+			preparedStatement.setDouble(2, position.getGesamtpreis());
+			preparedStatement.setInt(3, bestellungsID);
+			preparedStatement.setInt(4, position.getArtikel());
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return false;
 	}
@@ -134,7 +129,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.close();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return false;
 	}
@@ -153,7 +148,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.close();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return false;
 	}
@@ -182,7 +177,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.close();
 			return bestellung;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return null;
 	}
@@ -209,7 +204,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.close();
 			return position;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return null;
 	}
@@ -228,17 +223,13 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			while (resultSet != null && resultSet.next()) {
 				int id = resultSet.getInt(1);
 				double preis = resultSet.getDouble(2);
-				boolean abgeschlossen = resultSet.getBoolean(3);
-				String vermerk = resultSet.getString(4);
-				String lieferartDB = resultSet.getString(5);
-				String datum = resultSet.getString(6);
-				Lieferart lieferart = this.entryToEnumeration.entryToLieferart(lieferartDB);
-				bestellung = new Bestellung(id, preis, abgeschlossen, datum, vermerk, lieferart);
+				boolean abgeschlossen = false;
+				bestellung = new Bestellung(id, preis, abgeschlossen, null, null, Lieferart.Standardversand);
 			}
 			preparedStatement.close();
 			return bestellung;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return null;
 	}
@@ -271,7 +262,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.close();
 			return alleBestellungenKunde;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return null;
 	}
@@ -301,7 +292,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.close();
 			return allePositionenBestellung;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return null;
 	}
@@ -311,7 +302,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	 * 
 	 * @see dao.BestellungsDAO#speichereBestellung(modell.Bestellung)
 	 */
-	public boolean updateBestellung(Bestellung bestellung, String date) {
+	public boolean updateWarenkorbToBestellung(Bestellung bestellung, String date) {
 		try {
 			if (bestellung == null) {
 				return false;
@@ -333,7 +324,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.close();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return false;
 	}
@@ -354,7 +345,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.close();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return false;
 	}
@@ -372,7 +363,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			preparedStatement.close();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		return false;
 	}

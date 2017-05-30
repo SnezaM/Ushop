@@ -54,7 +54,7 @@ public class Bestellungsverwaltung {
 	 *         false.
 	 */
 	public boolean addBestellung(Bestellung bestellung, String date) {
-		return dao.updateBestellung(bestellung, date);
+		return dao.updateWarenkorbToBestellung(bestellung, date);
 	}
 
 	/**
@@ -86,19 +86,17 @@ public class Bestellungsverwaltung {
 	}
 
 	/**
-	 * Fuegt den uebergebene Warenkorb mit der entsprechenden KundenID in die
-	 * Datenbank hinzu. Sollte das hinzufuegen scheitern wird false retourniert
+	 * Legt einen Warenkorb beim entsprechenden Kunden mit der KundenID in der
+	 * Datenbank an. Sollte das hinzufuegen scheitern wird false retourniert
 	 * sonst true.
 	 * 
-	 * @param bestellung
-	 *            Warenkorb der hinzugefuegt werden soll.
 	 * @param kundenID
 	 *            ID des Kunden, dessen Warenkorb hinzugefuegt werden soll.
 	 * @return true falls der Warenkorb erfolgreich hinzugefuegt wurde, sonst
 	 *         false.
 	 */
-	public boolean addWarenkorb(Bestellung bestellung, int kundenID) {
-		return dao.createBestellung(bestellung, kundenID);
+	public boolean addWarenkorb(int kundenID) {
+		return dao.createWarenkorb(kundenID);
 	}
 
 	/**
@@ -183,18 +181,9 @@ public class Bestellungsverwaltung {
 	 * @param kundenID
 	 *            ID des Kunden, dessen Warenkorb gesucht werden soll.
 	 * @return Warenkorb des Kunden.
-	 * @throws Exception 
 	 */
-	public Bestellung getWarenkorb(int kundenID) throws Exception {
-		Bestellung warenkorb = dao.getWarenkorb(kundenID);
-		if (warenkorb == null) {
-			Bestellung neuerWarenkorb = new Bestellung();
-			if(!dao.createBestellung(neuerWarenkorb, kundenID)){
-				throw new Exception("Unerwarteter Fehler! Warenkorb kann nicht generiert werden.");
-			}
-			return neuerWarenkorb;
-		}
-		return warenkorb;
+	public Bestellung getWarenkorb(int kundenID) {
+		return dao.getWarenkorb(kundenID);
 	}
 
 	/**

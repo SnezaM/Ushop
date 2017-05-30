@@ -16,7 +16,8 @@ public class EntryToEnumeration {
 	/**
 	 * Strings werden in den entsprechenden Enum aus {@link Lieferart}
 	 * konvertiert. Moegliche Eingabestrings sind STANDARDVERSAND, DHL, DPD,
-	 * GLS, POST.
+	 * GLS, POST. Wird ein leerer String uebergeben wird STANDARDVERSAND
+	 * retourniert.
 	 * 
 	 * @param lieferartDB
 	 *            String der in Enum verwandelt werden soll.
@@ -26,6 +27,9 @@ public class EntryToEnumeration {
 	 */
 	public Lieferart entryToLieferart(String lieferartDB) {
 		Lieferart lieferart;
+		if (lieferartDB == null) {
+			return Lieferart.Standardversand;
+		}
 
 		switch (lieferartDB) {
 		case "STANDARDVERSAND":

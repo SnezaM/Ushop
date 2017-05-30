@@ -19,7 +19,12 @@ public class Bestellung {
 	private String datum;
 	private String vermerk;
 	private Lieferart lieferart;
-	private static int counter = 0;
+
+	/**
+	 * Konstruktor. Default.
+	 */
+	public Bestellung() {
+	}
 
 	/**
 	 * Konstruktor.
@@ -51,14 +56,12 @@ public class Bestellung {
 	 * Konstruktor. (Instanz fuer noch nicht abgeschlossene Bestellungen bzw.
 	 * Warenkorb)
 	 */
-	public Bestellung() {
-		this.bestellungsID = counter;
+	public Bestellung(boolean abgeschlossen) {
 		this.gesamtpreis = 0;
-		this.abgeschlossen = false;
+		this.abgeschlossen = abgeschlossen;
 		this.datum = null;
 		this.vermerk = null;
 		this.lieferart = null;
-		counter++;
 	}
 
 	/**
@@ -166,8 +169,7 @@ public class Bestellung {
 		this.lieferart = lieferart;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
