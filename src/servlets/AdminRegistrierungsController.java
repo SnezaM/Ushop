@@ -44,25 +44,24 @@ public class AdminRegistrierungsController extends HttpServlet {
 		}
 		
 		/**
-		 * Hier wird geprüft ob die eingegebenen Daten korrekt sind, falls ja, war die Registrierung erfolgreich und es wird ein Mitarbeiter angelegt,
+		 * Hier wird geprüft ob die eingegebenen Daten korrekt sind, falls ja, war die Registrierung erfolgreich und es wird ein Administrator angelegt,
 		 * falls nein, dann wird die jeweilige Fehlermeldung ausgegeben.
 		 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 		 */
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			Benutzerverwaltung b = Benutzerverwaltung.getInstance();
 			
-			//Hier wird geprüft, ob einfach nur auf das JSP zugegriffen wird und dies Authorisiert erfolgt
+			
 			if(request.getParameter("regBest")!=null){
-				System.out.println("AdminRegistrierungsController: Authorisiert zum Mitarbeiter Registrieren --> RegistrierenMitarbeiter.jsp");
 				request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
 				response.setContentType("text/html");
 				return;
 			}
 			
 			
-		//Ab hier wird alles bearbeitet, das vom MitarbeiterRegistrieren.jsp kommt
-			if(request.getParameter("username")==null){//registrierbutton gedrückt
-				System.out.println("MitarbeiterRegistrierController: keinUsername:Weiterleiten zum Registrieren!");
+		
+			if(request.getParameter("username")==null){
+				System.out.println("AdminRegistrierungsController: keinUsername:Weiterleiten zum Registrieren!");
 				request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
 				response.setContentType("text/html");
 				return;
@@ -86,8 +85,8 @@ public class AdminRegistrierungsController extends HttpServlet {
 					gehaltDouble = Double.parseDouble(gehaltString); 
 					gehalt = gehaltDouble.intValue();
 				}catch(Exception e){
-					request.getSession(true).setAttribute("fehler", "Keine Nummer(HausNr oder Plz oder staffNo oder salary) oder zu lang!");
-					System.out.println("MitarbeiterRegistrierungsController: Hausnummer oder PLZ oder salary oder staffNo ist keine Nummer!");
+					request.getSession(true).setAttribute("fehler", "Keine Nummer(HausNr oder Plz  oder gehalt) oder zu lang!");
+					System.out.println("AdminRegistrierungsController: Hausnummer oder PLZ ist keine Nummer!");
 					request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
 					response.setContentType("text/html");
 					return;
@@ -95,8 +94,8 @@ public class AdminRegistrierungsController extends HttpServlet {
 				
 				
 				if(Integer.MAX_VALUE==gehalt){
-					request.getSession(true).setAttribute("fehler", "Nummer(Plz oder HausNr oder staffNo oder salary) ist zu lang!");
-					System.out.println("MitarbeiterRegistrierungsController: Hausnummer oder PLZ oder salary oder staffNoist keine Nummer!");
+					request.getSession(true).setAttribute("fehler", "Nummer(Plz oder HausNr oder gehalt) ist zu lang!");
+					System.out.println("AdminRegistrierungsController: Hausnummer oder PLZ keine Nummer!");
 					request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
 					response.setContentType("text/html");
 					return;
@@ -104,38 +103,37 @@ public class AdminRegistrierungsController extends HttpServlet {
 				
 				if(username.length()<=2  || password.length()<=2 ){
 					request.getSession(true).setAttribute("fehler", "Fehler: Username od. Passwort zu kurz!");
-					System.out.println("MitarbeiterRegistrierungsController: Pwd od. Username  <  5 Zeichen!");
+					System.out.println("AdminRegistrierungsController: Pwd od. Username  <  2 Zeichen!");
 					request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
 					response.setContentType("text/html");
 					return;
 				}
 				
-				//Wiederholtes Passwort nicht korrekt
+				
 				if(!password.equals(passwordW) ){
 					request.getSession(true).setAttribute("fehler", "Fehler: Passwortwiederholung nicht korrekt!");
-					System.out.println("MitarbeiterRegistrierungsController: Passwortwiederholung nicht korrekt!!");
+					System.out.println("AdminRegistrierungsController: Passwortwiederholung nicht korrekt!!");
 					request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
 					response.setContentType("text/html");
 					return;
 				}
 				
-				//Username darf keine Abstände beinhalten
+			
 				if(username.length()!=username.replaceAll(" ","").length()){
 					request.getSession(true).setAttribute("fehler", "Fehler: Username darf keine Leerzeichen enthalten!");
-					System.out.println("MitarbeiterRegistrierungsController: Leerzeichen im Username!");
+					System.out.println("AdminRegistrierungsController: Leerzeichen im Username!");
 					response.sendRedirect("AdminRegistrieren.jsp");
 					return;
 				}
 				
 				
-				//Nachdem Benutzer angelegt wurde, wird er automatisch(nicht über Login) zur Hauptseite.jsp weitergeleitet.
+			
 				if(b.adminAnlegen(email, vorname, nachname, username, password, gehalt, geburtsdatum)){
 					
 					Administrator a = b.getAdminByUserName(username);
 				
 					HttpSession session = request.getSession(true);
-					session.setAttribute("message",username+" wurde nun als Mitarbeiter gespeichert");
-					System.out.println("MitarbeiterRegistrierungsController: Kunde angelegt: "+vorname+" "+nachname+" "+email+" "+username+" "+password);
+					session.setAttribute("message",username+" wurde nun als Administrator gespeichert");
 					session.setAttribute("fehler", null);
 					response.sendRedirect(request.getContextPath() + "/HauptseiteAdmin.jsp");
 					response.setContentType("text/html");
@@ -143,7 +141,7 @@ public class AdminRegistrierungsController extends HttpServlet {
 				}
 				//eingabe nicht erfolgreich:
 				else{
-					System.out.println("MitarbeiterRegistrierungsController: Person konnte nicht angelegt werden: "+vorname+" "+nachname+" "+email+" "+username+" "+password);
+					System.out.println("AdminRegistrierungsController: Person konnte nicht angelegt werden: "+vorname+" "+nachname+" "+email+" "+username+" "+password);
 					request.getSession(true).setAttribute("fehler", "Fehler: Prüfen Sie das Datum(Jahr-Monat-Tag) oder der Username ist schon vergeben!");
 					response.sendRedirect("AdminRegistrieren.jsp");
 				}

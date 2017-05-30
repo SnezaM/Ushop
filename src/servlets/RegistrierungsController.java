@@ -53,7 +53,7 @@ import modell.Kunde;
 			
 			
 			if(request.getParameter("username")==null){//registrierbutton gedrückt
-				System.out.println("RegistrierController: keinUsername:Weiterleiten zum Registrieren!");
+				System.out.println("RegistrierungsController: keinUsername:Weiterleiten zum Registrieren!");
 				request.getRequestDispatcher("KundeRegistrieren.jsp").include(request, response);
 				response.setContentType("text/html");
 				return;
@@ -86,7 +86,7 @@ import modell.Kunde;
 				}
 				
 				if(username.length()<2  || password.length()<2 ){
-					request.getSession(true).setAttribute("fehler", "Username od. Passwort zu kurz(mindestens 5 Zeichen benötigt)!");
+					request.getSession(true).setAttribute("fehler", "Username od. Passwort zu kurz(mindestens 2 Zeichen benötigt)!");
 					System.out.println("RegistrierungsController: Pwd od. Username  <  2 Zeichen!");
 					request.getRequestDispatcher("KundeRegistrieren.jsp").include(request, response);
 					response.setContentType("text/html");
@@ -111,7 +111,7 @@ import modell.Kunde;
 				}
 				
 				
-				//Nachdem Benutzer angelegt wurde, wird er automatisch(nicht über Login) zur Hauptseite.jsp weitergeleitet.
+				
 				if(b.kundeAnlegen(email, vorname, nachname, username, passwordW, strasse, plz, hausNr)){
 					Kunde k = b.getKundeByUName(username);
 					HttpSession session = request.getSession(true);
@@ -124,7 +124,7 @@ import modell.Kunde;
 				//	session.setAttribute("message", "Wilkommen "+username+" bei UShop 24/7!");
 					System.out.println("RegistrierungsController: Kunde angelegt: "+vorname+" "+nachname+" "+email+" "+strasse+" "+username+" "+password);
 				//	session.setAttribute("fehler", null);
-					response.sendRedirect(request.getContextPath() + "/HauptseiteKunde.jsp");//Damit Produktliste in session gleich aktualisiert wird
+					response.sendRedirect(request.getContextPath() + "/HauptseiteKunde.jsp");
 					response.setContentType("text/html");
 					return;
 				}

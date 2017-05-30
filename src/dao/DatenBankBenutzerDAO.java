@@ -30,22 +30,22 @@ import modell.Kunde;
 public class DatenBankBenutzerDAO implements BenutzerDAO {
 	
 	//Variablen die zum Vordefinieren der SQL Statements benoetigt werden
-	private PreparedStatement saveUserStmt;
-	private PreparedStatement saveKundeStmt;
+	private PreparedStatement speichereBenutzerStmt;
+	private PreparedStatement speichereKundeStmt;
 	private PreparedStatement saveAdminStmt;
 	
 	
-	private PreparedStatement loadUserStmtUname;
-	private PreparedStatement loadUserStmtID;
+	private PreparedStatement ladenBenutzerStmtUname;
+	private PreparedStatement ladenBenutzerStmtID;
 	
-	private PreparedStatement deleteKundeStmt;
-	private PreparedStatement deleteAdminStmt;
-	private PreparedStatement deleteUserStmt;
+	private PreparedStatement loescheKundeStmt;
+	private PreparedStatement loescheAdminStmt;
+	private PreparedStatement loescheBenutzerStmt;
 	
 	
-	private PreparedStatement loadAllUserStmt;
-	private PreparedStatement loadAllKundeStmt;
-	private PreparedStatement loadAllAdminStmt;
+	private PreparedStatement ladenAlleBenutzerStmt;
+	private PreparedStatement ladenAlleKundenStmt;
+	private PreparedStatement ladenAlleAdminStmt;
 	
 	
 	//Variable zum Verbindungsaufbau zur Datenbank
@@ -67,29 +67,29 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 	         stmt = connect.createStatement();
 	         
 			//einfuegen des Benutzers, Kundes, Admins in die DatenBank
-			saveUserStmt = connect
+			speichereBenutzerStmt = connect
 					.prepareStatement("INSERT INTO BENUTZER(EMAIL,VORNAME,NACHNAME,UNAME,PASSWORT)"
 									+ " VALUES(?,?,?,?,?)");
 			
-			saveKundeStmt = connect
+			speichereKundeStmt = connect
 					.prepareStatement("INSERT INTO KUNDE(STRASSE,PLZ,HAUSNUMMER,BENUTZERID) VALUES (?, ?, ?, ?)");
 		
-			saveAdminStmt= connect.
-					prepareStatement("INSERT INTO ADMINISTRATOR(GEHALT,geburtsdatum, benutzerid) VALUES (?,?,?)");
+			speichereAdminStmt= connect.
+					prepareStatement("INSERT INTO ADMINISTRATOR(gehalt,geburtsdatum, benutzerid) VALUES (?,?,?)");
 			
 			
-			loadUserStmtID = connect.prepareStatement("SELECT * FROM BENUTZER WHERE BENUTZERID=?");
-			loadUserStmtUname = connect.prepareStatement("SELECT * FROM BENUTZER WHERE UNAME=?");
+			ladenBenutzerStmtID = connect.prepareStatement("SELECT * FROM BENUTZER WHERE BENUTZERID=?");
+			ladenBenutzerStmtUname = connect.prepareStatement("SELECT * FROM BENUTZER WHERE UNAME=?");
 			
 			//statements um die vorhandene Benutzer aus der DatenBank zu loeschen
-			deleteUserStmt = connect.prepareStatement("DELETE FROM Benutzer WHERE BENUTZERID=?");
-			deleteKundeStmt = connect.prepareStatement("DELETE FROM Kunde WHERE BENUTZERID=?");
-			deleteAdminStmt = connect.prepareStatement("DELETE FROM Administrator WHERE BENUTZERID=?");
+			loescheBenutzerStmt = connect.prepareStatement("DELETE FROM Benutzer WHERE BENUTZERID=?");
+			loescheKundeStmt = connect.prepareStatement("DELETE FROM Kunde WHERE BENUTZERID=?");
+			loescheAdminStmt = connect.prepareStatement("DELETE FROM Administrator WHERE BENUTZERID=?");
 			
 			//Liste verwalten --> Daten aus der DatenBank holen
-			loadAllUserStmt = connect.prepareStatement("SELECT * FROM Benutzer");
-			loadAllKundeStmt = connect.prepareStatement("SELECT * FROM Kunde NATURAL JOIN Benutzer");
-			loadAllAdminStmt = connect.prepareStatement("SELECT * FROM Administrator NATURAL JOIN Benutzer");
+			ladenAlleBenutzerStmt = connect.prepareStatement("SELECT * FROM Benutzer");
+			ladenAlleKundenStmt = connect.prepareStatement("SELECT * FROM Kunde NATURAL JOIN Benutzer");
+			ladenAlleAdminStmt = connect.prepareStatement("SELECT * FROM Administrator NATURAL JOIN Benutzer");
 			
 			
 			
@@ -114,13 +114,13 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 	private boolean speichereBenutzer(Benutzer b) {
 		try {
 			
-			saveUserStmt.setString(1, b.getEmail());
-			saveUserStmt.setString(2, b.getVorname());
-			saveUserStmt.setString(3, b.getNachname());
-			saveUserStmt.setString(4, b.getUsername());
-			saveUserStmt.setString(5, b.getPasswort());
+			speichereBenutzerStmt.setString(1, b.getEmail());
+			speichereBenutzerStmt.setString(2, b.getVorname());
+			speichereBenutzerStmt.setString(3, b.getNachname());
+			speichereBenutzerStmt.setString(4, b.getUsername());
+			speichereBenutzerStmt.setString(5, b.getPasswort());
 		
-			saveUserStmt.executeUpdate();
+			speichereBenutzerStmt.executeUpdate();
 			return true;
 		}catch(NullPointerException e){
 			System.out.println("DatenBankBenutzer:methode:SpeichereBenutzer:NullPointerException!!! ("+e.getMessage()+")");
@@ -149,18 +149,18 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 			return false;
 		
 		try {
-			loadUserStmtUname.setString(1,k.getUsername());
-			ResultSet rs = loadUserStmtUname.executeQuery();
+			ladenBenutzerStmtUname.setString(1,k.getUsername());
+			ResultSet rs = ladenBenutzerStmtUname.executeQuery();
 			if (!rs.next()){
 				System.out.println("Kein Benutzer gefunden!");
 				return false;
 			}
 			int benutzerid = rs.getInt("benutzerid");
-			saveKundeStmt.setString(1, k.getStrasse());
-			saveKundeStmt.setInt(2, k.getPlz());
-			saveKundeStmt.setInt(3, k.getHausnummer());
-			saveKundeStmt.setInt(4, benutzerid);
-			saveKundeStmt.executeUpdate();
+			speichereKundeStmt.setString(1, k.getStrasse());
+			speichereKundeStmt.setInt(2, k.getPlz());
+			speichereKundeStmt.setInt(3, k.getHausnummer());
+			speichereKundeStmt.setInt(4, benutzerid);
+			speichereKundeStmt.executeUpdate();
 		
 			return true;
 			
@@ -190,18 +190,18 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 		
 		try{
 			
-			loadUserStmtUname.setString(1,a.getUsername());
-			ResultSet rs = loadUserStmtUname.executeQuery();
+			ladenBenutzerStmtUname.setString(1,a.getUsername());
+			ResultSet rs = ladenBenutzerStmtUname.executeQuery();
 			if (!rs.next()){
 				System.out.println("DatenBankBenutzerDAO:methode:SpeichereAdmin:Kein Benutzer gefunden!");
 				return false;
 			}
 			int benutzerid = rs.getInt("benutzerid");
-			saveAdminStmt.setDouble(1, a.getGehalt() );
-			saveAdminStmt.setDate(2, Date.valueOf(a.getGeburtsdatum()));
-			saveAdminStmt.setInt(3, benutzerid);
+			speichereAdminStmt.setDouble(1, a.getGehalt() );
+			speichereAdminStmt.setDate(2, Date.valueOf(a.getGeburtsdatum()));
+			speichereAdminStmt.setInt(3, benutzerid);
 			
-			saveAdminStmt.executeUpdate();
+			speichereAdminStmt.executeUpdate();
 		
 			return true;
 			
@@ -227,7 +227,7 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 	public List<Benutzer> getBenutzerListe() {
 		List<Benutzer> liste = new ArrayList<Benutzer>();
 		try {
-			ResultSet rs = loadAllUserStmt.executeQuery();
+			ResultSet rs = ladenAlleBenutzerStmt.executeQuery();
 		
 		
 			while(rs.next()){
@@ -276,7 +276,7 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 	public List<Kunde> getKundeListe() {
 		List<Kunde> liste = new ArrayList<Kunde>();
 		try {
-			ResultSet rs = loadAllKundeStmt.executeQuery();
+			ResultSet rs = ladenAlleKundenStmt.executeQuery();
 		
 		
 			while(rs.next()){
@@ -316,7 +316,7 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 	public List<Administrator> getAdministratorListe() {
 		List<Administrator> liste = new ArrayList<Administrator>();
 		try {
-			ResultSet rs = loadAllAdminStmt.executeQuery();
+			ResultSet rs = ladenAlleAdminStmt.executeQuery();
 		
 		
 			while(rs.next()){
@@ -354,8 +354,8 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 		
 		try{
 			
-			deleteUserStmt.setInt(1, userId);
-			deleteUserStmt.executeUpdate();
+			loescheBenutzerStmt.setInt(1, userId);
+			loescheBenutzerStmt.executeUpdate();
 			
 		}catch(SQLException e){
 			System.out.println("DatenBankBenutzerDAO: LoescheBenutzer: "+e.getMessage());
@@ -380,8 +380,8 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 			return false; 
 		
 		try{	
-			deleteKundeStmt.setInt(1, userId);
-			deleteKundeStmt.executeUpdate();
+			loescheKundeStmt.setInt(1, userId);
+			loescheKundeStmt.executeUpdate();
 			
 		}catch(SQLException e){
 			System.out.println("DatenBankBenutzerDAO:methode: loescheKunde" +e.getMessage());
@@ -409,8 +409,8 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 			return false; 
 		
 		try{
-			deleteAdminStmt.setInt(1, userId);
-			deleteAdminStmt.executeUpdate();
+			loescheAdminStmt.setInt(1, userId);
+			loescheAdminStmt.executeUpdate();
 			
 		}catch(SQLException e){
 			System.out.println("DatenBankBenutzerDAO:methode: loescheAdmin" +e.getMessage());
@@ -472,7 +472,7 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 		
 		List<Kunde> kundenliste = this.getKundeListe();
 		Kunde gesuchterkunde =null;
-		System.out.println("ICh bin nun in der Mehtode");
+		
 		
 		try{
 			for (Kunde k : kundenliste){
@@ -501,8 +501,8 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 		try{
 			String idToString = Integer.toString(benutzerID);
 			
-			loadUserStmtID.setString(1, idToString);
-			ResultSet rs = loadUserStmtID.executeQuery();
+			ladenBenutzerStmtID.setString(1, idToString);
+			ResultSet rs = ladenBenutzerStmtID.executeQuery();
 			if(!rs.next()){
 				System.out.println("Kein Benutzer mit der angegebenen ID gefunden!");
 				return null;
