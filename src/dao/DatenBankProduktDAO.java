@@ -15,8 +15,6 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import modell.Kunde;
 import modell.Produkt;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -62,7 +60,7 @@ public class DatenBankProduktDAO implements ProduktDAO{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Verbindungsaufbau zur Datenbank nicht m�glich auf Grund des Fehlers: ("+e.getMessage()+")");
+			System.out.println("Verbindungsaufbau zur Datenbank nicht möglich auf Grund des Fehlers: ("+e.getMessage()+")");
 		}
 		
 	}
@@ -179,30 +177,29 @@ public class DatenBankProduktDAO implements ProduktDAO{
 				return null;
 			}	
 		}
+	/**
+	 * Diese Methode dient zum Laden eines bestimmten Produktes aus der Datenbank.
+	 * Der Parameter ist der Name des gesuchten Produkte
+	 * Return einen Produkt  
+	 */
+	@Override
+	public Produkt getProduktByName(String pname) {
 
-/**
- * 
- */
-@Override
-public Produkt getProduktByName(String pname) {
-	
-	List<Produkt> produktliste = this.getProduktList();
-	Produkt gesuchterprodukt =null;
-	
-	try{
-		for (Produkt p : produktliste){
-			if(p.getProduktname().equals(pname)){
-				gesuchterprodukt = p;
+		List<Produkt> produktliste = this.getProduktList();
+		Produkt gesuchterprodukt =null;
+
+		try{
+			for (Produkt p : produktliste){
+				if(p.getProduktname().equals(pname)){
+					gesuchterprodukt = p;
+				}
 			}
+		}catch (Exception e) {
+			System.out.println("DatenBankProduktDAO:methode:getProduktByName: Fehler!");
+			return null;
+
 		}
-	}catch (Exception e) {
-		System.out.println("DatenBankProduktDAO:methode:getProduktByName: Fehler!");
-		return null;
-	
+		return gesuchterprodukt;
+
 	}
-	return gesuchterprodukt;
-	
 }
-
-}
-
