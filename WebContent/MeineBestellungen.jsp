@@ -29,28 +29,30 @@
 </head>
 <body>
 	<div class="container theme-showcase" role="main">
-	<div class="jumbotron">
-	
+	<div class="jumbotron">	
 		<h1>Meine Bestellungen:</h1>
 		<form action="BestellungsController" method="Post">
 		<table class="table">
 			<tr><th>BestellungsID</th><th>Datum</th><th>Vermerk</th><th>Lieferart</th><th>Gesamtpreis in EUR</th><th>Details</th></tr> 
 			
-	<%
-	BestellungsDAO dao = new DBBestellungsDAO();
-	for(Bestellung b : dao.readBestellungenByKundenID((int) session.getAttribute("kundenid"))) { %>
+			<%
+			int kundenID = (int) session.getAttribute("kundenid");
+			BestellungsDAO dao = new DBBestellungsDAO();
+			for(Bestellung b : dao.readBestellungenByKundenID(kundenID)) { 
+			%>
+				<tr>
+					<td><%=b.getBestellungID()%></td>
+					<td><%=b.getDatum()%></td>
+					<td><%=b.getVermerk() %></td>
+					<td><%=b.getLieferart() %></td>
+					<td><%=b.getGesamtpreis() %></td>
+					<td><button name="BestellungsDetails" value="<%=b.getBestellungID()%>" type="submit">Mehr</button></td>
+				</tr>
+			<%
+			} 
+			%>
 	
-		<tr>
-			<td><%=b.getBestellungID() %></td>
-			<td><%=b.getDatum() %></td>
-			<td><%=b.getVermerk() %></td>
-			<td><%=b.getLieferart() %></td>
-			<td><%=b.getGesamtpreis() %></td>
-			<td><button name="BestellungsDetails" value="<%=b.getBestellungID() %>" type="submit">Mehr</button></td>
-		</tr>
-	<%} %>
-	
-	<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="Zurueck" /></a></td><td></td><td></td></tr>
+			<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="Zurueck" /></a></td><td></td><td></td></tr>
 		</table>
 		</form>
 	</div>
