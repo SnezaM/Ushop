@@ -4,9 +4,9 @@
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
- <%
-	if(session.getAttribute("produktname")==null || session.getAttribute("produktname").equals("null")  ){
-		System.out.println("Hauptseite: kein Produkt eingegeben");
+<%
+	if(session.getAttribute("username")==null || session.getAttribute("username").equals("null")  ){
+		System.out.println("Hauptseite: nicht eingeloggt -> Login");
 		response.sendRedirect("Login.jsp");
 	}
 %>
@@ -49,7 +49,7 @@
 <div class="jumbotron">
 
 	<h1>Alle Produkte:</h1>
-	<form action="Suchproduktcontroller" method="Post">
+	<form action="SuchproduktController" method="Post">
 	<table class="table">
 	
 		<tr><th>Name</th>
@@ -75,11 +75,10 @@ for(Produktgruppe j:pdao.getProduktgruppeList()){%>
 			<td><%=i.getProduktID()%></td>
 			<td><%=i.getProduktgruppeID() %></td>
 			
+			<td><button name="Warenkorb" value="<%=i.getProduktID()%>" 
+			type="submit">Warenkorb</button></td>
 		</tr>
-		<tr>
-		<td><input class="btn btn-primary" type="submit"
-		value="Warenkorb" /></td>
-					</tr>	
+		
 <%} %>
 <%} %>
 
