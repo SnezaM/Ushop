@@ -35,16 +35,15 @@ public class SuchproduktController extends HttpServlet {
 	
 		
 		Produktverwaltung p = Produktverwaltung.getInstance();
-		String pname = request.getParameter("produktname");
+		String pname = request.getParameter("produktName");
 		
 		request.getSession(true).setAttribute("fehler", "Kein Produkt gefunden");
-		
-		if(request.getParameter("produktName")!=null){			
-			request.getRequestDispatcher("GesuchteProdukte.jsp").include(request, response);
+		 if(request.getParameter("produktName")!=null){
+			 response.sendRedirect(request.getContextPath() +"/GesuchteProdukte.jsp");
+
 			response.setContentType("text/html");
 			return;
 		}
-		
 		Produkt k = p.getProduktByName(pname);
 		System.out.println(pname+ " ich habe das jetzt gemacht");
 		
@@ -86,7 +85,7 @@ public class SuchproduktController extends HttpServlet {
 		}
 		
 		System.out.println("SuchproduktController: Weiterleiten zur Produkten!");
-		request.getRequestDispatcher("SuchproduktController.jsp").include(request, response);
+		request.getRequestDispatcher("GesuchteProdukte.jsp").include(request, response);
 		response.setContentType("text/html");
 		
 		

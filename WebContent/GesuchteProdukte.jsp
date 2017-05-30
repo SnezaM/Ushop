@@ -3,7 +3,7 @@
 <%@page import="modell.*"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+    pageEncoding="UTF-8"%>
 <%
 	if(session.getAttribute("username")==null || session.getAttribute("username").equals("null")  ){
 		System.out.println("Hauptseite: nicht eingeloggt -> Login");
@@ -14,40 +14,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta name="description" content="" />
-	<meta name="author" content="Arreze" />
-		<style>
-
-     		 #box1 { margin-left: 55em;  }
-
-  	  </style>
-
-<title>Gefundene Produkte</title>
-
-
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<!-- To ensure proper rendering and touch zooming for mobile -->
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	
-	<!-- Bootstrap core CSS -->
-	<link
-		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-		rel="stylesheet" />
-	
-	<!-- Bootstrap theme -->
-	<link
-		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-		rel="stylesheet" />
-		
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap theme -->
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
 	<title>Gefundene Produkte</title>
-	
-	</head>
+</head>
+
 <body>
 <div class="container theme-showcase" role="main">
 <div class="jumbotron">
-
+<img src="fotos/ushop247.png" alt="" height="90" width="500"/>
+	
 	<h1>Alle Produkte:</h1>
 	<form action="SuchproduktController" method="Post">
 	<table class="table">
@@ -57,8 +41,7 @@
 		<th>Preis</th>
 		<th>ProduktID</th>
 		<th>Produktgruppe ID</th>
-		<th>Produkt loeschen</th>
-		<th>Details</th></tr> 
+
 		
 <%
 ProduktDAO dao = new DatenBankProduktDAO();
@@ -81,12 +64,12 @@ for(Produktgruppe j:pdao.getProduktgruppeList()){%>
 		
 <%} %>
 <%} %>
-
+	</table>
+	</form>
 
 <tr><td><a href="HauptseiteKunde.jsp">
 <input type="submit" value="back" /></a></td><td></td><td></td></tr>
-	</table>
-	</form>
+
 </div>
 </div>
 </body>

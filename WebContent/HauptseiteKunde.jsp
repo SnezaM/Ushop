@@ -50,11 +50,13 @@
 		<br />
 		
 		<form action="SuchproduktController" method="post">
-		<div class="form-group">
-		<label for="produktname">Produkt: </label>
-		<input class="form-control" type="text" id="produktname" name="produktName"  data-validation="length" data-validation-length="min1" data-validation-error-msg="Bitte geben Sie einen gültigen Produkt ein!" required>
-		</div>
-		<button class="btn btn-primary"  type="submit" value="Gesuchte Produkte" >Suchen</button>
+		<tr>
+		<td><b>Produkt:</b></td>
+		<td><input type="text" name="produktName" /></td>
+			</tr>
+			<tr>
+			<td><input class="btn btn-primary" type="submit" value="Suchen" /></td>
+			</tr>
 		 </form>
 		
 		
