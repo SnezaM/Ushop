@@ -32,7 +32,7 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 	//Variablen die zum Vordefinieren der SQL Statements benoetigt werden
 	private PreparedStatement speichereBenutzerStmt;
 	private PreparedStatement speichereKundeStmt;
-	private PreparedStatement saveAdminStmt;
+	private PreparedStatement speichereAdminStmt;
 	
 	
 	private PreparedStatement ladenBenutzerStmtUname;
