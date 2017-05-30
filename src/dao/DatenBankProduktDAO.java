@@ -147,7 +147,7 @@ public class DatenBankProduktDAO implements ProduktDAO{
 					System.out.println("DatenBankProduktDAO:getProduktList: Funktioniert nicht auf Grund des Fehlers:("+e.getMessage()+")");
 					return null;
 			}	
-		System.out.println("Achtung jetzt kommt die Liste aus dem getProduktList");
+		
 			return produkte;
 	}
 
