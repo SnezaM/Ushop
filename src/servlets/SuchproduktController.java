@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,7 +17,7 @@ import modell.Produkt;
 import modell.Produktgruppe;
 
 @WebServlet("/SuchproduktController")
-public class SuchproduktController {
+public class SuchproduktController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public SuchproduktController(){
@@ -31,21 +32,34 @@ public class SuchproduktController {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		if(request.getParameter("produktName")!=null){			
+			request.getRequestDispatcher("GesuchteProdukte.jsp").include(request, response);
+			response.setContentType("text/html");
+			return;
+		}
+		
+		try{
+		
 		Produktverwaltung p = Produktverwaltung.getInstance();
+		
 		String pname = request.getParameter("produktname");
+		
 		request.getSession(true).setAttribute("fehler", "Kein Produkt gefunden");
-	
 		Produkt k = p.getProduktByName(pname);
 		System.out.println(pname+ " ich habe das jetzt gemacht");
 		
-		ProduktDAO dao = new DatenBankProduktDAO();
-		Produkt temp = dao.getProduktByName(pname);
 		
-		ProduktgruppeDAO daoGruppe = new DatenBankProduktgruppeDAO();
-		Produktgruppe tempgruppe = daoGruppe.getProduktgruppeByID(temp.getProduktgruppeID());
 		
 		if( k!=null){
 			if(k.getProduktname().equals(pname)){
+				
+				
+				ProduktDAO dao = new DatenBankProduktDAO();
+				Produkt temp = dao.getProduktByName(pname);
+				
+				ProduktgruppeDAO daoGruppe = new DatenBankProduktgruppeDAO();
+				Produktgruppe tempgruppe = daoGruppe.getProduktgruppeByID(temp.getProduktgruppeID());
+				
 				request.getSession().invalidate();
 				System.out.println(" Erfolgreiche: Weiterleiten zu den Produkten!");
 				
@@ -71,9 +85,13 @@ public class SuchproduktController {
 		
 		}
 		
-		System.out.println(" Weiterleiten zu den Produkten!");
-		request.getRequestDispatcher("HauptseiteKunde.jsp").include(request, response);
-		response.setContentType("text/html");
+		}catch(Exception e){
+			request.getSession().setAttribute("message", "Produkt konnte nicht gefunden werden");
+			response.sendRedirect(request.getContextPath() + "/HauptseiteKunde.jsp");
+			response.setContentType("text/html");
+			return;
+		}
+		
 		
 	}
 }
