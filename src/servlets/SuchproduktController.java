@@ -23,7 +23,8 @@ public class SuchproduktController extends HttpServlet {
 	public SuchproduktController(){
 		super();
 	}
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		request.getRequestDispatcher("Login.jsp").include(request, response);
 		response.setContentType("text/html");
@@ -31,6 +32,12 @@ public class SuchproduktController extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+	
+		
+		Produktverwaltung p = Produktverwaltung.getInstance();
+		String pname = request.getParameter("produktname");
+		
+		request.getSession(true).setAttribute("fehler", "Kein Produkt gefunden");
 		
 		if(request.getParameter("produktName")!=null){			
 			request.getRequestDispatcher("GesuchteProdukte.jsp").include(request, response);
@@ -38,13 +45,6 @@ public class SuchproduktController extends HttpServlet {
 			return;
 		}
 		
-		try{
-		
-		Produktverwaltung p = Produktverwaltung.getInstance();
-		
-		String pname = request.getParameter("produktname");
-		
-		request.getSession(true).setAttribute("fehler", "Kein Produkt gefunden");
 		Produkt k = p.getProduktByName(pname);
 		System.out.println(pname+ " ich habe das jetzt gemacht");
 		
@@ -85,12 +85,9 @@ public class SuchproduktController extends HttpServlet {
 		
 		}
 		
-		}catch(Exception e){
-			request.getSession().setAttribute("message", "Produkt konnte nicht gefunden werden");
-			response.sendRedirect(request.getContextPath() + "/HauptseiteKunde.jsp");
-			response.setContentType("text/html");
-			return;
-		}
+		System.out.println("SuchproduktController: Weiterleiten zur Produkten!");
+		request.getRequestDispatcher("SuchproduktController.jsp").include(request, response);
+		response.setContentType("text/html");
 		
 		
 	}
