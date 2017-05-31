@@ -36,9 +36,10 @@
 			<tr><th>BestellungsID</th><th>Datum</th><th>Vermerk</th><th>Lieferart</th><th>Gesamtpreis in EUR</th><th>Details</th></tr> 
 			
 			<%
-			int kundenID = (int) session.getAttribute("kundenid");
+			int kundenID = (int) session.getAttribute("benutzerid");
 			BestellungsDAO dao = new DBBestellungsDAO();
-			for(Bestellung b : dao.readBestellungenByKundenID(kundenID)) { 
+			List<Bestellung> bestellungen = dao.readBestellungenByKundenID(kundenID);
+			for(Bestellung b : bestellungen) { 
 			%>
 				<tr>
 					<td><%=b.getBestellungID()%></td>

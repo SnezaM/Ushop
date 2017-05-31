@@ -39,7 +39,7 @@
 		
 <%
 BestellungsDAO dao = new DBBestellungsDAO();
-int kundenID = (int) session.getAttribute("kundenid");
+int kundenID = (int) session.getAttribute("benutzerid");
 Bestellung warenkorb = dao.getWarenkorb(kundenID);
 if(warenkorb!=null){
 	for(Position p:dao.readPositionenByBestellungID(warenkorb.getBestellungID()) ){%>

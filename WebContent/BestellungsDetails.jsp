@@ -25,7 +25,7 @@
     <!-- Bootstrap theme -->
     <link href="css/bootstrap-theme.min.css" rel="stylesheet">
 
-	<title>BestellungsDetails:</title>
+	<title>BestellungsDetails</title>
 </head>
 <body>
 	<div class="container theme-showcase" role="main">
@@ -36,9 +36,10 @@
 			<tr><th>PositionsID</th><th>Menge</th><th>ProduktID</th><th>Gesamtpreis in EUR</th><th>Details</th></tr> 
 			
 			<%
-			int bestellungsID = (int) session.getAttribute("zeigeID");
+			int bestellungsID = Integer.valueOf((String) session.getAttribute("zeigeID"));
 			BestellungsDAO dao = new DBBestellungsDAO();
-			for(Position p : dao.readPositionenByBestellungID(bestellungsID)) { 
+			List<Position> pos = dao.readPositionenByBestellungID(bestellungsID);
+			for(Position p : pos) { 
 			%>
 				<tr>
 					<td><%=p.getPostionID()%></td>
