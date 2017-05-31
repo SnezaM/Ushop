@@ -52,7 +52,8 @@
 		<form action="SuchproduktController" method="post">
 		<tr>
 		<td><b>Produkt:</b></td>
-		<td><input type="text" name="produktName" /></td>
+		<td><input type="text" class="form-control" id="produktName" name="produktName" 
+		 data-validation="length" data-validation-length="min1" data-validation-error-msg="Bitte geben Sie eine gültige Destination ein!" required> /></td>
 			</tr>
 			<tr>
 			<td><input class="btn btn-primary" type="submit" value="Suchen" /></td>

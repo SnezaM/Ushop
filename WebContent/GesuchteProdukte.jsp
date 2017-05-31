@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
@@ -28,49 +29,43 @@
 </head>
 
 <body>
-<div class="container theme-showcase" role="main">
-<div class="jumbotron">
-<img src="fotos/ushop247.png" alt="" height="90" width="500"/>
-	
-	<h1>Alle Produkte:</h1>
-	<form action="SuchproduktController" method="Post">
-	<table class="table">
-	
-		<tr><th>Name</th>
-		<th>Produktgruppe Name</th>
-		<th>Preis</th>
-		<th>ProduktID</th>
-		<th>Produktgruppe ID</th>
+    
 
-		
-<%
-ProduktDAO dao = new DatenBankProduktDAO();
-for(Produkt i:dao.getProduktList()){%>
-<%
-ProduktgruppeDAO pdao = new DatenBankProduktgruppeDAO();
-for(Produktgruppe j:pdao.getProduktgruppeList()){%>
+        <h2>Search product by keyword</h2> 
+        <br/><br/>
+
+        <form method="post" name="Search" action="ListOfSortedProducts">
+            <table cellpadding="15" border="0" width="100%" align="center"   background="images/logo.jpg">
+                <tr><td colspan=2 style="font-size:12pt;" align="center">
+                <tr> <td> <input type="text"  class="input inputsearch" name=" produktname" placeholder="Search.."required>
+                    </td> </tr>      
+                <tr><td colspan=2 align="center">
+                        <input type="submit"  class="button button1" value="Search" /></td></tr>
+            </table>
+        </form>
+        <br/><br/>
+        <ul class="zebra">
+           
+<%  
+
+ProduktDAO object = new DatenBankProduktDAO();
+List<Produkt> list =new ArrayList<Produkt>();
+list=object.getProduktList();
 
 
-		<tr>
-			<td><%=i.getProduktname() %></td>
-			<td><%=j.getProduktgruppenname() %></td>
-			<td><%=i.getPreis() %></td>
-			<td><%=i.getProduktID()%></td>
-			<td><%=i.getProduktgruppeID() %></td>
-			
-			<td><button name="Warenkorb" value="<%=i.getProduktID()%>" 
-			type="submit">Warenkorb</button></td>
-		</tr>
-		
-<%} %>
-<%} %>
-	</table>
-	</form>
+for (int i=0;i<list.size();i++)
+          {
+
+              out.println("<li>"+ "<p>"+"Name of Product: "+list.get(i).getProduktname()+"<br>"
+            		  );}
+              
+%>
+</ul>
+</body>
 
 <tr><td><a href="HauptseiteKunde.jsp">
 <input type="submit" value="back" /></a></td><td></td><td></td></tr>
 
-</div>
-</div>
+
 </body>
 </html>

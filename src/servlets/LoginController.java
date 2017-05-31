@@ -45,7 +45,7 @@ public class LoginController extends HttpServlet {
 	}
 
 	/**
-	 * Hier wird geprüft ob die eingegebenen Daten korrekt sind, falls ja, war der Login erfolgreich und es wird zur Hauptseite verwiesen,
+	 * Hier wird geprï¿½ft ob die eingegebenen Daten korrekt sind, falls ja, war der Login erfolgreich und es wird zur Hauptseite verwiesen,
 	 * falls nein, dann wird die jeweilige Fehlermeldung ausgegeben.
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -58,8 +58,8 @@ public class LoginController extends HttpServlet {
 		request.getSession(true).setAttribute("fehler", "Kein Benutzer mit solch einem Usernamen registriert!");
 
 		
-		//da der logout-button auf der Hauptseite den LoginController aufruft, wird hier geprüft, ob er 
-		//gedrückt wurde
+		//da der logout-button auf der Hauptseite den LoginController aufruft, wird hier geprï¿½ft, ob er 
+		//gedrï¿½ckt wurde
 		if(request.getParameter("logout")!=null){
 			System.out.println("Logout von : "+request.getSession().getAttribute("username"));
 			request.getSession().invalidate();
@@ -71,6 +71,7 @@ public class LoginController extends HttpServlet {
 		
 		Kunde k = b.getKundeByUName(uname);
 		System.out.println(uname+ " ich habe das jetzt gemacht");
+		
 		Administrator a = b.getAdminByUserName(uname);
 		System.out.println(uname+ " ich habe das jetzt gemacht");
 		if( k!=null){
