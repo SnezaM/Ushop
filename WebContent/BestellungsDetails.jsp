@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
+<%@page import="java.text.DecimalFormat"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -30,14 +31,23 @@
 <body>
 	<div class="container theme-showcase" role="main">
 	<div class="jumbotron">	
-		<h1>Details zu meiner Bestellung:</h1>
+		<%
+			int bestellungsID = Integer.valueOf((String) session.getAttribute("zeigeID"));
+		%>
+		<h1>Ihre Bestellung:</h1>
+		<table class="table">
+			<tr><th>Bestellnummer:</th><th>Bestelldatum:</th><th>Versandart:</th><th>Vermerk:</th></tr>
+			<tr><td><%=bestellungsID%></td><td></td><td></td><td></td></tr>
+			
+		</table>
+		<br>
 		<form action="BestellungsController" method="Post">
 		<table class="table">
-			<tr><th>PositionsID</th><th>Menge</th><th>ProduktID</th><th>Gesamtpreis in EUR</th><th>Details</th></tr> 
+			<tr><th>PositionsID</th><th>Menge</th><th>ProduktID</th><th>Gesamtpreis</th><th/></tr> 
 			
 			<%
-			int bestellungsID = Integer.valueOf((String) session.getAttribute("zeigeID"));
 			BestellungsDAO dao = new DBBestellungsDAO();
+			DecimalFormat formator = new DecimalFormat("####,####,###.00");
 			List<Position> pos = dao.readPositionenByBestellungID(bestellungsID);
 			for(Position p : pos) { 
 			%>
@@ -45,14 +55,14 @@
 					<td><%=p.getPostionID()%></td>
 					<td><%=p.getMenge()%></td>
 					<td><%=p.getArtikel() %></td>
-					<td><%=p.getGesamtpreis() %></td>
-					<td><button name="KundeProduktseite" value="<%=p.getGesamtpreis()%>" type="submit">Mehr</button></td>
+					<td align="right"><%=formator.format(p.getGesamtpreis()) %> &euro;</td>
+					<td align="right"><button name="ProduktDetailsAnzeigen" value="<%=p.getArtikel()%>" type="submit">Produktdetails anzeigen</button></td>
 				</tr>
 			<%
 			} 
 			%>
 	
-			<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="Zurueck" /></a></td><td></td><td></td></tr>
+			<tr><td><button name="bestellungenAnzeigenKunde" type="submit">Retour</button></td><td/><td/><td/><td/></tr>
 		</table>
 		</form>
 	</div>

@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
+<%@page import="java.text.DecimalFormat"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -33,11 +34,12 @@
 		<h1>Meine Bestellungen:</h1>
 		<form action="BestellungsController" method="Post">
 		<table class="table">
-			<tr><th>BestellungsID</th><th>Datum</th><th>Vermerk</th><th>Lieferart</th><th>Gesamtpreis in EUR</th><th>Details</th></tr> 
+			<tr><th>BestellungsID</th><th>Datum</th><th>Vermerk</th><th>Lieferart</th><th>Gesamtpreis</th><th></th></tr> 
 			
 			<%
 			int kundenID = (int) session.getAttribute("benutzerid");
 			BestellungsDAO dao = new DBBestellungsDAO();
+			DecimalFormat formator = new DecimalFormat("####,####,###.00");
 			List<Bestellung> bestellungen = dao.readBestellungenByKundenID(kundenID);
 			for(Bestellung b : bestellungen) { 
 			%>
@@ -46,14 +48,14 @@
 					<td><%=b.getDatum()%></td>
 					<td><%=b.getVermerk() %></td>
 					<td><%=b.getLieferart() %></td>
-					<td><%=b.getGesamtpreis() %></td>
-					<td><button name="BestellungsDetails" value="<%=b.getBestellungID()%>" type="submit">Mehr</button></td>
+					<td align="right"><%=formator.format(b.getGesamtpreis()) %> &euro;</td>
+					<td align="right"><button name="BestellungsDetailsAnzeigen" value="<%=b.getBestellungID()%>" type="submit">Details anzeigen</button></td>
 				</tr>
 			<%
 			} 
 			%>
 	
-			<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="Zurueck" /></a></td><td></td><td></td></tr>
+			<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="Retour" /></a></td><td/><td/><td/><td/><td/></tr>
 		</table>
 		</form>
 	</div>
