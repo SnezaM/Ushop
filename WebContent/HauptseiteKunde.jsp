@@ -44,7 +44,7 @@
 		<div class="jumbotron">
 			<img src="fotos/ushop247.png" alt="" height="90" width="500"/>
 			<h2> UShop 24/7</h2>
-			<h3>Herzlich Willkommen <%=session.getAttribute("username")%></h3>
+			<h3>Herzlich Willkommen, <%=session.getAttribute("username")%>!</h3>
 			
 		<br />
 		

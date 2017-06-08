@@ -34,28 +34,39 @@
 		<h1>Meine Bestellungen:</h1>
 		<form action="BestellungsController" method="Post">
 		<table class="table">
-			<tr><th>BestellungsID</th><th>Datum</th><th>Vermerk</th><th>Lieferart</th><th>Gesamtpreis</th><th></th></tr> 
+			
 			
 			<%
 			int kundenID = (int) session.getAttribute("benutzerid");
 			BestellungsDAO dao = new DBBestellungsDAO();
 			DecimalFormat formator = new DecimalFormat("####,####,###.00");
 			List<Bestellung> bestellungen = dao.readBestellungenByKundenID(kundenID);
-			for(Bestellung b : bestellungen) { 
-			%>
-				<tr>
-					<td><%=b.getBestellungID()%></td>
-					<td><%=b.getDatum()%></td>
-					<td><%=b.getVermerk() %></td>
-					<td><%=b.getLieferart() %></td>
-					<td align="right"><%=formator.format(b.getGesamtpreis()) %> &euro;</td>
-					<td align="right"><button name="BestellungsDetailsAnzeigen" value="<%=b.getBestellungID()%>" type="submit">Details anzeigen</button></td>
-				</tr>
-			<%
-			} 
+			
+			if(bestellungen.size()==0){
+				%>
+				<tr><th colspan="6"><h3>Es sind noch keine Bestellungen vorhanden.</h3></th></tr>
+				<%
+			}
+			else {
+				%>
+				<tr><th>BestellungsID</th><th>Datum</th><th>Vermerk</th><th>Lieferart</th><th>Bestellungswert</th><th></th></tr> 
+				<%
+				for(Bestellung b : bestellungen) { 
+				%>
+					<tr>
+						<td><%=b.getBestellungID()%></td>
+						<td><%=b.getDatum()%></td>
+						<td><%=b.getVermerk() %></td>
+						<td><%=b.getLieferart() %></td>
+						<td align="right"><%=formator.format(b.getGesamtpreis()) %> &euro;</td>
+						<td align="right"><button name="BestellungsDetailsAnzeigen" value="<%=b.getBestellungID()%>" type="submit">Details anzeigen</button></td>
+					</tr>
+				<%
+				}
+			}
 			%>
 	
-			<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="Retour" /></a></td><td/><td/><td/><td/><td/></tr>
+				<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="Retour" /></a></td><td/><td/><td/><td/><td/></tr>
 		</table>
 		</form>
 	</div>

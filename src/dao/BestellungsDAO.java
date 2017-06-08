@@ -25,10 +25,10 @@ public interface BestellungsDAO {
 	 * <p>
 	 * Die Bestellung wird nur anhand der fuer einen Warenkorb noetigen Fakten
 	 * in der DB gespeichert. Abgeschlossen wird auf false gesetzt. Die
-	 * Instanzen vermerk, lieferart und datum, werden nicht gesetzt sondern
-	 * als null-Values eingetragen. Diese koennen spaeter mittels
-	 * {@link #updateWarenkorbToBestellung(Bestellung, String)} in eine abgeschlossene
-	 * Bestellung umgewandelt werden.
+	 * Instanzen vermerk, lieferart und datum, werden nicht gesetzt sondern als
+	 * null-Values eingetragen. Diese koennen spaeter mittels
+	 * {@link #updateWarenkorbToBestellung(Bestellung, String)} in eine
+	 * abgeschlossene Bestellung umgewandelt werden.
 	 * </p>
 	 * 
 	 * @param kundenID
@@ -128,7 +128,9 @@ public interface BestellungsDAO {
 	 * Mithilfe der uebergebenen KundenID wird die Datenbank nach Bestellungen
 	 * fuer den Kunden durchsucht und eine Liste mit allen entsprechenden
 	 * Bestellungen retourniert. Sollten keine Bestellungen vorhanden sein, wird
-	 * eine leere Liste retourniert.
+	 * eine leere Liste retourniert. <br/>
+	 * Hinweis: Der Warenkorb - jene Bestellung, wo abgeschlossen false ist -
+	 * wird nicht retourniert.
 	 * </p>
 	 * 
 	 * @param kundenID

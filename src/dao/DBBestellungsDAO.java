@@ -28,7 +28,7 @@ import dao.EntryToEnumeration;
  */
 public class DBBestellungsDAO implements BestellungsDAO {
 
-	public static final String alleBestellungenKunde = "SELECT * FROM Bestellung WHERE kundenid = ?";
+	public static final String alleBestellungenKunde = "SELECT * FROM Bestellung WHERE kundenid = ? AND abgeschlossen=true";
 	public static final String ladeBestellungID = "SELECT * FROM Bestellung WHERE bestellungid = ?";
 	public static final String ladeWarenkorb = "SELECT * FROM Bestellung WHERE kundenid = ? AND abgeschlossen=false";
 	public static final String ladePositionenVonBestellung = "SELECT * FROM Position WHERE bestellungid = ?";

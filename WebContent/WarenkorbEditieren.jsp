@@ -35,18 +35,18 @@
 
 	<h1>Mein Warenkorb:</h1>
 	
-	<form action="BestellungsController" method="Post">
+	<form action="Warenkorbcontroller" method="Post">
 	<table class="table">	
 		<%
 		BestellungsDAO dao = new DBBestellungsDAO();
 		ProduktDAO daoProd = new DatenBankProduktDAO();
 		DecimalFormat formator = new DecimalFormat("####,####,###.00");
-		int kundenID = (int) session.getAttribute("benutzerid");
+		int bestellungsID = (int) session.getAttribute("zeigeIDWarenkorb");
 		double gesamtwert = 0;
-		Bestellung warenkorb = dao.getWarenkorb(kundenID);
+		Bestellung warenkorb = dao.getBestellungByID(bestellungsID);
 		if(warenkorb!=null){
 			%>
-				<tr><th>PositionsID</th><th>Menge</th><th>Produkt</th><th>Preis/Stk</th><th>Gesamtpreis</th><th></th></tr> 
+				<tr><th>PositionsID</th><th/><th>Menge</th><th/><th>Produkt</th><th>Preis/Stk</th><th>Gesamtpreis</th><th/></tr> 
 			<%
 			for(Position p:dao.readPositionenByBestellungID(warenkorb.getBestellungID()) ){
 			Produkt prod = daoProd.getProduktByProduktID(p.getArtikel());
@@ -54,32 +54,37 @@
 			int menge = p.getMenge();
 			%>
 				<tr>
+					
 					<td><%=p.getPostionID()%></td>
-					<td><%=menge%></td>
+					<td>
+						<input type="hidden" value="<%=bestellungsID %>" name="bestellungsID">
+						<button name="minimize" value="<%=p.getPostionID() %>" type="submit"><i class="fa fa-minus" aria-hidden="true"></i></button>
+					</td>
+					<td align="center"><%=menge%></td>
+					<td>
+						<button name="maximize" value="<%=p.getPostionID() %>" type="submit"><i class="fa fa-plus" aria-hidden="true"></i></button>
+					</td>
 					<td><%=prod.getProduktname() %></td>
 					<td align="right"><%=formator.format(preis/menge) %> &euro;</td>
 					<td align="right"><%=formator.format(preis) %> &euro;</td>
-					<td align="right"><button name="ProduktDetailsAnzeigen" value="<%=p.getArtikel()%>" type="submit">Produktdetails anzeigen</button></td>
+					<td align="right">
+						<button name="posEntfernenID" value="<%=p.getPostionID() %>" type="submit"><i class="fa fa-trash" id="remove"></i></button>
+					</td>
 				</tr>	
 			<%
 			gesamtwert+=preis;
 			}
 			%>			
-			<tr><td></td><td></td><td/><td><b>Bestellwert</b></td><td align="right"><%=formator.format(gesamtwert) %> &euro;</td><td></td><td/></tr>
+			<tr><td></td><td></td><td></td><td><td/><td/><b>Bestellwert</b></td><td align="right"><%=formator.format(gesamtwert) %> &euro;</td><td/></tr>
 		<%	
 		}
 		else {
 		%>
-			<tr><td colspan="6"><h3>Es befinden sich noch keine Produkte im Warenkorb.</h3></td></tr>
+			<tr><td colspan="5"><h3>Es befinden sich keine Produkte im Warenkorb.</h3></td></tr>
 		<%
 		}
 		%>
-			<tr>
-				
-				<td align="right"><button name="WarenkorbEditierenID" value="<%=warenkorb.getBestellungID()  %>" type="submit">Warenkorb bearbeiten</button></td>
-				<td><a href="HauptseiteKunde.jsp"><input type="submit" value="Retour" /></a></td>
-				<td></td><td></td><td></td><td/>
-			</tr>
+			<tr><td><button name="bearbeitungBeendenID" value="<%=bestellungsID%>" type="submit">Bearbeitung beenden</button></td><td></td><td/><td/><td></td><td></td><td></td><td/></tr>
 	</table>
 	</form>
 </div>

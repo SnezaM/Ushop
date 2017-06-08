@@ -46,28 +46,32 @@
 		<br>
 		<form action="BestellungsController" method="Post">
 		<table class="table">
-			<tr><th>PositionsID</th><th>Menge</th><th>Produkt</th><th>Gesamtpreis</th><th/></tr> 
+			<tr><th>PositionsID</th><th>Menge</th><th>Produkt</th><th>Preis/Stk.</th><th>Gesamtpreis</th><th/></tr> 
 			
 			<%
 			BestellungsDAO dao = new DBBestellungsDAO();
 			ProduktDAO daoProd = new DatenBankProduktDAO();
 			DecimalFormat formator = new DecimalFormat("####,####,###.00");
 			List<Position> pos = dao.readPositionenByBestellungID(bestellungsID);
+			double gesamtwert = 0;
 			for(Position p : pos) { 
 			Produkt prod = daoProd.getProduktByProduktID(p.getArtikel());
+			double preis = p.getGesamtpreis();
 			%>
 				<tr>
 					<td><%=p.getPostionID()%></td>
 					<td><%=p.getMenge()%></td>
 					<td><%=prod.getProduktname() %></td>
-					<td align="right"><%=formator.format(p.getGesamtpreis()) %> &euro;</td>
+					<td align="right"><%=formator.format(preis/p.getMenge()) %> &euro;</td>
+					<td align="right"><%=formator.format(preis) %> &euro;</td>
 					<td align="right"><button name="ProduktDetailsAnzeigen" value="<%=p.getArtikel()%>" type="submit">Produktdetails anzeigen</button></td>
 				</tr>
 			<%
+			gesamtwert+=preis;
 			} 
-			%>
-	
-			<tr><td><button name="bestellungenAnzeigenKunde" type="submit">Retour</button></td><td/><td/><td/><td/></tr>
+			%>			
+			<tr><td></td><td></td><td/><td><b>Bestellwert</b></td><td align="right"><b><%=formator.format(gesamtwert) %> &euro;</b></td><td></td></tr>	
+			<tr><td><button name="bestellungenAnzeigenKunde" type="submit">Retour</button></td><td/><td/><td/><td/><td/></tr>
 		</table>
 		</form>
 	</div>

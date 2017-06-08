@@ -23,7 +23,7 @@
     <!-- Bootstrap theme -->
     <link href="css/bootstrap-theme.min.css" rel="stylesheet">
 
-	<title>Produkseite</title>
+	<title>Produkdetails</title>
 </head>
 
 <%
@@ -44,21 +44,15 @@
 <h2> Produkt:</h2><h1><%=name %> </h1>
 	<form action="BestellungsController" method="Post">
 	<table class="table">
-	
 			<tr><td> ID </td><td><%=id %></td>
 			<tr><td> Name </td><td><%=name %></td> 
 			<tr><td> Preis </td><td>&euro; <%=preis %></td> 
 			<tr><td> Beschreibung </td><td><%=beschreibung %></td> 
 			<tr><td> Produktgruppe </td><td><%=kategorie %></td> 
 			<tr><td> ProduktgruppenID </td><td><%=gruppeid %></td> 
-	
-		
+			<!-- <tr><td><a href="BestellungsDetails.jsp"><input type="submit" value="Retour" /></a></td><td/></tr> -->
 	</table>
-		
 	</form>
-
-	
-	<td><a href="BestellungsDetails.jsp"><input type="submit" value="Retour" /></a></td>
 </div>
 </div>
 </body>

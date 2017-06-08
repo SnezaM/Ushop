@@ -100,7 +100,7 @@ public class Bestellungsverwaltung {
 	}
 
 	/**
-	 * Aendert die Menge einer Position auf den uebergebenen Wert fuer Menge und
+	 * Fügt zur Menge einer Position den uebergebenen Wert hinzu und
 	 * passt auch automatisch den Preis an. Sollte die Position nicht vorhanden
 	 * sein wird null retourniert.
 	 * 
@@ -108,22 +108,26 @@ public class Bestellungsverwaltung {
 	 *            ID der Bestellung in der die Position enthalten sein soll.
 	 * @param positionID
 	 *            ID der Position, die geaendert werden soll.
-	 * @param menge
-	 *            Menge, auf die geaendert werden soll.
+	 * @param mengenAenderung
+	 *            Menge, um die veraendert werden soll.
 	 * @return true falls die Aenderung erfolgreich durchgefuehrt wurde, sonst
 	 *         false.
 	 */
-	public boolean aenderePosition(int bestellungsID, int positionID, int menge) {
+	public boolean aenderePosition(int bestellungsID, int positionID, int mengenAenderung) {
 		Position position = dao.getPositionByID(bestellungsID, positionID);
 		if (position == null)
 			return false;
-		double preis = position.getGesamtpreis() / position.getMenge() * menge;
-		return dao.updatePosition(bestellungsID, positionID, menge, preis);
+		int alteMenge = position.getMenge();
+		int neueMenge = alteMenge+mengenAenderung;
+		double preis = position.getGesamtpreis() / alteMenge * neueMenge;
+		return dao.updatePosition(bestellungsID, positionID, neueMenge, preis);
 	}
 
 	/**
 	 * Retourniert alle Bestellungen eines Kunden. Sollten keine Bestellungen
-	 * vorhanden sein wird null retourniert.
+	 * vorhanden sein wird null retourniert. <br/>
+	 * Hinweis: Der Warenkorb - jene Bestellung, wo abgeschlossen false ist -
+	 * ist in dieser Liste nicht enthalten.
 	 * 
 	 * @param kundenID
 	 *            ID des Kunden dessen Bestellungen retourniert werden sollen.
