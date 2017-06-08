@@ -33,28 +33,33 @@
 	<div class="jumbotron">	
 		<%
 			int bestellungsID = Integer.valueOf((String) session.getAttribute("zeigeID"));
+			String vermerk = (String) session.getAttribute("zeigeVermerk");
+			String versand = (String) session.getAttribute("zeigeVersand");
+			String datum = (String) session.getAttribute("zeigeDatum");
 		%>
 		<h1>Ihre Bestellung:</h1>
 		<table class="table">
 			<tr><th>Bestellnummer:</th><th>Bestelldatum:</th><th>Versandart:</th><th>Vermerk:</th></tr>
-			<tr><td><%=bestellungsID%></td><td></td><td></td><td></td></tr>
+			<tr><td><%=bestellungsID%></td><td><%=datum%></td><td><%=versand%></td><td><%=vermerk%></td></tr>
 			
 		</table>
 		<br>
 		<form action="BestellungsController" method="Post">
 		<table class="table">
-			<tr><th>PositionsID</th><th>Menge</th><th>ProduktID</th><th>Gesamtpreis</th><th/></tr> 
+			<tr><th>PositionsID</th><th>Menge</th><th>Produkt</th><th>Gesamtpreis</th><th/></tr> 
 			
 			<%
 			BestellungsDAO dao = new DBBestellungsDAO();
+			ProduktDAO daoProd = new DatenBankProduktDAO();
 			DecimalFormat formator = new DecimalFormat("####,####,###.00");
 			List<Position> pos = dao.readPositionenByBestellungID(bestellungsID);
 			for(Position p : pos) { 
+			Produkt prod = daoProd.getProduktByProduktID(p.getArtikel());
 			%>
 				<tr>
 					<td><%=p.getPostionID()%></td>
 					<td><%=p.getMenge()%></td>
-					<td><%=p.getArtikel() %></td>
+					<td><%=prod.getProduktname() %></td>
 					<td align="right"><%=formator.format(p.getGesamtpreis()) %> &euro;</td>
 					<td align="right"><button name="ProduktDetailsAnzeigen" value="<%=p.getArtikel()%>" type="submit">Produktdetails anzeigen</button></td>
 				</tr>

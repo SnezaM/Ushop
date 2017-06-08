@@ -11,10 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.BestellungsDAO;
+import dao.DBBestellungsDAO;
 import dao.DatenBankProduktDAO;
 import dao.DatenBankProduktgruppeDAO;
 import dao.ProduktDAO;
 import dao.ProduktgruppeDAO;
+import modell.Bestellung;
 import modell.Produkt;
 import modell.Produktgruppe;
 
@@ -66,6 +69,19 @@ public class BestellungsController extends HttpServlet {
 		if(request.getParameter("BestellungsDetailsAnzeigen")!=null){
 			String bID = request.getParameter("BestellungsDetailsAnzeigen");			
 			request.getSession(true).setAttribute("zeigeID", bID);
+			
+			int bestellungsID = Integer.parseInt(bID);
+			BestellungsDAO dao = new DBBestellungsDAO();
+			Bestellung temp = dao.getBestellungByID(bestellungsID);
+			
+			String vermerk = temp.getVermerk();
+			String versand = temp.getLieferart().toString();
+			String datum = temp.getDatum();
+			
+			request.getSession(true).setAttribute("zeigeVermerk", vermerk);
+			request.getSession(true).setAttribute("zeigeVersand", versand);
+			request.getSession(true).setAttribute("zeigeDatum", datum);
+			
 			response.sendRedirect(request.getContextPath() + "/BestellungsDetails.jsp");
 			response.setContentType("text/html");
 			return;
@@ -74,7 +90,7 @@ public class BestellungsController extends HttpServlet {
 		if(request.getParameter("ProduktDetailsAnzeigen")!=null){
 			String pID = request.getParameter("ProduktDetailsAnzeigen");
 			
-			request.getSession(true).setAttribute("zeigeID", pID);
+			request.getSession(true).setAttribute("zeigeIDProd", pID);
 			int produktid = Integer.parseInt(pID);
 			
 			ProduktDAO dao = new DatenBankProduktDAO();
@@ -95,7 +111,7 @@ public class BestellungsController extends HttpServlet {
 			request.getSession(true).setAttribute("zeigePreis", pPreis);
 			request.getSession(true).setAttribute("zeigeBeschr", pBesch);
 
-			response.sendRedirect(request.getContextPath() + "/KundeProduktSeite.jsp");
+			response.sendRedirect(request.getContextPath() + "/Produktdetails.jsp");
 			response.setContentType("text/html");
 			return;
 		}
