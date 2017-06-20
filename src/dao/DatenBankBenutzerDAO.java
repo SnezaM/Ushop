@@ -61,7 +61,7 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 			
 			//Connection with the postgresql
 			Class.forName("org.postgresql.Driver");
-	         connect = DriverManager.getConnection("jdbc:postgresql://gertsch22.ddns.net:5432/ISME_Ushop", "postgres", "hallodu");
+	         connect = DriverManager.getConnection("jdbc:postgresql://gertsch21.ddns.net:5432/ISME_Ushop", "ise_user", "schikuta");
 	         connect.setAutoCommit(true);
 	         System.out.println("Database success --> Verbindung ist da! ");
 	         stmt = connect.createStatement();

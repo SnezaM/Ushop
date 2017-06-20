@@ -39,7 +39,7 @@ public class DatenBankProduktgruppeDAO implements ProduktgruppeDAO{
 		try {
 	         Class.forName("org.postgresql.Driver");
 	         c = DriverManager
-	            .getConnection("jdbc:postgresql://gertsch22.ddns.net:5432/ISME_Ushop","postgres", "hallodu");
+	            .getConnection("jdbc:postgresql://gertsch21.ddns.net:5432/ISME_Ushop", "ise_user", "schikuta");
 	         c.setAutoCommit(true);
 	         System.out.println("Datenbankverbindung Erfolgreich");
 			
