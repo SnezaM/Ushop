@@ -8,11 +8,7 @@ import java.util.Scanner;
 import management.Benutzerverwaltung;
 import management.Bestellungsverwaltung;
 import management.Produktverwaltung;
-import modell.Benutzer;
-import modell.Bestellung;
-import modell.Lieferart;
-import modell.Position;
-import modell.Produkt;
+import modell.*;
 
 /**
  * Generiert Bestellungen. Produkte und Kunden muessen dafuer bereits vorhanden
@@ -28,6 +24,7 @@ public class BestellungsGenerator {
 	private Random random;
 	private static int positionsCounter = 0;
 	private static int bestellungsCounter = 0;
+	private static int warenkorbCounter = 0;
 	private String[] vermerk = { "", "", "Beim Nachbarn abgeben", "", "", "Pronto bitte!", "", "", "Ein Geschenk" };
 
 	/**
@@ -51,12 +48,12 @@ public class BestellungsGenerator {
 	}
 
 	/**
-	 * Retourniert eine Liste mit den Benutzern aus der Datenbank.
+	 * Retourniert eine Liste mit den Kunden aus der Datenbank.
 	 * 
 	 * @return List<Benutzer>
 	 */
-	public List<Benutzer> getBenutzerList() {
-		return benutzerverwaltung.getBenutzerListe();
+	public List<Kunde> getKundenList() {
+		return benutzerverwaltung.getKundenListe();
 	}
 
 	/**
@@ -68,7 +65,7 @@ public class BestellungsGenerator {
 	 * @return Zufallszahl
 	 */
 	public int getRandom(int max) {
-		return (this.random.nextInt(max) + 1);
+		return (this.random.nextInt(max)+1);
 	}
 
 	/**
@@ -147,7 +144,7 @@ public class BestellungsGenerator {
 
 	public static void main(String[] args) {
 		BestellungsGenerator generator = new BestellungsGenerator();
-		List<Benutzer> benutzer = generator.getBenutzerList();
+		List<Kunde> kunden = generator.getKundenList();
 		List<Produkt> produkt = generator.getProduktList();
 
 		Scanner sc = new Scanner(System.in);
@@ -161,6 +158,8 @@ public class BestellungsGenerator {
 		int maxMengeProd = Integer.parseInt(sc.nextLine());
 		System.out.println("Wie viele Jahre soll das Datum maximal in der Vergangenheit liegen?");
 		int yearsBack = Integer.parseInt(sc.nextLine());
+		System.out.println("Sollen auch unfertige Bestellungen (Warenkorbinhalte) erzeugt werden? (True od. False eingeben)");
+		boolean warenkorbErzeugung = Boolean.parseBoolean(sc.nextLine());
 		System.out.println("Einen Moment - die Daten werden generiert. . . .");
 		sc.close();
 
@@ -170,7 +169,7 @@ public class BestellungsGenerator {
 		 * int maxMengeProd = Integer.parseInt(args[3]); int yearsBack =
 		 * Integer.parseInt(args[4]);
 		 */
-		if (benutzer == null || produkt == null) {
+		if (kunden == null || produkt == null) {
 			System.out.println("Keine Benutzer oder Produkte gefunden! Generator wird beendet!");
 			return;
 		}
@@ -181,10 +180,10 @@ public class BestellungsGenerator {
 
 		// Bestellungserzeugung
 		for (int i = 0; i < maxOrder; i++) {
-			int random = generator.getRandom(benutzer.size());
-			int kundenID = benutzer.get(random).getBenutzerid();
+			int random = generator.getRandom(kunden.size())-1;
+			int kundenID = kunden.get(random).getKundenID();
 			// Bestellungserzeugung Kunde
-			int randomOrder = generator.getRandom(maxOrderKunde);
+			int randomOrder = generator.getRandom(maxOrderKunde); //Anzahl Bestellungen
 			for (int j = 0; j < randomOrder; j++) {
 				Bestellung warenkorb = generator.getWarenkorb(kundenID);
 				if (warenkorb == null) {
@@ -197,9 +196,9 @@ public class BestellungsGenerator {
 				}
 				int warenkorbID = warenkorb.getBestellungID();
 				// Positionserzeugung
-				int randomPos = generator.getRandom(maxPos);
+				int randomPos = generator.getRandom(maxPos); //Anzahl Positionen
 				for (int k = 0; k < randomPos; k++) {
-					int randomProd = generator.getRandom(produkt.size());
+					int randomProd = generator.getRandom(produkt.size())-1;
 					Produkt prod = produkt.get(randomProd);
 					int randomMenge = generator.getRandom(maxMengeProd);
 					Position pos = new Position(k + 1, prod.getProduktID(), randomMenge, randomMenge * prod.getPreis());
@@ -208,14 +207,29 @@ public class BestellungsGenerator {
 					}
 				}
 				// Bestellung entgueltig erzeugen
-				warenkorb.setLieferart(Lieferart.getRandomLieferart());
-				warenkorb.setVermerk(generator.getRandomVermerk());
-				if (generator.makeBestellung(warenkorb, generator.makeDate(yearsBack))) {
-					bestellungsCounter++;
+				if(warenkorbErzeugung){
+					if(generator.getRandom(9) == 5){
+						warenkorbCounter++;
+					}
+					else{
+						warenkorb.setLieferart(Lieferart.getRandomLieferart());
+						warenkorb.setVermerk(generator.getRandomVermerk());
+						if (generator.makeBestellung(warenkorb, generator.makeDate(yearsBack))) {
+							bestellungsCounter++;
+						}
+					}
+				}
+				else{
+					warenkorb.setLieferart(Lieferart.getRandomLieferart());
+					warenkorb.setVermerk(generator.getRandomVermerk());
+					if (generator.makeBestellung(warenkorb, generator.makeDate(yearsBack))) {
+						bestellungsCounter++;
+					}
 				}
 			}
 		}
-		System.out.println("Hinzugefuegt: Bestellungen: " + bestellungsCounter + ", Positionen: " + positionsCounter);
+		System.out.println("Hinzugefuegt: Bestellungen: " + bestellungsCounter + ", Positionen: " + 
+				positionsCounter + ", Unfertige Bestellungen: " + warenkorbCounter);
 	}
 
 }

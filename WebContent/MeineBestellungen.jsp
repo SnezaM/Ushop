@@ -33,11 +33,9 @@
 	<div class="jumbotron">	
 		<h1>Meine Bestellungen:</h1>
 		<form action="BestellungsController" method="Post">
-		<table class="table">
-			
-			
+		<table class="table">			
 			<%
-			int kundenID = (int) session.getAttribute("benutzerid");
+			int kundenID = (int) session.getAttribute("kundenid");
 			BestellungsDAO dao = new DBBestellungsDAO();
 			DecimalFormat formator = new DecimalFormat("####,####,###.00");
 			List<Bestellung> bestellungen = dao.readBestellungenByKundenID(kundenID);

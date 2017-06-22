@@ -68,7 +68,7 @@ public class Warenkorbcontroller extends HttpServlet {
 			request.getSession(true).setAttribute("zeigeIDWarenkorb", bestellungsID);
 			
 			if (bvw.removePositionFromBestellung(bestellungsID, positionID)) {
-				response.sendRedirect(request.getContextPath() + "/WarenkorbEditieren.jsp");
+				response.sendRedirect(request.getContextPath() + "/Warenkorb.jsp");
 				response.setContentType("text/html");
 				return;
 			} else {
@@ -77,7 +77,7 @@ public class Warenkorbcontroller extends HttpServlet {
 				out.println("<script type=\"text/javascript\">");
 				out.println("alert('Position konnte nicht geloescht werden! "
 						+ "Sollte das Problem weiterhin bestehen, wenden Sie sich an den Admin.');");
-				out.println("location='WarenkorbEditieren.jsp';");
+				out.println("location='Warenkorb.jsp';");
 				out.println("</script>");
 				return;
 			}
@@ -99,8 +99,8 @@ public class Warenkorbcontroller extends HttpServlet {
 			int bestellungsID = Integer.parseInt(changeFromID);
 			request.getSession(true).setAttribute("zeigeIDWarenkorb", bestellungsID);
 			
-			if (bvw.aenderePosition(bestellungsID, positionID, 1)) {
-				response.sendRedirect(request.getContextPath() + "/WarenkorbEditieren.jsp");
+			if (bvw.aenderePosition(bestellungsID, positionID, -1)) {
+				response.sendRedirect(request.getContextPath() + "/Warenkorb.jsp");
 				response.setContentType("text/html");
 				return;
 			} else {
@@ -109,14 +109,33 @@ public class Warenkorbcontroller extends HttpServlet {
 				out.println("<script type=\"text/javascript\">");
 				out.println("alert('Position konnte nicht bearbeitet werden! "
 						+ "Sollte das Problem weiterhin bestehen, wenden Sie sich an den Admin.');");
-				out.println("location='WarenkorbEditieren.jsp';");
+				out.println("location='Warenkorb.jsp';");
 				out.println("</script>");
 				return;
 			}
 		}
 		
 		if(request.getParameter("maximize")!= null){
+			String posID = request.getParameter("maximize");
+			int positionID = Integer.parseInt(posID);
+			String changeFromID = request.getParameter("bestellungsID");
+			int bestellungsID = Integer.parseInt(changeFromID);
+			request.getSession(true).setAttribute("zeigeIDWarenkorb", bestellungsID);
 			
+			if (bvw.aenderePosition(bestellungsID, positionID, 1)) {
+				response.sendRedirect(request.getContextPath() + "/Warenkorb.jsp");
+				response.setContentType("text/html");
+				return;
+			} else {
+				System.out.println("Mengenaenderung gescheitert!");
+				PrintWriter out = response.getWriter();
+				out.println("<script type=\"text/javascript\">");
+				out.println("alert('Position konnte nicht bearbeitet werden! "
+						+ "Sollte das Problem weiterhin bestehen, wenden Sie sich an den Admin.');");
+				out.println("location='Warenkorb.jsp';");
+				out.println("</script>");
+				return;
+			}
 		}
 
 		else {

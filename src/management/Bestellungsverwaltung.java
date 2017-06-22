@@ -79,8 +79,9 @@ public class Bestellungsverwaltung {
 			Double neuerPreis = bestellung.getGesamtpreis() + position.getGesamtpreis();
 			if (dao.updatePriceBestellung(bestellungsID, neuerPreis)) {
 				return true;
+			} else {
+				dao.removePosition(bestellungsID, position.getPostionID());
 			}
-			dao.removePosition(bestellungsID, position.getPostionID());
 		}
 		return false;
 	}
@@ -100,9 +101,9 @@ public class Bestellungsverwaltung {
 	}
 
 	/**
-	 * Fügt zur Menge einer Position den uebergebenen Wert hinzu und
-	 * passt auch automatisch den Preis an. Sollte die Position nicht vorhanden
-	 * sein wird null retourniert.
+	 * Fuegt zur Menge einer Position den uebergebenen Wert hinzu und passt auch
+	 * automatisch den Preis der Position und der Bestellung an. Sollte die
+	 * Position nicht vorhanden sein wird null retourniert.
 	 * 
 	 * @param bestellungsID
 	 *            ID der Bestellung in der die Position enthalten sein soll.
@@ -115,12 +116,26 @@ public class Bestellungsverwaltung {
 	 */
 	public boolean aenderePosition(int bestellungsID, int positionID, int mengenAenderung) {
 		Position position = dao.getPositionByID(bestellungsID, positionID);
-		if (position == null)
-			return false;
-		int alteMenge = position.getMenge();
-		int neueMenge = alteMenge+mengenAenderung;
-		double preis = position.getGesamtpreis() / alteMenge * neueMenge;
-		return dao.updatePosition(bestellungsID, positionID, neueMenge, preis);
+		if (position != null) {
+			// Gesamtwert der Bestellung, um in anpassen zu koennen
+			double bestellwert = dao.getBestellungByID(bestellungsID).getGesamtpreis();
+			int alteMenge = position.getMenge();
+			int neueMenge = alteMenge + mengenAenderung;
+			double preisPosAlt = position.getGesamtpreis();
+			// Wenn keine Menge vorhanden sein soll, wird Position entfernt
+			if (neueMenge <= 0) {
+				return this.removePositionFromBestellung(bestellungsID, positionID);
+			} else {
+				double preisPosNeu = preisPosAlt / alteMenge * neueMenge;
+				if (dao.updatePosition(bestellungsID, positionID, neueMenge, preisPosNeu)) {
+					double neuerBestellwert = bestellwert - preisPosAlt + preisPosNeu;
+					if (dao.updatePriceBestellung(bestellungsID, neuerBestellwert)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -187,7 +202,13 @@ public class Bestellungsverwaltung {
 	 * @return Warenkorb des Kunden.
 	 */
 	public Bestellung getWarenkorb(int kundenID) {
-		return dao.getWarenkorb(kundenID);
+		Bestellung warenkorb = dao.getWarenkorb(kundenID);
+		if(warenkorb==null){
+			System.out.println("Check ich nicht");
+			this.addWarenkorb(kundenID);
+			warenkorb = dao.getWarenkorb(kundenID);
+		}
+		return warenkorb;
 	}
 
 	/**
@@ -212,7 +233,8 @@ public class Bestellungsverwaltung {
 	/**
 	 * Entfernt die Positionen mit der entsprechenden ID aus der Bestellung mit
 	 * der entsprechenden ID. Sollte keine Bestellung oder Position mit der ID
-	 * vorhanden sein wird false retourniert.
+	 * vorhanden sein wird false retourniert. Ebenso wird false retourniert,
+	 * falls es zu einem Fehler kommt.
 	 * 
 	 * @param bestellungsID
 	 *            ID der Bestellung in der die Position enthalten sein soll.
@@ -221,6 +243,15 @@ public class Bestellungsverwaltung {
 	 * @return true falls die Position erfolgreich entfernt wurde, sonst false.
 	 */
 	public boolean removePositionFromBestellung(int bestellungsID, int positionID) {
-		return dao.removePosition(bestellungsID, positionID);
+		Position position = dao.getPositionByID(bestellungsID, positionID);
+		double bestellwert = dao.getBestellungByID(bestellungsID).getGesamtpreis();
+		if (dao.removePosition(bestellungsID, positionID)) {
+			if (dao.updatePriceBestellung(bestellungsID, (bestellwert - position.getGesamtpreis()))) {
+				return true;
+			} else {
+				dao.createPosition(bestellungsID, position);
+			}
+		}
+		return false;
 	}
 }

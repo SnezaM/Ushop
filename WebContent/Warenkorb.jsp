@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
+<%@page import="management.Bestellungsverwaltung"%>
 <%@page import="java.text.DecimalFormat"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -34,54 +35,70 @@
 <div class="jumbotron">
 
 	<h1>Mein Warenkorb:</h1>
-	
-	<form action="BestellungsController" method="Post">
-	<table class="table">	
-		<%
-		BestellungsDAO dao = new DBBestellungsDAO();
-		ProduktDAO daoProd = new DatenBankProduktDAO();
-		DecimalFormat formator = new DecimalFormat("####,####,###.00");
-		int kundenID = (int) session.getAttribute("benutzerid");
-		double gesamtwert = 0;
-		Bestellung warenkorb = dao.getWarenkorb(kundenID);
-		if(warenkorb!=null){
-			%>
-				<tr><th>PositionsID</th><th>Menge</th><th>Produkt</th><th>Preis/Stk</th><th>Gesamtpreis</th><th></th></tr> 
+	<%
+	int kundenID = (int) session.getAttribute("kundenid");
+	ProduktDAO daoProd = new DatenBankProduktDAO();
+	BestellungsDAO dao = new DBBestellungsDAO();
+	Bestellungsverwaltung bwver = Bestellungsverwaltung.getInstance();
+	DecimalFormat formator = new DecimalFormat("####,####,###.00");
+	Bestellung warenkorb = bwver.getWarenkorb(kundenID);
+	int bestellungsID = warenkorb.getBestellungID();
+	List<Position> positionen = dao.readPositionenByBestellungID(bestellungsID);
+	if(positionen.size()>0){
+	%>
+		<form action="Warenkorbcontroller" method="Post">
+			<table class="table">	
+				<tr><th>PositionsID</th><th/><th>Menge</th><th/><th>Produkt</th><th>Preis/Stk</th><th>Gesamtpreis</th><th/></tr> 
 			<%
-			for(Position p:dao.readPositionenByBestellungID(warenkorb.getBestellungID()) ){
+			for(Position p: positionen){
 			Produkt prod = daoProd.getProduktByProduktID(p.getArtikel());
 			double preis = p.getGesamtpreis();
 			int menge = p.getMenge();
 			%>
 				<tr>
 					<td><%=p.getPostionID()%></td>
-					<td><%=menge%></td>
+					<td>
+						<input  name="bestellungsID" value="<%=bestellungsID %>" type="hidden">
+						<button name="minimize" value="<%=p.getPostionID() %>" type="submit"><i class="fa fa-minus" aria-hidden="true"></i></button>
+					</td>
+					<td align="center"><%=menge%></td>
+					<td>
+						<input  name="bestellungsID" value="<%=bestellungsID %>" type="hidden">
+						<button name="maximize" value="<%=p.getPostionID() %>" type="submit"><i class="fa fa-plus" aria-hidden="true"></i></button>
+					</td>
 					<td><%=prod.getProduktname() %></td>
 					<td align="right"><%=formator.format(preis/menge) %> &euro;</td>
 					<td align="right"><%=formator.format(preis) %> &euro;</td>
-					<td align="right"><button name="ProduktDetailsAnzeigen" value="<%=p.getArtikel()%>" type="submit">Produktdetails anzeigen</button></td>
+					<td align="right">
+						<button name="posEntfernenID" value="<%=p.getPostionID() %>" type="submit"><i class="fa fa-trash" id="remove"></i></button>
+					</td>
 				</tr>	
 			<%
-			gesamtwert+=preis;
 			}
-			%>			
-			<tr><td></td><td></td><td/><td><b>Bestellwert</b></td><td align="right"><%=formator.format(gesamtwert) %> &euro;</td><td></td><td/></tr>
-		<%	
-		}
-		else {
-		%>
-			<tr><td colspan="6"><h3>Es befinden sich noch keine Produkte im Warenkorb.</h3></td></tr>
-		<%
-		}
-		%>
-			<tr>
-				
-				<td align="right"><button name="WarenkorbEditierenID" value="<%=warenkorb.getBestellungID()  %>" type="submit">Warenkorb bearbeiten</button></td>
-				<td><a href="HauptseiteKunde.jsp"><input type="submit" value="Retour" /></a></td>
-				<td></td><td></td><td></td><td/>
-			</tr>
-	</table>
+		%>			
+			<tr><td></td><td></td><td></td><td><td/><td/><th>Bestellwert</th><td align="right"><%=formator.format(warenkorb.getGesamtpreis()) %> &euro;</td><td/></tr>
+		</table>
 	</form>
+	<form action="BestellenController" method="post">
+		<input class="btn btn-primary" name="bestellen" type="submit" value="Produkte bestellen"/><br/>
+	</form>	
+	<%	
+	}
+	else {
+	%>
+		<table class=table>
+			<tr><td><h3>Es befinden sich keine Produkte im Warenkorb.</h3></td></tr>
+		</table>
+	<%
+	}
+	%>
+	<br>
+	<hr>
+	<table>
+			<tr>
+				<td><a href="HauptseiteKunde.jsp"><input type="submit" value="Retour zur Hauptseite" /></a></td>
+			</tr>	
+	</table>
 </div>
 </div>
 </body>

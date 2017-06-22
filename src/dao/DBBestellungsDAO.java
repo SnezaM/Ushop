@@ -28,10 +28,10 @@ import dao.EntryToEnumeration;
  */
 public class DBBestellungsDAO implements BestellungsDAO {
 
-	public static final String alleBestellungenKunde = "SELECT * FROM Bestellung WHERE kundenid = ? AND abgeschlossen=true";
+	public static final String alleBestellungenKunde = "SELECT * FROM Bestellung WHERE kundenid = ? AND abgeschlossen=true ORDER BY datum DESC";
 	public static final String ladeBestellungID = "SELECT * FROM Bestellung WHERE bestellungid = ?";
 	public static final String ladeWarenkorb = "SELECT * FROM Bestellung WHERE kundenid = ? AND abgeschlossen=false";
-	public static final String ladePositionenVonBestellung = "SELECT * FROM Position WHERE bestellungid = ?";
+	public static final String ladePositionenVonBestellung = "SELECT * FROM Position WHERE bestellungid = ? ORDER BY positionid ASC";
 	public static final String ladePositionID = "SELECT * FROM Position WHERE bestellungid = ? AND positionid=?";
 
 	public static final String speichereWarenkorb = "INSERT INTO Bestellung (abgeschlossen, kundenid) VALUES(false,?)";
@@ -50,8 +50,6 @@ public class DBBestellungsDAO implements BestellungsDAO {
 
 	// Variable zum Verbindungsaufbau zur Datenbank
 	private Connection c = null;
-	// Variable fuer Enums
-	private EntryToEnumeration entryToEnumeration;
 
 	/**
 	 * Im Konstruktor wird eine Verbindung zur Datenbank erzeugt. Mittels
@@ -64,7 +62,6 @@ public class DBBestellungsDAO implements BestellungsDAO {
 			Class.forName("org.postgresql.Driver");
 			c = DriverManager.getConnection("jdbc:postgresql://gertsch21.ddns.net:5432/ISME_Ushop", "ise_user", "schikuta");
 			c.setAutoCommit(true);
-			entryToEnumeration = new EntryToEnumeration();
 		} catch (Exception e) {
 			System.out.println(e);
 			System.out.println("Verbindungsaufbau zur Datenbank nicht moeglich: (" + e.getMessage() + ")");
@@ -165,7 +162,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 				String vermerk = resultSet.getString(4);
 				String lieferartDB = resultSet.getString(5);
 				String datum = resultSet.getString(6);
-				Lieferart lieferart = this.entryToEnumeration.entryToLieferart(lieferartDB);
+				Lieferart lieferart = EntryToEnumeration.entryToLieferart(lieferartDB);
 				bestellung = new Bestellung(id, preis, abgeschlossen, datum, vermerk, lieferart);
 			}
 			preparedStatement.close();
@@ -249,7 +246,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 				String vermerk = resultSet.getString(4);
 				String lieferartDB = resultSet.getString(5);
 				String datum = resultSet.getString(6);
-				Lieferart lieferart = this.entryToEnumeration.entryToLieferart(lieferartDB);
+				Lieferart lieferart = EntryToEnumeration.entryToLieferart(lieferartDB);
 				bestellung = new Bestellung(id, preis, abgeschlossen, datum, vermerk, lieferart);
 				alleBestellungenKunde.add(bestellung);
 			}

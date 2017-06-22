@@ -116,18 +116,6 @@ public class BestellungsController extends HttpServlet {
 			return;
 		}
 		
-		if(request.getParameter("WarenkorbEditierenID")!=null){
-			String warenkorbID = request.getParameter("WarenkorbEditierenID");
-			
-			int wkID = Integer.parseInt(warenkorbID);
-			request.getSession(true).setAttribute("zeigeIDWarenkorb", wkID);
-			
-			
-			response.sendRedirect(request.getContextPath() + "/WarenkorbEditieren.jsp");
-			response.setContentType("text/html");	
-			return;
-		}
-		
 		response.sendRedirect(request.getContextPath() + "/HauptseiteKunde.jsp");
 		response.setContentType("text/html");
 		return;
