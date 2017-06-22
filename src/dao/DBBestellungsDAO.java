@@ -76,12 +76,26 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see dao.BestellungsDAO#speichereWarenkorb(modell.Bestellung)
+	 * @see dao.BestellungsDAO#speichereBestellung(modell.Bestellung)
 	 */
-	public boolean createWarenkorb(int kundenID) {
+	public boolean createBestellungFromWarenkorb(Bestellung bestellung, String date) {
 		try {
-			PreparedStatement preparedStatement = c.prepareStatement(speichereWarenkorb);
-			preparedStatement.setInt(1, kundenID);
+			if (bestellung == null) {
+				return false;
+			}
+			PreparedStatement preparedStatement;
+			if (bestellung.getVermerk() == null) {
+				preparedStatement = c.prepareStatement(updateBestellung);
+				preparedStatement.setString(1, bestellung.getLieferart().toString());
+				preparedStatement.setDate(2, Date.valueOf(date));
+				preparedStatement.setInt(3, bestellung.getBestellungID());
+			} else {
+				preparedStatement = c.prepareStatement(updateBestellungMitVermerk);
+				preparedStatement.setString(1, bestellung.getVermerk());
+				preparedStatement.setString(2, bestellung.getLieferart().toString());
+				preparedStatement.setDate(3, Date.valueOf(date));
+				preparedStatement.setInt(4, bestellung.getBestellungID());
+			}
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
@@ -119,31 +133,12 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see dao.BestellungsDAO#deleteBestellung(int)
+	 * @see dao.BestellungsDAO#speichereWarenkorb(modell.Bestellung)
 	 */
-	public boolean deleteBestellung(int bestellungsID) {
+	public boolean createWarenkorb(int kundenID) {
 		try {
-			PreparedStatement preparedStatement = c.prepareStatement(entferneBestellung);
-			preparedStatement.setInt(1, bestellungsID);
-			preparedStatement.execute();
-			preparedStatement.close();
-			return true;
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see dao.BestellungsDAO#removePositionFromBestellung(java.util.int, int)
-	 */
-	public boolean deletePosition(int bestellungsID, int positionID) {
-		try {
-			PreparedStatement preparedStatement = c.prepareStatement(entfernePosition);
-			preparedStatement.setInt(1, positionID);
-			preparedStatement.setInt(2, bestellungsID);
+			PreparedStatement preparedStatement = c.prepareStatement(speichereWarenkorb);
+			preparedStatement.setInt(1, kundenID);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
@@ -300,26 +295,31 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see dao.BestellungsDAO#speichereBestellung(modell.Bestellung)
+	 * @see dao.BestellungsDAO#removeBestellung(int)
 	 */
-	public boolean updateWarenkorbToBestellung(Bestellung bestellung, String date) {
+	public boolean removeBestellung(int bestellungsID) {
 		try {
-			if (bestellung == null) {
-				return false;
-			}
-			PreparedStatement preparedStatement;
-			if (bestellung.getVermerk() == null) {
-				preparedStatement = c.prepareStatement(updateBestellung);
-				preparedStatement.setString(1, bestellung.getLieferart().toString());
-				preparedStatement.setDate(2, Date.valueOf(date));
-				preparedStatement.setInt(3, bestellung.getBestellungID());
-			} else {
-				preparedStatement = c.prepareStatement(updateBestellungMitVermerk);
-				preparedStatement.setString(1, bestellung.getVermerk());
-				preparedStatement.setString(2, bestellung.getLieferart().toString());
-				preparedStatement.setDate(3, Date.valueOf(date));
-				preparedStatement.setInt(4, bestellung.getBestellungID());
-			}
+			PreparedStatement preparedStatement = c.prepareStatement(entferneBestellung);
+			preparedStatement.setInt(1, bestellungsID);
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see dao.BestellungsDAO#removePositionFromBestellung(java.util.int, int)
+	 */
+	public boolean removePosition(int bestellungsID, int positionID) {
+		try {
+			PreparedStatement preparedStatement = c.prepareStatement(entfernePosition);
+			preparedStatement.setInt(1, positionID);
+			preparedStatement.setInt(2, bestellungsID);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;

@@ -54,7 +54,7 @@ public class Bestellungsverwaltung {
 	 *         false.
 	 */
 	public boolean addBestellung(Bestellung bestellung, String date) {
-		return dao.updateWarenkorbToBestellung(bestellung, date);
+		return dao.createBestellungFromWarenkorb(bestellung, date);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class Bestellungsverwaltung {
 	 * @return true falls die Position erfolgreich hinzugefuegt wurde, sonst
 	 *         false.
 	 */
-	public boolean addPositionToBestellung(int bestellungsID, Position position) {
+	public boolean addPosition(int bestellungsID, Position position) {
 		Bestellung bestellung = dao.getBestellungByID(bestellungsID);
 		if (bestellung == null) {
 			return false;
@@ -80,7 +80,7 @@ public class Bestellungsverwaltung {
 			if (dao.updatePriceBestellung(bestellungsID, neuerPreis)) {
 				return true;
 			}
-			dao.deletePosition(bestellungsID, position.getPostionID());
+			dao.removePosition(bestellungsID, position.getPostionID());
 		}
 		return false;
 	}
@@ -204,9 +204,9 @@ public class Bestellungsverwaltung {
 	public boolean removeBestellung(int bestellungsID) {
 		List<Position> positionen = dao.readPositionenByBestellungID(bestellungsID);
 		for (Position pos : positionen) {
-			dao.deletePosition(bestellungsID, pos.getPostionID());
+			dao.removePosition(bestellungsID, pos.getPostionID());
 		}
-		return dao.deleteBestellung(bestellungsID);
+		return dao.removeBestellung(bestellungsID);
 	}
 
 	/**
@@ -221,6 +221,6 @@ public class Bestellungsverwaltung {
 	 * @return true falls die Position erfolgreich entfernt wurde, sonst false.
 	 */
 	public boolean removePositionFromBestellung(int bestellungsID, int positionID) {
-		return dao.deletePosition(bestellungsID, positionID);
+		return dao.removePosition(bestellungsID, positionID);
 	}
 }

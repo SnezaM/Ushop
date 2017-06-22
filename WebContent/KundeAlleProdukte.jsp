@@ -34,7 +34,7 @@
 	<h1>Alle Produkte:</h1>
 	<form action="Produktkundencontroller" method="Post">
 	<table class="table">
-		<tr><th>Name</th><th>Preis</th><th>ProduktID</th><th>Produktgruppe ID</th><th>Details</th></tr> 
+		<tr><th>Name</th><th>Preis</th><th>ProduktID</th><th>Produktgruppe ID</th><th>Details</th><th></th></tr> 
 		
 <%
 ProduktDAO dao = new DatenBankProduktDAO();
@@ -45,14 +45,14 @@ for(Produkt i:dao.getProduktList()){%>
 			<td><%=i.getPreis() %></td>
 			<td><%=i.getProduktID()%></td>
 			<td><%=i.getProduktgruppeID() %></td>
-			
+			<td>In den Warenkorb MUSS NOCH IMPLEMENTIERT WERDEN</td>
 			
 			<td><button name="KundeProduktseite" value="<%=i.getProduktID()%>" type="submit">Mehr</button></td>
 			
 		</tr>		
 <%} %>
 
-<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="back" /></a></td><td></td><td></td></tr>
+<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="back" /></a></td><td></td><td></td><td></td></tr>
 	</table>
 	</form>
 </div>

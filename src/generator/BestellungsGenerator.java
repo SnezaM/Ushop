@@ -133,7 +133,7 @@ public class BestellungsGenerator {
 	 * @return true wenn Position hinzugefuegt werden konnte, sonst false
 	 */
 	public boolean addPosition(int bestellungsID, Position position) {
-		return bestellungsverwaltung.addPositionToBestellung(bestellungsID, position);
+		return bestellungsverwaltung.addPosition(bestellungsID, position);
 	}
 
 	/**

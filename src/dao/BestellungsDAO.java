@@ -21,22 +21,23 @@ import modell.Position;
 public interface BestellungsDAO {
 
 	/**
-	 * <b>Speichert die uebergebene Bestellung in der DB.</b>
+	 * <b>Aktualisiert die uebergebene Bestellungs in der Datenbank</b>
 	 * <p>
-	 * Die Bestellung wird nur anhand der fuer einen Warenkorb noetigen Fakten
-	 * in der DB gespeichert. Abgeschlossen wird auf false gesetzt. Die
-	 * Instanzen vermerk, lieferart und datum, werden nicht gesetzt sondern als
-	 * null-Values eingetragen. Diese koennen spaeter mittels
-	 * {@link #updateWarenkorbToBestellung(Bestellung, String)} in eine
-	 * abgeschlossene Bestellung umgewandelt werden.
+	 * Wenn die uebergebene Bestellung in der DB vorhanden ist wird diese in den
+	 * Variablen lieferart, datum und vermerk anhand der uebergebenen Bestellung
+	 * aktualisiert. Die Variable abgeschlossen wird auf true gesetzt. Wenn Sie
+	 * nicht vorhanden ist, wird kein Update und keine Speicherung
+	 * durchgefuehrt.
 	 * </p>
 	 * 
-	 * @param kundenID
-	 *            ID des Kunden, dessen Warenkorb gespeichert wird.
-	 * @return true, falls die Bestellung gesepeichert werden konnte, sonst
-	 *         false.
+	 * @param bestellung
+	 *            Bestellung, die aktualiesiert werden soll
+	 * @param date
+	 *            Datum, das als Bestellungsdatum eingetragen wird (Format:
+	 *            "YYYY-MM-DD")
+	 * @return true bei erfolgreichen Aktualisieren, sonst false
 	 */
-	public boolean createWarenkorb(int kundenID);
+	public boolean createBestellungFromWarenkorb(Bestellung bestellung, String date);
 
 	/**
 	 * <b>Fuegt der Bestellung mit der uebergebenen ID, die uebergebene Position
@@ -52,26 +53,22 @@ public interface BestellungsDAO {
 	public boolean createPosition(int bestellungsID, Position position);
 
 	/**
-	 * <b>Entfernt die Bestellung mit der entsprechenden ID aus der
-	 * Datenbank.</b>
+	 * <b>Speichert die uebergebene Bestellung in der DB.</b>
+	 * <p>
+	 * Die Bestellung wird nur anhand der fuer einen Warenkorb noetigen Fakten
+	 * in der DB gespeichert. Abgeschlossen wird auf false gesetzt. Die
+	 * Instanzen vermerk, lieferart und datum, werden nicht gesetzt sondern als
+	 * null-Values eingetragen. Diese koennen spaeter mittels
+	 * {@link #createBestellungFromWarenkorb(Bestellung, String)} in eine
+	 * abgeschlossene Bestellung umgewandelt werden.
+	 * </p>
 	 * 
-	 * @param bestellungsID
-	 *            BestellungsID, der Bestellung, die geloescht werden soll.
-	 * @return true bei erfolgreichem Entfernen, sonst false.
+	 * @param kundenID
+	 *            ID des Kunden, dessen Warenkorb gespeichert wird.
+	 * @return true, falls die Bestellung gesepeichert werden konnte, sonst
+	 *         false.
 	 */
-	public boolean deleteBestellung(int bestellungsID);
-
-	/**
-	 * <b>Entfernt die Position mit der entsprechenden PositionsID aus der
-	 * Bestellung mit der uebergeben BestellungsID</b>
-	 * 
-	 * @param bestellungsID
-	 *            BestellungsID, der Bestellung mit zu loeschender Position.
-	 * @param positionID
-	 *            PositionsID, der zu entfernenden Instanz.
-	 * @return true bei erfolgreichem Entfernen, sonst false.
-	 */
-	public boolean deletePosition(int bestellungsID, int positionID);
+	public boolean createWarenkorb(int kundenID);
 
 	/**
 	 * <b>Liefert die Bestellung mit der uebergebenen ID retour</b>
@@ -156,23 +153,26 @@ public interface BestellungsDAO {
 	public List<Position> readPositionenByBestellungID(int bestellungsID);
 
 	/**
-	 * <b>Aktualisiert die uebergebene Bestellungs in der Datenbank</b>
-	 * <p>
-	 * Wenn die uebergebene Bestellung in der DB vorhanden ist wird diese in den
-	 * Variablen lieferart, datum und vermerk anhand der uebergebenen Bestellung
-	 * aktualisiert. Die Variable abgeschlossen wird auf true gesetzt. Wenn Sie
-	 * nicht vorhanden ist, wird kein Update und keine Speicherung
-	 * durchgefuehrt.
-	 * </p>
+	 * <b>Entfernt die Bestellung mit der entsprechenden ID aus der
+	 * Datenbank.</b>
 	 * 
-	 * @param bestellung
-	 *            Bestellung, die aktualiesiert werden soll
-	 * @param date
-	 *            Datum, das als Bestellungsdatum eingetragen wird (Format:
-	 *            "YYYY-MM-DD")
-	 * @return true bei erfolgreichen Aktualisieren, sonst false
+	 * @param bestellungsID
+	 *            BestellungsID, der Bestellung, die geloescht werden soll.
+	 * @return true bei erfolgreichem Entfernen, sonst false.
 	 */
-	public boolean updateWarenkorbToBestellung(Bestellung bestellung, String date);
+	public boolean removeBestellung(int bestellungsID);
+
+	/**
+	 * <b>Entfernt die Position mit der entsprechenden PositionsID aus der
+	 * Bestellung mit der uebergeben BestellungsID</b>
+	 * 
+	 * @param bestellungsID
+	 *            BestellungsID, der Bestellung mit zu loeschender Position.
+	 * @param positionID
+	 *            PositionsID, der zu entfernenden Instanz.
+	 * @return true bei erfolgreichem Entfernen, sonst false.
+	 */
+	public boolean removePosition(int bestellungsID, int positionID);
 
 	/**
 	 * <b>Aktualisiert die Menge und den Gesamtpreis der Position mit der

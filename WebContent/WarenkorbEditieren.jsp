@@ -54,14 +54,14 @@
 			int menge = p.getMenge();
 			%>
 				<tr>
-					
 					<td><%=p.getPostionID()%></td>
 					<td>
-						<input type="hidden" value="<%=bestellungsID %>" name="bestellungsID">
+						<input  name="bestellungsID" value="<%=bestellungsID %>" type="hidden">
 						<button name="minimize" value="<%=p.getPostionID() %>" type="submit"><i class="fa fa-minus" aria-hidden="true"></i></button>
 					</td>
 					<td align="center"><%=menge%></td>
 					<td>
+						<input  name="bestellungsID" value="<%=bestellungsID %>" type="hidden">
 						<button name="maximize" value="<%=p.getPostionID() %>" type="submit"><i class="fa fa-plus" aria-hidden="true"></i></button>
 					</td>
 					<td><%=prod.getProduktname() %></td>

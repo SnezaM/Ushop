@@ -50,7 +50,8 @@
 			<tr><td> Preis </td><td><%=preis %></td> 
 			<tr><td> Beschreibung </td><td><%=beschreibung %></td> 
 			<tr><td> Produktgruppe </td><td><%=kategorie %></td> 
-			<tr><td> ProduktgruppenID </td><td><%=gruppeid %></td> 
+			<tr><td> ProduktgruppenID </td><td><%=gruppeid %></td>
+			<tr><td> Zum Warenkorb hinzufügen </td>
 	
 		
 	</table>
