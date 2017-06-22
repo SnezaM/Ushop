@@ -28,10 +28,10 @@ import dao.EntryToEnumeration;
  */
 public class DBBestellungsDAO implements BestellungsDAO {
 
-	public static final String alleBestellungenKunde = "SELECT * FROM Bestellung WHERE kundenid = ?";
+	public static final String alleBestellungenKunde = "SELECT * FROM Bestellung WHERE kundenid = ? AND abgeschlossen=true ORDER BY datum DESC";
 	public static final String ladeBestellungID = "SELECT * FROM Bestellung WHERE bestellungid = ?";
 	public static final String ladeWarenkorb = "SELECT * FROM Bestellung WHERE kundenid = ? AND abgeschlossen=false";
-	public static final String ladePositionenVonBestellung = "SELECT * FROM Position WHERE bestellungid = ?";
+	public static final String ladePositionenVonBestellung = "SELECT * FROM Position WHERE bestellungid = ? ORDER BY positionid ASC";
 	public static final String ladePositionID = "SELECT * FROM Position WHERE bestellungid = ? AND positionid=?";
 
 	public static final String speichereWarenkorb = "INSERT INTO Bestellung (abgeschlossen, kundenid) VALUES(false,?)";
@@ -50,8 +50,6 @@ public class DBBestellungsDAO implements BestellungsDAO {
 
 	// Variable zum Verbindungsaufbau zur Datenbank
 	private Connection c = null;
-	// Variable fuer Enums
-	private EntryToEnumeration entryToEnumeration;
 
 	/**
 	 * Im Konstruktor wird eine Verbindung zur Datenbank erzeugt. Mittels
@@ -62,10 +60,8 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	public DBBestellungsDAO() {
 		try {
 			Class.forName("org.postgresql.Driver");
-			c = DriverManager.getConnection("jdbc:postgresql://gertsch22.ddns.net:5432/ISME_Ushop", "postgres",
-					"hallodu");
+			c = DriverManager.getConnection("jdbc:postgresql://gertsch21.ddns.net:5432/ISME_Ushop", "ise_user", "schikuta");
 			c.setAutoCommit(true);
-			entryToEnumeration = new EntryToEnumeration();
 		} catch (Exception e) {
 			System.out.println(e);
 			System.out.println("Verbindungsaufbau zur Datenbank nicht moeglich: (" + e.getMessage() + ")");
@@ -76,12 +72,26 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see dao.BestellungsDAO#speichereWarenkorb(modell.Bestellung)
+	 * @see dao.BestellungsDAO#speichereBestellung(modell.Bestellung)
 	 */
-	public boolean createWarenkorb(int kundenID) {
+	public boolean createBestellungFromWarenkorb(Bestellung bestellung, String date) {
 		try {
-			PreparedStatement preparedStatement = c.prepareStatement(speichereWarenkorb);
-			preparedStatement.setInt(1, kundenID);
+			if (bestellung == null) {
+				return false;
+			}
+			PreparedStatement preparedStatement;
+			if (bestellung.getVermerk() == null) {
+				preparedStatement = c.prepareStatement(updateBestellung);
+				preparedStatement.setString(1, bestellung.getLieferart().toString());
+				preparedStatement.setDate(2, Date.valueOf(date));
+				preparedStatement.setInt(3, bestellung.getBestellungID());
+			} else {
+				preparedStatement = c.prepareStatement(updateBestellungMitVermerk);
+				preparedStatement.setString(1, bestellung.getVermerk());
+				preparedStatement.setString(2, bestellung.getLieferart().toString());
+				preparedStatement.setDate(3, Date.valueOf(date));
+				preparedStatement.setInt(4, bestellung.getBestellungID());
+			}
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
@@ -119,31 +129,12 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see dao.BestellungsDAO#deleteBestellung(int)
+	 * @see dao.BestellungsDAO#speichereWarenkorb(modell.Bestellung)
 	 */
-	public boolean deleteBestellung(int bestellungsID) {
+	public boolean createWarenkorb(int kundenID) {
 		try {
-			PreparedStatement preparedStatement = c.prepareStatement(entferneBestellung);
-			preparedStatement.setInt(1, bestellungsID);
-			preparedStatement.execute();
-			preparedStatement.close();
-			return true;
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see dao.BestellungsDAO#removePositionFromBestellung(java.util.int, int)
-	 */
-	public boolean deletePosition(int bestellungsID, int positionID) {
-		try {
-			PreparedStatement preparedStatement = c.prepareStatement(entfernePosition);
-			preparedStatement.setInt(1, positionID);
-			preparedStatement.setInt(2, bestellungsID);
+			PreparedStatement preparedStatement = c.prepareStatement(speichereWarenkorb);
+			preparedStatement.setInt(1, kundenID);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
@@ -171,7 +162,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 				String vermerk = resultSet.getString(4);
 				String lieferartDB = resultSet.getString(5);
 				String datum = resultSet.getString(6);
-				Lieferart lieferart = this.entryToEnumeration.entryToLieferart(lieferartDB);
+				Lieferart lieferart = EntryToEnumeration.entryToLieferart(lieferartDB);
 				bestellung = new Bestellung(id, preis, abgeschlossen, datum, vermerk, lieferart);
 			}
 			preparedStatement.close();
@@ -255,7 +246,7 @@ public class DBBestellungsDAO implements BestellungsDAO {
 				String vermerk = resultSet.getString(4);
 				String lieferartDB = resultSet.getString(5);
 				String datum = resultSet.getString(6);
-				Lieferart lieferart = this.entryToEnumeration.entryToLieferart(lieferartDB);
+				Lieferart lieferart = EntryToEnumeration.entryToLieferart(lieferartDB);
 				bestellung = new Bestellung(id, preis, abgeschlossen, datum, vermerk, lieferart);
 				alleBestellungenKunde.add(bestellung);
 			}
@@ -300,26 +291,31 @@ public class DBBestellungsDAO implements BestellungsDAO {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see dao.BestellungsDAO#speichereBestellung(modell.Bestellung)
+	 * @see dao.BestellungsDAO#removeBestellung(int)
 	 */
-	public boolean updateWarenkorbToBestellung(Bestellung bestellung, String date) {
+	public boolean removeBestellung(int bestellungsID) {
 		try {
-			if (bestellung == null) {
-				return false;
-			}
-			PreparedStatement preparedStatement;
-			if (bestellung.getVermerk() == null) {
-				preparedStatement = c.prepareStatement(updateBestellung);
-				preparedStatement.setString(1, bestellung.getLieferart().toString());
-				preparedStatement.setDate(2, Date.valueOf(date));
-				preparedStatement.setInt(3, bestellung.getBestellungID());
-			} else {
-				preparedStatement = c.prepareStatement(updateBestellungMitVermerk);
-				preparedStatement.setString(1, bestellung.getVermerk());
-				preparedStatement.setString(2, bestellung.getLieferart().toString());
-				preparedStatement.setDate(3, Date.valueOf(date));
-				preparedStatement.setInt(4, bestellung.getBestellungID());
-			}
+			PreparedStatement preparedStatement = c.prepareStatement(entferneBestellung);
+			preparedStatement.setInt(1, bestellungsID);
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see dao.BestellungsDAO#removePositionFromBestellung(java.util.int, int)
+	 */
+	public boolean removePosition(int bestellungsID, int positionID) {
+		try {
+			PreparedStatement preparedStatement = c.prepareStatement(entfernePosition);
+			preparedStatement.setInt(1, positionID);
+			preparedStatement.setInt(2, bestellungsID);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;

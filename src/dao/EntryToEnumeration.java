@@ -25,12 +25,11 @@ public class EntryToEnumeration {
 	 *         STANDARDVERSAND)
 	 * @see Lieferart
 	 */
-	public Lieferart entryToLieferart(String lieferartDB) {
+	public static Lieferart entryToLieferart(String lieferartDB) {
 		Lieferart lieferart;
 		if (lieferartDB == null) {
 			return Lieferart.Standardversand;
 		}
-
 		switch (lieferartDB) {
 		case "Standardversand":
 			lieferart = Lieferart.Standardversand;

@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
+<%@page import="java.text.DecimalFormat"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -30,29 +31,47 @@
 <body>
 	<div class="container theme-showcase" role="main">
 	<div class="jumbotron">	
-		<h1>Details zu meiner Bestellung:</h1>
+		<%
+			int bestellungsID = Integer.valueOf((String) session.getAttribute("zeigeID"));
+			String vermerk = (String) session.getAttribute("zeigeVermerk");
+			String versand = (String) session.getAttribute("zeigeVersand");
+			String datum = (String) session.getAttribute("zeigeDatum");
+		%>
+		<h1>Ihre Bestellung:</h1>
+		<table class="table">
+			<tr><th>Bestellnummer:</th><th>Bestelldatum:</th><th>Versandart:</th><th>Vermerk:</th></tr>
+			<tr><td><%=bestellungsID%></td><td><%=datum%></td><td><%=versand%></td><td><%=vermerk%></td></tr>
+			
+		</table>
+		<br>
 		<form action="BestellungsController" method="Post">
 		<table class="table">
-			<tr><th>PositionsID</th><th>Menge</th><th>ProduktID</th><th>Gesamtpreis in EUR</th><th>Details</th></tr> 
+			<tr><th>PositionsID</th><th>Menge</th><th>Produkt</th><th>Preis/Stk.</th><th>Gesamtpreis</th><th/></tr> 
 			
 			<%
-			int bestellungsID = Integer.valueOf((String) session.getAttribute("zeigeID"));
 			BestellungsDAO dao = new DBBestellungsDAO();
+			ProduktDAO daoProd = new DatenBankProduktDAO();
+			DecimalFormat formator = new DecimalFormat("####,####,###.00");
 			List<Position> pos = dao.readPositionenByBestellungID(bestellungsID);
+			double gesamtwert = 0;
 			for(Position p : pos) { 
+			Produkt prod = daoProd.getProduktByProduktID(p.getArtikel());
+			double preis = p.getGesamtpreis();
 			%>
 				<tr>
 					<td><%=p.getPostionID()%></td>
 					<td><%=p.getMenge()%></td>
-					<td><%=p.getArtikel() %></td>
-					<td><%=p.getGesamtpreis() %></td>
-					<td><button name="KundeProduktseite" value="<%=p.getGesamtpreis()%>" type="submit">Mehr</button></td>
+					<td><%=prod.getProduktname() %></td>
+					<td align="right"><%=formator.format(preis/p.getMenge()) %> &euro;</td>
+					<td align="right"><%=formator.format(preis) %> &euro;</td>
+					<td align="right"><button name="ProduktDetailsAnzeigen" value="<%=p.getArtikel()%>" type="submit">Produktdetails anzeigen</button></td>
 				</tr>
 			<%
+			gesamtwert+=preis;
 			} 
-			%>
-	
-			<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="Zurueck" /></a></td><td></td><td></td></tr>
+			%>			
+			<tr><td></td><td></td><td/><td><b>Bestellwert</b></td><td align="right"><b><%=formator.format(gesamtwert) %> &euro;</b></td><td></td></tr>	
+			<tr><td><button name="bestellungenAnzeigenKunde" type="submit">Retour</button></td><td/><td/><td/><td/><td/></tr>
 		</table>
 		</form>
 	</div>

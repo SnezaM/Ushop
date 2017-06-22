@@ -1,7 +1,6 @@
 <%@page import="java.util.List" %>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
-<%@page import="management.Bestellungsverwaltung"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
@@ -23,20 +22,13 @@
 
     <!-- Bootstrap theme -->
     <link href="css/bootstrap-theme.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-	<title>Produkseite</title>
+	<title>Produkdetails</title>
 </head>
 
 <%
-	//Benotigt fuer Warenkorb adden
-	int kundenID = (int) session.getAttribute("kundenid");
-	Bestellungsverwaltung bwver = Bestellungsverwaltung.getInstance();
-	int bestellungsID = bwver.getWarenkorb(kundenID).getBestellungID();
-	
-	String id = request.getSession().getAttribute("zeigeID").toString();
+
+	String id = request.getSession().getAttribute("zeigeIDProd").toString();
 	String name = request.getSession().getAttribute("zeigeName").toString();
 	String gruppeid = request.getSession().getAttribute("zeigeGruppeid").toString();
 	String preis = request.getSession().getAttribute("zeigePreis").toString();
@@ -49,28 +41,18 @@
 <div class="container theme-showcase" role="main">
 <div class="jumbotron">
 
-<h1> Produkt: <%=name %> </h1>
-	<form action="Produktkundencontroller" method="Post">
+<h2> Produkt:</h2><h1><%=name %> </h1>
+	<form action="BestellungsController" method="Post">
 	<table class="table">
-	
-			<tr><td> ID </td><td><%=id %></td></tr>
-			<tr><td> Name </td><td><%=name %></td></tr> 
-			<tr><td> Preis </td><td><%=preis %></td></tr>
-			<tr><td> Beschreibung </td><td><%=beschreibung %></td></tr>
-			<tr><td> Produktgruppe </td><td><%=kategorie %></td></tr>
-			<tr><td> ProduktgruppenID </td><td><%=gruppeid %></td></tr>
-			<tr>
-				<td>
-					<input  name="bestellungsID" value="<%=bestellungsID %>" type="hidden">
-					<button name="ZumWarenkorbGeben" value="<%=id%>" type="submit">
-						<i class="fa fa-shopping-basket" aria-hidden="true"> In den Warenkorb</i>
-					</button>
-				</td>
-				<td/>
-			</tr>
-	</table>		
+			<tr><td> ID </td><td><%=id %></td>
+			<tr><td> Name </td><td><%=name %></td> 
+			<tr><td> Preis </td><td>&euro; <%=preis %></td> 
+			<tr><td> Beschreibung </td><td><%=beschreibung %></td> 
+			<tr><td> Produktgruppe </td><td><%=kategorie %></td> 
+			<tr><td> ProduktgruppenID </td><td><%=gruppeid %></td> 
+			<!-- <tr><td><a href="BestellungsDetails.jsp"><input type="submit" value="Retour" /></a></td><td/></tr> -->
+	</table>
 	</form>
-	<table><tr><td><a href="KundeAlleProdukte.jsp"><input type="submit" value="Retour" /></a></td></tr></table>
 </div>
 </div>
 </body>
