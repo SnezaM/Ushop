@@ -6,6 +6,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -98,9 +99,21 @@ public class Produktkundencontroller extends HttpServlet {
 					int produktid = Integer.parseInt(pID);
 					double produktPreis = dao.getProduktByProduktID(produktid).getPreis();
 					int bestellungsID = Integer.parseInt(request.getParameter("bestellungsID"));
-					int positionsID = (bverw.getAllPositionenByBestellungsID(bestellungsID).size()+1);
-					Position position = new Position(positionsID, produktid, 1, produktPreis);
-					if(bverw.addPosition(bestellungsID, position)){
+					List<Position> positionen = bverw.getAllPositionenByBestellungsID(bestellungsID);
+					boolean alreadyAdded = false;
+					boolean noProblems = true;
+					for(Position p: positionen){
+						if(p.getArtikel()==produktid){
+							noProblems = bverw.aenderePosition(bestellungsID, p.getPostionID(), 1);
+							alreadyAdded = true;
+						}
+					}
+					if(!alreadyAdded){
+						int positionsID = (positionen.size()+1);
+						Position position = new Position(positionsID, produktid, 1, produktPreis);
+						noProblems = bverw.addPosition(bestellungsID, position);
+					}	
+					if(noProblems){
 						response.sendRedirect(request.getContextPath() + "/Warenkorb.jsp");
 						response.setContentType("text/html");
 						return;
