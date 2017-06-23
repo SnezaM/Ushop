@@ -177,4 +177,18 @@ public class DatenBankProduktDAO implements ProduktDAO{
 				return null;
 			}	
 		}
+
+
+@Override
+public Produkt getProduktByName(String pname) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public List<Produkt> sucheProdukt(String lis) {
+	// TODO Auto-generated method stub
+	return null;
+}
 }
