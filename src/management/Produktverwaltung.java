@@ -4,15 +4,10 @@
  */
 package management;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import dao.DatenBankProduktDAO;
 import dao.ProduktDAO;
-import modell.Kunde;
 import modell.Produkt;
-
-
 
 /**
  * 
@@ -88,29 +83,10 @@ public class Produktverwaltung {
     public boolean loescheProdukt(int produktID){
 		return dao.loescheProduktByID(produktID);
 	}
-/**
- * liefert Liste von Produkten, bei denen der name die uebergebenen Daten entsprechen
- * @param name von Produkt
- * @return die Liste von den Prdukten
- */
-    
-    public List<Produkt> sucheProdukt (String name){
-    	List<Produkt> produktSuchList = new ArrayList<Produkt>();
-    	List<Produkt> produktdatenbank = dao.getProduktList();
-    	for(Produkt produkt : produktdatenbank){
-    		
-    		if(produkt.getProduktname().equalsIgnoreCase(name)){
-    			produktSuchList.add(produkt);
-    		}
-    	}
-    	return produktSuchList;
-    }
     
     public Produkt getProduktByName(String pname){
-		return dao.getProduktByName(pname);
-		
-	}
-    
+ 		return dao.getProduktByName(pname);
+ 	}
     
     
 }

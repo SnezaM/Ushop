@@ -53,7 +53,7 @@ public class BenVerController extends HttpServlet {
 		Benutzerverwaltung b = Benutzerverwaltung.getInstance();
 		
 		if(request.getParameter("alleKundenAnzeigen")!=null){
-			response.sendRedirect(request.getContextPath() + "/KundenSeite.jsp");//Damit Produktliste in session gleich aktualisiert wird
+			response.sendRedirect(request.getContextPath() + "/KundenSeite.jsp");
 			response.setContentType("text/html");
 			return;
 		}
@@ -62,14 +62,14 @@ public class BenVerController extends HttpServlet {
 			String benutzerid = request.getParameter("loescheKunde");
 			int benID = Integer.parseInt(benutzerid);
 			b.loescheKunden(benID);
-			response.sendRedirect(request.getContextPath() + "/HauptseiteAdmin.jsp");//Damit Produktliste in session gleich aktualisiert wird
+			response.sendRedirect(request.getContextPath() + "/HauptseiteAdmin.jsp"); 
 			response.setContentType("text/html");
 			return;
 		}
 		
 		if(request.getParameter("alleAdminsAnzeigen")!=null){
 			List<Administrator> adminliste = b.getAdministratorListe();
-			request.getSession().setAttribute("adminliste", adminliste); //Liste in sessionvariable speichern
+			request.getSession().setAttribute("adminliste", adminliste); 
 			request.getRequestDispatcher("AdminSeite.jsp").include(request, response);
 			response.setContentType("text/html");
 			return;
@@ -79,7 +79,7 @@ public class BenVerController extends HttpServlet {
 			String benutzerid = request.getParameter("loescheAdmin");
 			int benID = Integer.parseInt(benutzerid);
 			b.loescheAdmin(benID);
-			response.sendRedirect(request.getContextPath() + "/HauptseiteAdmin.jsp");//Damit Produktliste in session gleich aktualisiert wird
+			response.sendRedirect(request.getContextPath() + "/HauptseiteAdmin.jsp");
 			response.setContentType("text/html");
 			return;
 		}

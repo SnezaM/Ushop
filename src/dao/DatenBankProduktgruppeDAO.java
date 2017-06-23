@@ -39,7 +39,7 @@ public class DatenBankProduktgruppeDAO implements ProduktgruppeDAO{
 		try {
 	         Class.forName("org.postgresql.Driver");
 	         c = DriverManager
-	            .getConnection("jdbc:postgresql://gertsch22.ddns.net:5432/ISME_Ushop","postgres", "hallodu");
+	            .getConnection("jdbc:postgresql://gertsch21.ddns.net:5432/ISME_Ushop", "ise_user", "schikuta");
 	         c.setAutoCommit(true);
 	         System.out.println("Datenbankverbindung Erfolgreich");
 			
@@ -54,7 +54,7 @@ public class DatenBankProduktgruppeDAO implements ProduktgruppeDAO{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Verbindungsaufbau zur Datenbank nicht möglich auf Grund des Fehlers: ("+e.getMessage()+")");
+			System.out.println("Verbindungsaufbau zur Datenbank nicht mÃ¶glich auf Grund des Fehlers: ("+e.getMessage()+")");
 		}
 	}
 	

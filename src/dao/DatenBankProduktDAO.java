@@ -45,7 +45,7 @@ public class DatenBankProduktDAO implements ProduktDAO{
 		try {
 	         Class.forName("org.postgresql.Driver");
 	         c = DriverManager
-	            .getConnection("jdbc:postgresql://gertsch22.ddns.net:5432/ISME_Ushop","postgres", "hallodu");
+	            .getConnection("jdbc:postgresql://gertsch21.ddns.net:5432/ISME_Ushop", "ise_user", "schikuta");
 	         c.setAutoCommit(true);
 	         System.out.println("Datenbankverbindung Erfolgreich");
 			
@@ -147,7 +147,7 @@ public class DatenBankProduktDAO implements ProduktDAO{
 					System.out.println("DatenBankProduktDAO:getProduktList: Funktioniert nicht auf Grund des Fehlers:("+e.getMessage()+")");
 					return null;
 			}	
-		System.out.println("Achtung jetzt kommt die Liste aus dem getProduktList");
+		
 			return produkte;
 	}
 
@@ -177,29 +177,4 @@ public class DatenBankProduktDAO implements ProduktDAO{
 				return null;
 			}	
 		}
-	/**
-	 * Diese Methode dient zum Laden eines bestimmten Produktes aus der Datenbank.
-	 * Der Parameter ist der Name des gesuchten Produkte
-	 * Return einen Produkt  
-	 */
-	@Override
-	public Produkt getProduktByName(String pname) {
-
-		List<Produkt> produktliste = this.getProduktList();
-		Produkt gesuchterprodukt =null;
-
-		try{
-			for (Produkt p : produktliste){
-				if(p.getProduktname().equals(pname)){
-					gesuchterprodukt = p;
-				}
-			}
-		}catch (Exception e) {
-			System.out.println("DatenBankProduktDAO:methode:getProduktByName: Fehler!");
-			return null;
-
-		}
-		return gesuchterprodukt;
-
-	}
 }

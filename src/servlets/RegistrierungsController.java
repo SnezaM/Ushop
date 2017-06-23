@@ -43,7 +43,7 @@ import modell.Kunde;
 		}
 
 		/**
-		 * Hier wird gepr�ft ob die eingegebenen Daten korrekt sind, falls ja, war die Registrieren erfolgreich und es wird zur Hauptseite verwiesen,
+		 * Hier wird geprüft ob die eingegebenen Daten korrekt sind, falls ja, war die Registrieren erfolgreich und es wird zur Hauptseite verwiesen,
 		 * falls nein, dann wird die jeweilige Fehlermeldung ausgegeben.
 		 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 		 */
@@ -52,8 +52,8 @@ import modell.Kunde;
 			
 			
 			
-			if(request.getParameter("username")==null){//registrierbutton gedr�ckt
-				System.out.println("RegistrierController: keinUsername:Weiterleiten zum Registrieren!");
+			if(request.getParameter("username")==null){//registrierbutton gedrückt
+				System.out.println("RegistrierungsController: keinUsername:Weiterleiten zum Registrieren!");
 				request.getRequestDispatcher("KundeRegistrieren.jsp").include(request, response);
 				response.setContentType("text/html");
 				return;
@@ -86,7 +86,7 @@ import modell.Kunde;
 				}
 				
 				if(username.length()<2  || password.length()<2 ){
-					request.getSession(true).setAttribute("fehler", "Username od. Passwort zu kurz(mindestens 5 Zeichen ben�tigt)!");
+					request.getSession(true).setAttribute("fehler", "Username od. Passwort zu kurz(mindestens 2 Zeichen benötigt)!");
 					System.out.println("RegistrierungsController: Pwd od. Username  <  2 Zeichen!");
 					request.getRequestDispatcher("KundeRegistrieren.jsp").include(request, response);
 					response.setContentType("text/html");
@@ -102,7 +102,7 @@ import modell.Kunde;
 					return;
 				}
 				
-				//Username enth�lt Abst�nde
+				//Username enthält Abstände
 				if(username.length()!=username.replaceAll(" ","").length()){
 					request.getSession(true).setAttribute("fehler", "Fehler: Username darf keine Leerzeichen enthalten!");
 					System.out.println("RegistrierungsController: Leerzeichen im Username!");
@@ -111,7 +111,7 @@ import modell.Kunde;
 				}
 				
 				
-				//Nachdem Benutzer angelegt wurde, wird er automatisch(nicht �ber Login) zur Hauptseite.jsp weitergeleitet.
+				
 				if(b.kundeAnlegen(email, vorname, nachname, username, passwordW, strasse, plz, hausNr)){
 					Kunde k = b.getKundeByUName(username);
 					HttpSession session = request.getSession(true);
@@ -124,7 +124,7 @@ import modell.Kunde;
 				//	session.setAttribute("message", "Wilkommen "+username+" bei UShop 24/7!");
 					System.out.println("RegistrierungsController: Kunde angelegt: "+vorname+" "+nachname+" "+email+" "+strasse+" "+username+" "+password);
 				//	session.setAttribute("fehler", null);
-					response.sendRedirect(request.getContextPath() + "/HauptseiteKunde.jsp");//Damit Produktliste in session gleich aktualisiert wird
+					response.sendRedirect(request.getContextPath() + "/HauptseiteKunde.jsp");
 					response.setContentType("text/html");
 					return;
 				}
@@ -133,8 +133,6 @@ import modell.Kunde;
 					System.out.println("RegistrierungsController: Person konnte nicht angelegt werden: "+vorname+" "+nachname+" "+email+" "+strasse+" "+username+" "+password);
 					request.getSession(true).setAttribute("fehler", "Fehler: Der Username ist leider schon vergeben!");
 					response.sendRedirect("KundeRegistrieren.jsp");
-					
-					request.getSession(true).setAttribute("fehler", "Kein Produkt mit diesen Namen gefunden");
 				}
 			}
 			

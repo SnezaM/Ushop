@@ -35,7 +35,7 @@
 	<h1>Alle Produkte:</h1>
 	<form action="Produktverwaltungscontroller" method="Post">
 	<table class="table">
-		<tr><th>Name</th><th>Preis</th><th>ProduktID</th><th>Produktgruppe ID</th><th>Produkt loeschen</th><th>Details</th></tr> 
+		<tr><th>Name</th><th>Preis</th><th>ProduktID</th><th>Produktgruppe ID</th><th>Produkt entfernen</th><th>Details</th></tr> 
 		
 <%
 ProduktDAO dao = new DatenBankProduktDAO();

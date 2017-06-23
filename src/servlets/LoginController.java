@@ -45,7 +45,7 @@ public class LoginController extends HttpServlet {
 	}
 
 	/**
-	 * Hier wird gepr�ft ob die eingegebenen Daten korrekt sind, falls ja, war der Login erfolgreich und es wird zur Hauptseite verwiesen,
+	 * Hier wird geprüft ob die eingegebenen Daten korrekt sind, falls ja, war der Login erfolgreich und es wird zur Hauptseite verwiesen,
 	 * falls nein, dann wird die jeweilige Fehlermeldung ausgegeben.
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -54,12 +54,10 @@ public class LoginController extends HttpServlet {
 		String uname = request.getParameter("username");
 		String pwd = request.getParameter("password");
 		System.out.println("LoginController: Pruefe Login: '"+uname+"' mit PWD:'"+pwd+".");
-		
 		request.getSession(true).setAttribute("fehler", "Kein Benutzer mit solch einem Usernamen registriert!");
 
 		
-		//da der logout-button auf der Hauptseite den LoginController aufruft, wird hier gepr�ft, ob er 
-		//gedr�ckt wurde
+		
 		if(request.getParameter("logout")!=null){
 			System.out.println("Logout von : "+request.getSession().getAttribute("username"));
 			request.getSession().invalidate();
@@ -70,14 +68,10 @@ public class LoginController extends HttpServlet {
 		
 		
 		Kunde k = b.getKundeByUName(uname);
-		System.out.println(uname+ " ich habe das jetzt gemacht");
-		
 		Administrator a = b.getAdminByUserName(uname);
-		System.out.println(uname+ " ich habe das jetzt gemacht");
 		if( k!=null){
 			if(k.getPasswort().equals(pwd)){
 				request.getSession().invalidate();
-				System.out.println("LoginController: Erfolgreiche Pruefung(istKunde): Weiterleiten zur Hauptseite des Kunden!");
 				HttpSession session = request.getSession(true);
 				session.setAttribute("username", uname);
 				session.setAttribute("benutzerid",k.getBenutzerid());
@@ -97,7 +91,6 @@ public class LoginController extends HttpServlet {
 		if(a != null){
 			if(a.getPasswort().equals(pwd)){
 				request.getSession().invalidate();
-				System.out.println("LoginController: Erfolgreiche Pruefung(istMitarbeiter): Weiterleiten zur Hauptseite des Mitarbeiters!");
 				HttpSession session = request.getSession(true);
 				session.setAttribute("username", uname);
 				session.setAttribute("username", uname);
@@ -110,7 +103,7 @@ public class LoginController extends HttpServlet {
 				response.setContentType("text/html");
 				return;
 			}
-			System.out.println("Logincontroller: Falsches Passwort eingegeben von '"+uname+"'");
+			
 			request.getSession(true).setAttribute("fehler", "Ihr Passwort ist nicht korrekt!");
 		}
 
