@@ -60,11 +60,9 @@ public class BestellenController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("Soweit");
 		if (request.getParameter("bestellen") != null) {
 			response.sendRedirect(request.getContextPath() + "/Bestellen.jsp");
 			response.setContentType("text/html");
-			System.out.println("Sogut");
 			return;
 		}
 
