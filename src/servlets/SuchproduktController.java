@@ -24,11 +24,7 @@ public class SuchproduktController {
 
 	}
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/*request.getSession().invalidate();
-		request.getRequestDispatcher("HauptseiteKunde.jsp").include(request, response);
-		response.setContentType("text/html");
-	}
-		 */
+	
 		Produktverwaltung b = Produktverwaltung.getInstance();
 		String pname="";
 
@@ -69,3 +65,4 @@ public class SuchproduktController {
 
 
 }
+
