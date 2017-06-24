@@ -5,6 +5,7 @@ package management;
 
 import dao.BenutzerDAO;
 import dao.DatenBankBenutzerDAO;
+import dao.MongoDBBenutzerDAO;
 import modell.Administrator;
 import modell.Kunde;
 import modell.Benutzer;
@@ -22,7 +23,8 @@ public class Benutzerverwaltung {
 	private BenutzerDAO dao;
 	
 	private Benutzerverwaltung() {
-		dao = new DatenBankBenutzerDAO();
+	//	dao = new DatenBankBenutzerDAO();
+		dao = new MongoDBBenutzerDAO();
 	}
 	
 	/**

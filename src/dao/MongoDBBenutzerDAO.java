@@ -7,6 +7,7 @@ import java.util.List;
 import org.bson.Document;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.MongoClient;
 import modell.Administrator;
 import modell.Benutzer;
@@ -47,8 +48,8 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 	@Override
 	public boolean speichereKunde(Kunde k) {
 		
-		int id = k.getBenutzerid();
-		int idKunde = k.getKundenID();
+	//	int id = k.getBenutzerid();		wird gebraucht beim migrieren von postgresql zu mongoDB
+	//	int idKunde = k.getKundenID();
 		String username = k.getUsername();
 		String passwort = k.getPasswort();
 		String vorname = k.getVorname();
@@ -58,6 +59,12 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		String strasse = k.getStrasse();
 		int plz = k.getPlz();
 		int hausnummer = k.getHausnummer();
+		
+		//ids für mongodb
+		int benutzer_id = getBenutzerListe().size();
+		benutzer_id++;
+		int kunde_id = getKundeListe().size();
+		kunde_id++;
 		
 		
 		if(this.getBenutzerByUname(username)!=null){
@@ -70,8 +77,8 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 			Document adresse = new Document().append("plz",plz)
 										     .append("strasse", strasse)
 											 .append("hausnummer", hausnummer);
-			Document neuerKunde = new Document().append("_id", id)
-												.append("kundeId", idKunde)
+			Document neuerKunde = new Document().append("_id", benutzer_id)
+												.append("kundeID", kunde_id)
 												.append("uname", username)
 												.append("passwort",passwort)
 												.append("vorname", vorname)
@@ -91,8 +98,8 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 	@Override
 	public boolean speichereAdmin(Administrator a) {
 		
-		int id = a.getBenutzerid();
-		int idAdmin = a.getAdminID();
+	//	int id = a.getBenutzerid();
+	//	int idAdmin = a.getAdminID();  //  wird gebraucht für die Datenmigration von psql --> mongodb
 		String username = a.getUsername();
 		String passwort = a.getPasswort();
 		String vorname = a.getVorname();
@@ -101,6 +108,12 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		
 		double gehalt = a.getGehalt();
 		String geburtsdatum = a.getGeburtsdatum();
+		
+		//ids für den Administratoren
+		int benutzer_id = getBenutzerListe().size();
+		benutzer_id++;
+		int admin_id = getAdministratorListe().size();
+		admin_id++;
 		
 		if(this.getBenutzerByUname(username)!=null){
 			System.out.print("MongoDB: Administrator mit dem Username existiert schon");
@@ -112,8 +125,8 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 			Document adminDaten = new Document().append("gehalt",gehalt)
 												.append("geburtsdatum", geburtsdatum);
 												
-			Document neuerAdmin = new Document().append("_id", id)
-												.append("adminID", idAdmin)
+			Document neuerAdmin = new Document().append("_id", benutzer_id)
+												.append("adminID", admin_id)
 												.append("uname", username)
 												.append("passwort",passwort)
 												.append("vorname", vorname)
@@ -140,16 +153,19 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		try{
 			for(Document d : documents){
 				if(d.get("adminDaten") != null){
-					benutzerListe.add( new Administrator(	
+					Administrator admin = new Administrator(	
 							d.getString("email"),
 							d.getString("vorname"),
 							d.getString("nachname"),
 							d.getString("uname"),
 							d.getString("passwort"),	
 							((Document)d.get("adminDaten")).getDouble("gehalt"),
-							((Document)d.get("adminDaten")).getString("geburtsdatum")));
+							((Document)d.get("adminDaten")).getString("geburtsdatum"));
+					admin.setAdminID(d.getInteger("adminID"));
+					admin.setBenutzerid(d.getInteger("_id"));
+					benutzerListe.add(admin);
 				}else if(d.get("adresse") != null){
-					benutzerListe.add( new Kunde(
+					Kunde k = new Kunde(
 							d.getString("email"),
 							d.getString("vorname"),
 							d.getString("nachname"),
@@ -157,7 +173,10 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 							d.getString("passwort"),
 							((Document)d.get("adresse")).getString("strasse"),
 							((Document)d.get("adresse")).getInteger("plz").intValue(),
-							((Document)d.get("adresse")).getInteger("hausnummer").intValue()));
+							((Document)d.get("adresse")).getInteger("hausnummer").intValue());
+					k.setKundenID(d.getInteger("kundeID"));
+					k.setBenutzerid(d.getInteger("_id"));
+					benutzerListe.add(k);
 							
 			}
 		}
@@ -176,10 +195,12 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		List<Kunde> kundenListe = new ArrayList<Kunde>();
 		FindIterable<Document> documents = db.getCollection(collectionName).find();
 		
+	
 		try {
 			for (Document d : documents){
-				if(d.get("adresse")!=null){
-					kundenListe.add(new Kunde(
+				if(d.get("adresse")!=null){	
+					
+					Kunde k = new Kunde(
 							d.getString("email"),
 							d.getString("vorname"),
 							d.getString("nachname"),
@@ -187,10 +208,16 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 							d.getString("passwort"),
 							((Document)d.get("adresse")).getString("strasse"),
 							((Document)d.get("adresse")).getInteger("plz").intValue(),
-							((Document)d.get("adresse")).getInteger("hausnummer").intValue()));
+							((Document)d.get("adresse")).getInteger("hausnummer").intValue());
+					
+					k.setBenutzerid(d.getInteger("_id"));
+					k.setKundenID(d.getInteger("kundeID"));
+					kundenListe.add(k);
 					
 				}
 			}
+			
+			return kundenListe;
 		}catch(Exception e){
 			System.out.println("MongoDB:methode:getKundeListe: Fehler!");
 			e.printStackTrace();
@@ -199,7 +226,7 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		
 		
 		
-		return kundenListe;
+		
 	}
 
 	@Override
@@ -210,14 +237,17 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		try{
 			for(Document d : documents){
 				if(d.get("adminDaten") != null){
-					adminListe.add( new Administrator(	
+					Administrator admin = new Administrator(	
 							d.getString("email"),
 							d.getString("vorname"),
 							d.getString("nachname"),
 							d.getString("uname"),
 							d.getString("passwort"),	
 							((Document)d.get("adminDaten")).getDouble("gehalt"),
-							((Document)d.get("adminDaten")).getString("geburtsdatum")));
+							((Document)d.get("adminDaten")).getString("geburtsdatum"));
+					admin.setAdminID(d.getInteger("adminID"));
+					admin.setBenutzerid(d.getInteger("_id"));
+					adminListe.add(admin);
 				}
 			}
 		}catch(Exception e){
@@ -228,16 +258,51 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		return adminListe;
 	}
 
+
+		
 	@Override
 	public Kunde getKundeByUName(String kundeName) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Kunde> kundenListe = getKundeListe();
+		Kunde kunde = null;
+		
+		try {
+			for(Kunde k : kundenListe){
+				if(k.getUsername().equals(kundeName)){
+					kunde = k;
+				}
+			}
+			}catch(Exception e){
+				e.printStackTrace();
+				System.out.println( "MongoDB:Methode:getKundeByUName!" );
+				return null;
+			}
+			
+		
+		return kunde;
 	}
+	
 
 	@Override
 	public Benutzer getBenutzerByID(int benutzerID) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Benutzer> benutzerListe = getBenutzerListe();
+		Benutzer benutzer = null;
+		
+		try{
+			for (Benutzer b : benutzerListe){
+				if(b.getBenutzerid() == benutzerID){
+					benutzer = b;
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println( "MongoDB:Methode:getBenutzerByID!" );
+			return null;
+		}
+		
+		
+		
+		
+		return benutzer;
 	}
 
 	@Override
@@ -285,19 +350,41 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 
 	@Override
 	public Administrator getAdminByUName(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Administrator> adminListe = getAdministratorListe();
+		Administrator admin = null;
+		
+		try{
+			for(Administrator a : adminListe){
+				if(a.getUsername().equals(username)){
+					if(a instanceof Administrator){
+						admin = a;
+					}
+				}
+					
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("MongoDB:methode:getAdminByUName: Fehler!");
+			return null;
+		}
+		return admin;
 	}
 
 	@Override
 	public boolean loescheAdminByID(int benutzerid) {
-		// TODO Auto-generated method stub
+		DeleteResult dr = db.getCollection(collectionName).deleteOne(new Document("_id",benutzerid));
+		if(dr.getDeletedCount()>0){
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean loescheKundeByID(int benutzerid) {
-		// TODO Auto-generated method stub
+		DeleteResult dr = db.getCollection(collectionName).deleteOne(new Document("_id",benutzerid));
+		if(dr.getDeletedCount()>0){
+			return true;
+		}
 		return false;
 	}
 	
