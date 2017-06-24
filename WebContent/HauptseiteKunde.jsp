@@ -60,7 +60,7 @@
 						value="Logout" />
 				</form>
 			</div>
-			<form action="Produktsuchecontroller" method="post">
+			<form action="SuchproduktController" method="post">
 				<table>
 					<tr>
 						<div class="form-group">

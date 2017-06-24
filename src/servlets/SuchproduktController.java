@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.DatenBankProduktDAO;
 import modell.Administrator;
@@ -25,16 +26,15 @@ public class SuchproduktController {
 
 	}
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-		Produktverwaltung b = Produktverwaltung.getInstance();
-		String pname="";
+		/*	Produktverwaltung b = Produktverwaltung.getInstance();
+		String produktname="";
 
 		ProduktDAO dao = new DatenBankProduktDAO();
-		Produkt temp = dao.getProduktByName(pname);
+		Produkt temp = dao.getProduktByName(produktname);
 
-		pname = request.getParameter("pname");
-		if(pname!=null && !(pname.equals(""))){
-			Produkt p = b.getProduktByName(pname);
+		produktname = request.getParameter("produktname");
+		if(produktname!=null && !(produktname.equals(""))){
+			Produkt p = b.getProduktByName(produktname);
 
 			int gruppeid = temp.getProduktgruppeID();
 			String pName = temp.getProduktname();
@@ -50,15 +50,29 @@ public class SuchproduktController {
 			response.setContentType("text/html");
 			return;
 		}
+	}*/
+
+
+		HttpSession session = request.getSession(true);
+		request.getRequestDispatcher("/HauptseiteKunde.jsp").include(request, response);
+
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		/*
 		doGet(request, response);
-	}
+	}*/
+		HttpSession session = request.getSession(true);
+
+		String name=request.getParameter("produktname");
+		name.trim();
+
+		response.setContentType( "text/html" );
+		response.sendRedirect( "GesuchteProdukte.jsp?foo="+name ); }
 
 
 
