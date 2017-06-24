@@ -1,5 +1,5 @@
 /**
- * Das Package Modell dient fuer alle Akteure, Produkte und Produktgrupen die für den Ushop benoetigt werden.
+ * Das Package Modell dient fuer alle Akteure, Produkte und Produktgrupen die fï¿½r den Ushop benoetigt werden.
  */
 package modell;
 
