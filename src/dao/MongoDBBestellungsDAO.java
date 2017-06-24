@@ -20,7 +20,11 @@ import javafx.geometry.Pos;
 
 import com.mongodb.MongoClient;
 
-
+/**
+ * 
+ * @author Arreze Fetahaj a1146976
+ *
+ */
 public class MongoDBBestellungsDAO implements BestellungsDAO {
 
 

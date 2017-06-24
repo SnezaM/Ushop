@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -16,7 +17,11 @@ import modell.Produkt;
 import dao.ProduktDAO;
 import management.Benutzerverwaltung;
 import management.Produktverwaltung;
-
+/**
+ * 
+ * @author Arreze Fetahaj a1146976
+ *
+ */
 @WebServlet("/SuchproduktController")
 public class SuchproduktController {
 	private static final long serialVersionUID = 1L;
@@ -25,6 +30,9 @@ public class SuchproduktController {
 		super();
 
 	}
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/*	Produktverwaltung b = Produktverwaltung.getInstance();
 		String produktname="";
@@ -60,7 +68,9 @@ public class SuchproduktController {
 	}
 
 
-
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/*
