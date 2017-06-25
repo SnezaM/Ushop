@@ -73,23 +73,7 @@
 								required /></td>
 						</div>
 
-						<%
-							ProduktgruppeDAO dao = new DatenBankProduktgruppeDAO();
-							for (Produktgruppe i : dao.getProduktgruppeList()) {
-						%>
-					
-					<tr>
-						<td><%=i.getProduktgruppenname()%></td>
-
-
-						<td><label>Kategorie: </label></td>
-						<td><select name="produktgruppe"
-							value="<%=i.getProduktgruppenname()%>">
-						</select></td>
-					</tr>
-					<%
-						}
-					%>
+						
 
 
 					<td><button type="submit" class="btn btn-primary">Suchen</button></td>
