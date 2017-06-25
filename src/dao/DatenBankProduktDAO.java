@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Das Paket dient zum persistenten speichern und lesen in der 
  * Datenbank um spaeter wieder darauf zugreifen zu koennen.
  * 
