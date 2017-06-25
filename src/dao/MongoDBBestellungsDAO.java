@@ -49,6 +49,7 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 		this.db = mongoClient.getDatabase(dbName);
 	}
 
+	// Sollte ueberarbeitet werden
 	@Override
 	public boolean createBestellungFromWarenkorb(Bestellung bestellung, String date) {
 		int id = bestellung.getBestellungID();
@@ -63,11 +64,8 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 		}
 		try {
 
-			Document neueBestellung = new Document().append("gesamtpreis", gesamtpreis)
-					.append("abgeschlossen", true).append("lieferart", liferart).append("vermerk", vermerk)
-					.append("datum", datum);
-			
-			
+			Document neueBestellung = new Document().append("gesamtpreis", gesamtpreis).append("abgeschlossen", true)
+					.append("lieferart", liferart).append("vermerk", vermerk).append("datum", datum);
 
 			db.getCollection(collectionName).insertOne(neueBestellung);
 			System.out.println("Bestellung wurde erstellt!");
@@ -89,7 +87,7 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	public boolean createBestellung(Bestellung bestellung, int kundenid) {
 		int id = bestellung.getBestellungID();
 		double gesamtpreis = bestellung.getGesamtpreis();
-		boolean abgeschlossen = false;
+		boolean abgeschlossen = true;
 		String lieferart = bestellung.getLieferart().toString();
 		String vermerkt = bestellung.getVermerk();
 		String datum = bestellung.getDatum();
@@ -192,7 +190,8 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	@Override
 	public Bestellung getBestellungByID(int bestellungsID) {
 		try {
-			FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("_id", bestellungsID));
+			FindIterable<Document> documents = db.getCollection(collectionName)
+					.find(new Document("_id", bestellungsID));
 
 			Bestellung bestellung = null;
 
@@ -219,17 +218,15 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	@Override
 	public Position getPositionByID(int bestellungsID, int positionID) {
 		try {
-			FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("_id", bestellungsID));
-			
-			for(Document doc : documents){
+			FindIterable<Document> documents = db.getCollection(collectionName)
+					.find(new Document("_id", bestellungsID));
+
+			for (Document doc : documents) {
 				List<Document> positionen = (List<Document>) doc.get("Positionen");
-				if(positionen!=null){
-					for(Document x : positionen){
-						if(x.getInteger("positionID").intValue() == positionID){
-							Position pos = new Position(
-									positionID, 
-									x.getInteger("produktID"),
-									x.getInteger("menge"), 
+				if (positionen != null) {
+					for (Document x : positionen) {
+						if (x.getInteger("positionID").intValue() == positionID) {
+							Position pos = new Position(positionID, x.getInteger("produktID"), x.getInteger("menge"),
 									x.getDouble("preis"));
 							return pos;
 						}
@@ -248,7 +245,8 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	@Override
 	public Bestellung getWarenkorb(int kundenID) {
 		try {
-			FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("kundenid", kundenID));
+			FindIterable<Document> documents = db.getCollection(collectionName)
+					.find(new Document("kundenid", kundenID));
 
 			Bestellung bestellung = null;
 
@@ -276,13 +274,14 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	}
 
 	@Override
-	public List<Bestellung> readBestellungenByKundenID(int kundenID) {		
+	public List<Bestellung> readBestellungenByKundenID(int kundenID) {
 		List<Bestellung> bestellungsListe = new ArrayList<Bestellung>();
 		FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("kundenid", kundenID));
 		try {
 			Bestellung bestellung = null;
-
 			for (Document d1 : documents) {
+				System.out.println(bestellungsListe.size());
+				System.out.println(d1.getBoolean("abgeschlossen"));
 				if (d1.getBoolean("abgeschlossen")) {
 					int bestellungsID1 = d1.getInteger("_id");
 					double gesamtpreis = d1.getDouble("gesamtpreis");
@@ -293,6 +292,7 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 					Lieferart lieferart1 = EntryToEnumeration.entryToLieferart(lieferartDB1);
 					bestellung = new Bestellung(bestellungsID1, gesamtpreis, abgeschlossen, datum, vermerk, lieferart1);
 					bestellungsListe.add(bestellung);
+					System.out.println(bestellungsListe.size());
 				}
 			}
 			return bestellungsListe;
@@ -309,15 +309,12 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 		FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("_id", bestellungsID));
 
 		try {
-			for(Document doc : documents){
+			for (Document doc : documents) {
 				List<Document> positionen = (List<Document>) doc.get("Positionen");
-				if(positionen!=null){
-					for(Document x : positionen){
-						Position pos = new Position(
-								x.getInteger("positionID"), 
-								x.getInteger("produktID"),
-								x.getInteger("menge"), 
-								x.getDouble("preis"));
+				if (positionen != null) {
+					for (Document x : positionen) {
+						Position pos = new Position(x.getInteger("positionID"), x.getInteger("produktID"),
+								x.getInteger("menge"), x.getDouble("preis"));
 						positionListe.add(pos);
 					}
 				}
@@ -347,7 +344,7 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 			MongoCollection<Document> collection = db.getCollection(collectionName);
 
 			BasicDBObject sq = new BasicDBObject("_id", bestellungsID);
-			BasicDBObject idoc = new BasicDBObject("positionId", positionID);
+			BasicDBObject idoc = new BasicDBObject("positionID", positionID);
 			BasicDBObject odoc = new BasicDBObject("Positionen", idoc);
 			BasicDBObject delq = new BasicDBObject("$pull", odoc);
 			collection.updateOne(sq, delq);
@@ -358,36 +355,35 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 		}
 	}
 
+	// Sollte ueberarbeitet werden
 	@Override
 	public boolean updatePosition(int bestellungsID, int positionsID, int menge, double preis) {
-		bestellungsID = bestellung.getBestellungID();
-		positionsID = position.getPostionID();
-		preis = position.getGesamtpreis();
-
 		try {
-			Document createPosition = new Document().append("_id", bestellungsID).append("positionID", positionsID)
-					.append("preis", preis);
+			MongoCollection<Document> collection = db.getCollection(collectionName);
 
-			db.getCollection(collectionName).updateOne(createPosition, null);
-			System.out.println("Position ist bereits upgedated!");
+			BasicDBObject abfq = new BasicDBObject().append("_id", bestellungsID).append("positionID", positionsID);
+			BasicDBObject sq = new BasicDBObject("$and", abfq);
+			BasicDBObject idoc = new BasicDBObject().append("menge", menge).append("preis", preis);
+			BasicDBObject indoc = new BasicDBObject("Positionen", idoc);
+			BasicDBObject updateq = new BasicDBObject("$set", indoc);
+			collection.updateOne(sq, updateq);
+			System.out.println("Preis wurde upgedated!");
 			return true;
-
 		} catch (Exception e) {
 			System.out.println("MongoDB:Methode:updatePriceBestellung: Fehler! ");
 			return false;
 		}
-
 	}
 
+	// Sollte ueberarbeitet werden
 	@Override
 	public boolean updatePriceBestellung(int bestellungsID, double wert) {
-		bestellungsID = bestellung.getBestellungID();
-		wert = position.getGesamtpreis();
-
 		try {
-			Document createPosition = new Document().append("_id", bestellungsID).append("gesamtpreis", wert);
+			BasicDBObject newDocument = new BasicDBObject();
+			newDocument.append("$set", new BasicDBObject().append("gesamtpreis", wert));
+			BasicDBObject searchQuery = new BasicDBObject().append("_id", bestellungsID);
+			db.getCollection(collectionName).updateOne(searchQuery, newDocument);
 
-			db.getCollection(collectionName).updateOne(createPosition, null);
 			System.out.println("Preis wurde upgedated!");
 			return true;
 
@@ -395,6 +391,5 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 			System.out.println("MongoDB:Methode:updatePriceBestellung: Fehler! ");
 			return false;
 		}
-
 	}
 }
