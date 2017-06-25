@@ -38,6 +38,14 @@ public interface BestellungsDAO {
 	 * @return true bei erfolgreichen Aktualisieren, sonst false
 	 */
 	public boolean createBestellungFromWarenkorb(Bestellung bestellung, String date);
+	
+	/**
+	 * Notwendig fuer Datenmigration.
+	 * @param bestellung
+	 * @param kundenID
+	 * @return
+	 */
+	public boolean createBestellung(Bestellung bestellung, int kundenID);
 
 	/**
 	 * <b>Fuegt der Bestellung mit der uebergebenen ID, die uebergebene Position
@@ -69,6 +77,14 @@ public interface BestellungsDAO {
 	 *         false.
 	 */
 	public boolean createWarenkorb(int kundenID);
+	
+	/**
+	 * Notwendig fuer Datenmigration
+	 * @param kundenID
+	 * @param warenkorb
+	 * @return
+	 */
+	public boolean createWarenkorb(int kundenID, Bestellung warenkorb);
 
 	/**
 	 * <b>Liefert die Bestellung mit der uebergebenen ID retour</b>

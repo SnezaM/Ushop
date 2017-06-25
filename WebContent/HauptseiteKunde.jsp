@@ -44,7 +44,7 @@
 <body>
 	<div class="container theme-showcase">
 		<div class="jumbotron">
-			<img src="fotos/ushop247.png" alt="" height="90" width="500" />
+			<img src="fotos/ushop247with.png" alt="" height="90" width="500" />
 			<h2>UShop 24/7</h2>
 			<h3>
 				Herzlich Willkommen,
