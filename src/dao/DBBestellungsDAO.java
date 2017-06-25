@@ -363,6 +363,18 @@ public class DBBestellungsDAO implements BestellungsDAO {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean createBestellung(Bestellung bestellung, int kundenID) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean createWarenkorb(int kundenID, Bestellung warenkorb) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 
 }

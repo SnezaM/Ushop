@@ -205,7 +205,6 @@ public class Bestellungsverwaltung {
 	public Bestellung getWarenkorb(int kundenID) {
 		Bestellung warenkorb = dao.getWarenkorb(kundenID);
 		if(warenkorb==null){
-			System.out.println("Check ich nicht");
 			this.addWarenkorb(kundenID);
 			warenkorb = dao.getWarenkorb(kundenID);
 		}

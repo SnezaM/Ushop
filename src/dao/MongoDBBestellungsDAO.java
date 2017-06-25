@@ -2,16 +2,23 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import modell.Bestellung;
 import modell.Lieferart;
 import modell.Position;
+import modell.Produkt;
+import modell.Produktgruppe;
+
 import org.bson.Document;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
 
 import javafx.geometry.Pos;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 
 public class MongoDBBestellungsDAO implements BestellungsDAO {
@@ -19,6 +26,7 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 	private String collectionName;
+	private String collectionNamePos;
 	private String dbName;
 	private String mongoLocation;
 	private Bestellung bestellung;
@@ -27,16 +35,17 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	public MongoDBBestellungsDAO() {
 		this.mongoLocation = "localhost";
 		this.mongoClient = new MongoClient(mongoLocation);
-		this.dbName = "mydb";
+		this.dbName = "ISME_Ushop";
 		this.db = mongoClient.getDatabase(dbName);
 		this.collectionName = "Bestellung";
 	}
 
-	public MongoDBBestellungsDAO(String sLocation, String dbName, String collectionName) {
+	public MongoDBBestellungsDAO(String sLocation, String dbName, String collectionName, String collectionName2) {
 
 		this.mongoClient = new MongoClient(sLocation);
 		this.dbName = dbName;
 		this.collectionName = collectionName;
+		this.collectionNamePos = collectionName2;
 		this.db = mongoClient.getDatabase(dbName);
 	}
 
@@ -44,8 +53,44 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	public boolean createBestellungFromWarenkorb(Bestellung bestellung, String date) {
 		int id = bestellung.getBestellungID();
 		double gesamtpreis = bestellung.getGesamtpreis();
-		boolean abgeschlossen = false;
 		String liferart = bestellung.getLieferart().toString();
+		String vermerk = bestellung.getVermerk();
+		String datum = bestellung.getDatum();
+
+		if (this.getBestellungByID(id) != null) {
+			System.out.print("MongoDB: Bestellung mit der ID " + id + " existiert bereits");
+			return false;
+		}
+		try {
+
+			Document neueBestellung = new Document().append("gesamtpreis", gesamtpreis)
+					.append("abgeschlossen", true).append("lieferart", liferart).append("vermerk", vermerk)
+					.append("datum", datum);
+			
+			
+
+			db.getCollection(collectionName).insertOne(neueBestellung);
+			System.out.println("Bestellung wurde erstellt!");
+			return true;
+		} catch (Exception e) {
+			System.out.println("MongoDB:Methode:createBestellungFromWarenkorb: Fehler! ");
+			return false;
+		}
+
+	}
+
+	/**
+	 * Notwendig fuer Datenmigration.
+	 * 
+	 * @param bestellung
+	 * @param kundenid
+	 * @return
+	 */
+	public boolean createBestellung(Bestellung bestellung, int kundenid) {
+		int id = bestellung.getBestellungID();
+		double gesamtpreis = bestellung.getGesamtpreis();
+		boolean abgeschlossen = false;
+		String lieferart = bestellung.getLieferart().toString();
 		String vermerkt = bestellung.getVermerk();
 		String datum = bestellung.getDatum();
 
@@ -56,11 +101,11 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 		try {
 
 			Document neueBestellung = new Document().append("_id", id).append("gesamtpreis", gesamtpreis)
-					.append("abgeschlossen", abgeschlossen).append("lieferant", liferart).append("vermerk", vermerkt)
-					.append("datum", datum);
+					.append("abgeschlossen", abgeschlossen).append("lieferant", lieferart).append("vermerk", vermerkt)
+					.append("datum", datum).append("kundenid", kundenid);
 
 			db.getCollection(collectionName).insertOne(neueBestellung);
-			System.out.println("Bestellung wurde bereits erstellt!");
+			System.out.println("Bestellung wurde erstellt!");
 			return true;
 		} catch (Exception e) {
 			System.out.println("MongoDB:Methode:createBestellungFromWarenkorb: Fehler! ");
@@ -71,22 +116,22 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 
 	@Override
 	public boolean createPosition(int bestellungsID, Position position) {
-		int id = bestellungsID;
 		int pid = position.getPostionID();
 		int menge = position.getMenge();
 		double preis = position.getGesamtpreis();
 		int artikel = position.getArtikel();
 
 		if (this.getPositionByID(bestellungsID, pid) != null) {
-			System.out.print("MongoDB: Position mit ID "+ pid + " in der Bestellung mit ID " + bestellungsID + " existiert bereits.");
+			System.out.print("MongoDB: Position mit ID " + pid + " in der Bestellung mit ID " + bestellungsID
+					+ " existiert bereits.");
 			return false;
 		}
 		try {
-			Document createPosition = new Document().append("_id", id).append("positionId", pid).append("menge", menge)
-					.append("preis", preis).append("artikel", artikel);
+			db.getCollection(collectionName).updateOne(new Document("_id", bestellungsID),
+					new Document("$push", new Document("Positionen", new Document().append("positionID", pid)
+							.append("menge", menge).append("preis", preis).append("produktID", artikel))));
 
-			db.getCollection(collectionName).insertOne(createPosition);
-			System.out.println("Position wurde bereits erstellt!");
+			System.out.println("Position wurde erstellt!");
 			return true;
 
 		} catch (Exception e) {
@@ -99,11 +144,42 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	@Override
 	public boolean createWarenkorb(int kundenID) {
 		int kid = kundenID;
+
 		try {
-			Document createWarenkorb = new Document().append("positionId", kid);
+			Document createWarenkorb = new Document().append("gesamtpreis", 0).append("abgeschlossen", false)
+					.append("lieferant", null).append("vermerk", null).append("datum", null).append("kundenid", kid);
 
 			db.getCollection(collectionName).insertOne(createWarenkorb);
-			System.out.println("Warenkorb wurde bereits erstellt!");
+			System.out.println("Warenkorb wurde erstellt!");
+			return true;
+
+		} catch (Exception e) {
+			System.out.println("MongoDB:Methode:createWarenkorb: Fehler! ");
+			return false;
+		}
+
+	}
+
+	/**
+	 * Notwendig fuer Datenmigration. Liest einen bereits vorhanden Warenkorb in
+	 * die DB ein.
+	 * 
+	 * @param kundenID
+	 * @param b
+	 * @return
+	 */
+	public boolean createWarenkorb(int kundenID, Bestellung b) {
+		int kid = kundenID;
+		int id = b.getBestellungID();
+		double preis = b.getGesamtpreis();
+
+		try {
+			Document createWarenkorb = new Document().append("_id", id).append("gesamtpreis", preis)
+					.append("abgeschlossen", false).append("lieferart", null).append("vermerk", null)
+					.append("datum", null).append("kundenid", kid);
+
+			db.getCollection(collectionName).insertOne(createWarenkorb);
+			System.out.println("Warenkorb wurde erstellt!");
 			return true;
 
 		} catch (Exception e) {
@@ -116,22 +192,19 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	@Override
 	public Bestellung getBestellungByID(int bestellungsID) {
 		try {
-			FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("id", bestellungsID));
+			FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("_id", bestellungsID));
 
 			Bestellung bestellung = null;
 
 			for (Document d1 : documents) {
-				if (d1.get("adminDaten") != null) {
-					int bestellungsID1 = d1.getInteger("id");
-					double gesamtpreis = d1.getDouble("gesamtpreis");
-					boolean abgeschlossen = d1.getBoolean("abgeschlossen");
-					String vermerk = d1.getString("vermerkt");
-					String lieferartDB1 = d1.getString("liferart");
-					String datum = d1.getString("datum");
-					Lieferart lieferart1 = EntryToEnumeration.entryToLieferart(lieferartDB1);
-					bestellung = new Bestellung(bestellungsID1, gesamtpreis, abgeschlossen, datum, vermerk, lieferart1);
-
-				}
+				int bestellungsID1 = d1.getInteger("_id");
+				double gesamtpreis = d1.getDouble("gesamtpreis");
+				boolean abgeschlossen = d1.getBoolean("abgeschlossen");
+				String vermerk = d1.getString("vermerkt");
+				String lieferartDB1 = d1.getString("lieferart");
+				String datum = d1.getString("datum");
+				Lieferart lieferart1 = EntryToEnumeration.entryToLieferart(lieferartDB1);
+				bestellung = new Bestellung(bestellungsID1, gesamtpreis, abgeschlossen, datum, vermerk, lieferart1);
 			}
 			return bestellung;
 
@@ -145,35 +218,25 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 
 	@Override
 	public Position getPositionByID(int bestellungsID, int positionID) {
-
 		try {
-			FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("id", bestellungsID));
-			FindIterable<Document> documents1 = db.getCollection(collectionName).find(new Document("pid", positionID));
-
-			Position position = null;
-			Bestellung bestellung = null;
-
-			for (Document d1 : documents) {
-				if (d1.get("adminDaten") != null) {
-					int bestellungsID1 = d1.getInteger("id");
-					double gesamtpreis = d1.getDouble("gesamtpreis");
-					boolean abgeschlossen = d1.getBoolean("abgeschlossen");
-					String vermerk = d1.getString("vermerkt");
-					String lieferartDB1 = d1.getString("liferart");
-					String datum = d1.getString("datum");
-					Lieferart lieferart1 = EntryToEnumeration.entryToLieferart(lieferartDB1);
-					bestellung = new Bestellung(bestellungsID1, gesamtpreis, abgeschlossen, datum, vermerk, lieferart1);
-
+			FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("_id", bestellungsID));
+			
+			for(Document doc : documents){
+				List<Document> positionen = (List<Document>) doc.get("Positionen");
+				if(positionen!=null){
+					for(Document x : positionen){
+						if(x.getInteger("positionID").intValue() == positionID){
+							Position pos = new Position(
+									positionID, 
+									x.getInteger("produktID"),
+									x.getInteger("menge"), 
+									x.getDouble("preis"));
+							return pos;
+						}
+					}
 				}
 			}
-			for (Document d : documents1) {
-				if (d.get("adminDaten") != null) {
-					position = new Position(d.getInteger("positionID"), d.getInteger("produktID"),
-							d.getInteger("menge"), d.getDouble("gesamtpreis"));
-				}
-			}
-			return position;
-
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("MongoDB:methode:getPositionByID: Fehler!");
@@ -185,24 +248,24 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	@Override
 	public Bestellung getWarenkorb(int kundenID) {
 		try {
-			FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("id", kundenID));
+			FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("kundenid", kundenID));
 
 			Bestellung bestellung = null;
 
 			for (Document d1 : documents) {
-				if (d1.get("adminDaten") != null) {
-					int bestellungsID1 = d1.getInteger("id");
+				if (!d1.getBoolean("abgeschlossen")) {
+					int bestellungsID1 = d1.getInteger("_id");
 					double gesamtpreis = d1.getDouble("gesamtpreis");
 					boolean abgeschlossen = d1.getBoolean("abgeschlossen");
 					String vermerk = d1.getString("vermerkt");
-					String lieferartDB1 = d1.getString("liferart");
+					String lieferartDB1 = d1.getString("lieferart");
 					String datum = d1.getString("datum");
 					Lieferart lieferart1 = EntryToEnumeration.entryToLieferart(lieferartDB1);
 					bestellung = new Bestellung(bestellungsID1, gesamtpreis, abgeschlossen, datum, vermerk, lieferart1);
-
+					return bestellung;
 				}
 			}
-			return bestellung;
+			return null;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -213,46 +276,50 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 	}
 
 	@Override
-	public List<Bestellung> readBestellungenByKundenID(int kundenID) {
-
+	public List<Bestellung> readBestellungenByKundenID(int kundenID) {		
 		List<Bestellung> bestellungsListe = new ArrayList<Bestellung>();
-		FindIterable<Document> documents = db.getCollection(collectionName).find();
-		int kid = kundenID;
+		FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("kundenid", kundenID));
 		try {
 			Bestellung bestellung = null;
 
 			for (Document d1 : documents) {
-				if (d1.get("adminDaten") != null) {
-					int bestellungsID1 = d1.getInteger("id");
+				if (d1.getBoolean("abgeschlossen")) {
+					int bestellungsID1 = d1.getInteger("_id");
 					double gesamtpreis = d1.getDouble("gesamtpreis");
-					boolean abgeschlossen = d1.getBoolean("abgeschlossen");
+					boolean abgeschlossen = true;
 					String vermerk = d1.getString("vermerkt");
 					String lieferartDB1 = d1.getString("liferart");
 					String datum = d1.getString("datum");
 					Lieferart lieferart1 = EntryToEnumeration.entryToLieferart(lieferartDB1);
 					bestellung = new Bestellung(bestellungsID1, gesamtpreis, abgeschlossen, datum, vermerk, lieferart1);
-
+					bestellungsListe.add(bestellung);
 				}
 			}
+			return bestellungsListe;
 		} catch (Exception e) {
 			System.out.println("MongoDB:readBestellungenByKundenID: Fehler!");
 			e.printStackTrace();
 			return null;
 		}
-
-		return bestellungsListe;
 	}
 
 	@Override
 	public List<Position> readPositionenByBestellungID(int bestellungsID) {
 		List<Position> positionListe = new ArrayList<Position>();
-		FindIterable<Document> documents = db.getCollection(collectionName).find();
+		FindIterable<Document> documents = db.getCollection(collectionName).find(new Document("_id", bestellungsID));
 
 		try {
-			for (Document d : documents) {
-				if (d.get("neuePosition") != null) {
-					positionListe.add(new Position(d.getInteger("positionID"), d.getInteger("produktID"),
-							d.getInteger("menge"), d.getDouble("gesamtpreis")));
+			for(Document doc : documents){
+				List<Document> positionen = (List<Document>) doc.get("Positionen");
+				if(positionen!=null){
+					for(Document x : positionen){
+						Position pos = new Position(
+								x.getInteger("positionID"), 
+								x.getInteger("produktID"),
+								x.getInteger("menge"), 
+								x.getDouble("preis"));
+						positionListe.add(pos);
+					}
 				}
 			}
 			return positionListe;
@@ -266,41 +333,29 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 
 	@Override
 	public boolean removeBestellung(int bestellungsID) {
-		bestellung = null;
-		bestellungsID = bestellung.getBestellungID();
-
-		try {
-
-			Document neueBestellung = new Document().append("_id", bestellungsID);
-
-			db.getCollection(collectionName).deleteOne(neueBestellung);
-			System.out.println("Bestellung wurde bereits gelöscht!");
+		DeleteResult dr = db.getCollection(collectionName).deleteOne(new Document("_id", bestellungsID));
+		if (dr.getDeletedCount() > 0) {
 			return true;
-		} catch (Exception e) {
-			System.out.println("MongoDB:Methode:removeBestellung: Fehler! ");
-			return false;
 		}
+		return false;
 
 	}
 
 	@Override
 	public boolean removePosition(int bestellungsID, int positionID) {
-		bestellung = null;
-		position = null;
-		bestellungsID = bestellung.getBestellungID();
-		positionID = position.getPostionID();
 		try {
-			Document createPosition = new Document().append("_id", bestellungsID).append("positionId", positionID);
+			MongoCollection<Document> collection = db.getCollection(collectionName);
 
-			db.getCollection(collectionName).deleteOne(createPosition);
-			System.out.println("Position wurde bereits erstellt!");
+			BasicDBObject sq = new BasicDBObject("_id", bestellungsID);
+			BasicDBObject idoc = new BasicDBObject("positionId", positionID);
+			BasicDBObject odoc = new BasicDBObject("Positionen", idoc);
+			BasicDBObject delq = new BasicDBObject("$pull", odoc);
+			collection.updateOne(sq, delq);
 			return true;
-
 		} catch (Exception e) {
-			System.out.println("MongoDB:Methode:createPosition: Fehler! ");
+			System.out.println("MongoProduktDAO: loescheProduktByProdID: Error");
 			return false;
 		}
-
 	}
 
 	@Override
@@ -310,7 +365,7 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 		preis = position.getGesamtpreis();
 
 		try {
-			Document createPosition = new Document().append("_id", bestellungsID).append("positionId", positionsID)
+			Document createPosition = new Document().append("_id", bestellungsID).append("positionID", positionsID)
 					.append("preis", preis);
 
 			db.getCollection(collectionName).updateOne(createPosition, null);
@@ -330,10 +385,10 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 		wert = position.getGesamtpreis();
 
 		try {
-			Document createPosition = new Document().append("_id", bestellungsID).append("preis", wert);
+			Document createPosition = new Document().append("_id", bestellungsID).append("gesamtpreis", wert);
 
 			db.getCollection(collectionName).updateOne(createPosition, null);
-			System.out.println("Preis ist bereits upgedated!");
+			System.out.println("Preis wurde upgedated!");
 			return true;
 
 		} catch (Exception e) {
