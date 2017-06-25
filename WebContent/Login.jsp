@@ -31,7 +31,7 @@
 <body>
 	<div class="container theme-showcase">
 		<div class="jumbotron">
-			<img src="fotos/ushop247with.png" alt="" height="123" width="600"/>
+			<img src="fotos/ushop247.png" alt="" height="123" width="600"/>
 			<h2>Login</h2>
 		
 <%

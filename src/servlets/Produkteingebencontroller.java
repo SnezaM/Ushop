@@ -55,9 +55,10 @@ import management.Produktverwaltung;
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			
 			if(request.getParameter("produktEingeben")!=null){
-				request.getRequestDispatcher("ProduktEingeben.jsp").include(request, response);
+				response.sendRedirect(request.getContextPath() + "/ProduktEingeben.jsp");
 				response.setContentType("text/html");
 				return;
+				
 				
 			}
 			

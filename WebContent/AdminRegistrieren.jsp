@@ -92,7 +92,7 @@
 				<table class="table">
 					
 						<tr>
-						<td><input type="submit" value="Send" /></td>
+						<td><input type="submit" value="Absenden" /></td>
 						<td></td>
 					</tr>
 					
@@ -105,7 +105,7 @@
 
 <!-- Einfaches Retour zur Hauptseite -->
 			<form method="get" action="HauptseiteAdmin.jsp">
-			    <button type="submit">Back</button>
+			    <button type="submit">Retour</button>
 			</form>
 
 		</div>

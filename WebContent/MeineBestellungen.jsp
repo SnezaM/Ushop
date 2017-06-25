@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
+<%@page import="management.*"%>
 <%@page import="java.text.DecimalFormat"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -36,9 +37,9 @@
 		<table class="table">			
 			<%
 			int kundenID = (int) session.getAttribute("kundenid");
-			BestellungsDAO dao = new DBBestellungsDAO();
+			Bestellungsverwaltung bestellver = Bestellungsverwaltung.getInstance();
 			DecimalFormat formator = new DecimalFormat("####,####,###.00");
-			List<Bestellung> bestellungen = dao.readBestellungenByKundenID(kundenID);
+			List<Bestellung> bestellungen = bestellver.getAllBestellungenByKunde(kundenID);
 			
 			if(bestellungen.size()==0){
 				%>

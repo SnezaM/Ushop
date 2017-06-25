@@ -28,7 +28,7 @@ public class Datenmigration {
 		@SuppressWarnings("unused")
 		List<Kunde> kundenListe = postgreSQL.getKundeListe();
 		List<Administrator> adminListe = postgreSQL.getAdministratorListe();
-
+/*
 		 for(Benutzer k : kundenListe)
 		 if(k instanceof Kunde)
 		 mongoDB.speichereKunde((Kunde)k);
@@ -42,10 +42,11 @@ public class Datenmigration {
 		
 
 	}
-		/*
+	*/
+		//----------------------------------------Produkte-----------------------------------------
 		 List<Produktgruppe> produktgruppeList = postgreSQL2.getProduktgruppeList();
 		 List<Produkt> produktList = postgreSQL1.getProduktList();
-
+/*
 			
 			for (Produktgruppe p : produktgruppeList) {
 				if (mongoDB1.speichereProduktgruppe(p))
@@ -54,14 +55,14 @@ public class Datenmigration {
 					System.out.println("Fehler bei Migration von Produktgruppe " + p.getProduktgruppenname());
 			}
 
-			
+	*/	
 			for (Produkt p : produktList) {
 				if (mongoDB1.speichereProdukt(p))
 					System.out.println("Produkt " + p.getProduktID() + " erfolgreich migriert!");
 				else
 					System.out.println("Fehler bei Migration von Produkt " + p.getProduktname());
 			}
-	*/
+	
 		}
 		 
 }

@@ -1,6 +1,7 @@
 <%@ page import="java.util.List"%>
 <%@ page import="modell.Produktgruppe"%>
 <%@ page import="dao.*" %>
+<%@page import="management.*"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -31,8 +32,8 @@
 
 
 <%
-ProduktgruppeDAO dao = new DatenBankProduktgruppeDAO();
-List <Produktgruppe> liste = dao.getProduktgruppeList();
+Produktgruppenverwaltung prodGver = Produktgruppenverwaltung.getInstance();
+List <Produktgruppe> liste = prodGver.getAlleProduktgruppen();
 %>
 
 <body>
@@ -70,13 +71,13 @@ List <Produktgruppe> liste = dao.getProduktgruppeList();
 				
 			</tr>
 			<tr>
-				<td><input type="submit" value="Send" /></td>
+				<td><input type="submit" value="Absenden" /></td>
 				<td></td>
 			</tr>
 		</table>
 	</form>
 
-	<a href="HauptseiteAdmin.jsp"><input type="submit" value="back" /></a>
+	<a href="HauptseiteAdmin.jsp"><input type="submit" value="Retour" /></a>
 </div>
 </div>
 </body>

@@ -18,6 +18,8 @@ import dao.DatenBankProduktgruppeDAO;
 import dao.ProduktDAO;
 import dao.ProduktgruppeDAO;
 import management.Bestellungsverwaltung;
+import management.Produktgruppenverwaltung;
+import management.Produktverwaltung;
 import modell.Position;
 import modell.Produkt;
 import modell.Produktgruppe;
@@ -69,11 +71,17 @@ public class Produktkundencontroller extends HttpServlet {
 					request.getSession(true).setAttribute("zeigeID", pID);
 					int produktid = Integer.parseInt(pID);
 					
-					ProduktDAO dao = new DatenBankProduktDAO();
-					Produkt temp = dao.getProduktByProduktID(produktid);
 					
-					ProduktgruppeDAO daoGruppe = new DatenBankProduktgruppeDAO();
-					Produktgruppe tempgruppe = daoGruppe.getProduktgruppeByID(temp.getProduktgruppeID());
+				//	ProduktDAO dao = new DatenBankProduktDAO();
+				//	Produkt temp = dao.getProduktByProduktID(produktid);
+				//	ProduktgruppeDAO daoGruppe = new DatenBankProduktgruppeDAO();
+				//	Produktgruppe tempgruppe = daoGruppe.getProduktgruppeByID(temp.getProduktgruppeID());
+					
+					Produktgruppenverwaltung prodverGruppe = Produktgruppenverwaltung.getInstance();
+					Produktverwaltung pro = Produktverwaltung.getInstance();
+					
+					Produkt temp = pro.getProduktByProduktID(produktid);
+					Produktgruppe tempgruppe = prodverGruppe.getProdukgruppeByProduktID(temp.getProduktgruppeID());
 
 					String pKat = tempgruppe.getProduktgruppenname();
 					int gruppeid = temp.getProduktgruppeID();
@@ -94,10 +102,14 @@ public class Produktkundencontroller extends HttpServlet {
 				//Waren zum Warenkorb adden
 				if(request.getParameter("ZumWarenkorbGeben")!=null){
 					Bestellungsverwaltung bverw = Bestellungsverwaltung.getInstance();
-					ProduktDAO dao = new DatenBankProduktDAO();
+					
+					//ProduktDAO dao = new DatenBankProduktDAO();
+					
+					Produktverwaltung pro = Produktverwaltung.getInstance();
 					String pID = request.getParameter("ZumWarenkorbGeben");
 					int produktid = Integer.parseInt(pID);
-					double produktPreis = dao.getProduktByProduktID(produktid).getPreis();
+					double produktPreis = pro.getProduktByProduktID(produktid).getPreis();
+					
 					int bestellungsID = Integer.parseInt(request.getParameter("bestellungsID"));
 					List<Position> positionen = bverw.getAllPositionenByBestellungsID(bestellungsID);
 					boolean alreadyAdded = false;

@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
+<%@page import="management.*"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="UTF-8"%>
@@ -38,8 +39,8 @@
 		<tr><th>Name</th><th>Preis</th><th>ProduktID</th><th>Produktgruppe ID</th><th>Produkt entfernen</th><th>Details</th></tr> 
 		
 <%
-ProduktDAO dao = new DatenBankProduktDAO();
-for(Produkt i:dao.getProduktList()){%>
+Produktverwaltung prodver = Produktverwaltung.getInstance();
+for(Produkt i:prodver.getAlleProdukt()){%>
 
 		<tr>
 			<td><%=i.getProduktname() %></td>
@@ -54,9 +55,13 @@ for(Produkt i:dao.getProduktList()){%>
 		</tr>		
 <%} %>
 
-<tr><td><a href="HauptseiteAdmin.jsp"><input type="submit" value="back" /></a></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
 	</table>
 	</form>
+	<!-- Einfaches Retour zur Hauptseite -->
+			<form method="get" action="HauptseiteAdmin.jsp">
+			    <button type="submit">Retour</button>
+			</form>
 </div>
 </div>
 </body>

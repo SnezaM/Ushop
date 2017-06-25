@@ -17,7 +17,7 @@
 	<meta name="description" content=""/>
 	<meta name="author" content="Snezana"/>
 	
-	<title>KundeRegistrieren</title>
+	<title>Registrieren</title>
 	
 	<!-- To ensure proper rendering and touch zooming for mobile -->
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -46,7 +46,7 @@
 				}
 			%>
 			<form action="RegistrierungsController" method="POST">
-			<div align="center">
+				<div align="center">
 				<table class="table">
 					<tr>
 						<th>Parameter</th>
@@ -90,24 +90,31 @@
 						<td>Passwort wiederholen:</td>
 						<td><input type="password" name="passwordW" /></td>
 					</tr>
-
-
-					<tr>
-						<td><input type="submit" value="Send" /></td>
-						<td></td>
-					</tr>
 				</table>
 				</div>
+				
+				<div align="center">
+				<table class="table">
+					
+						<tr>
+						<td><input type="submit" value="Absenden" /></td>
+						<td></td>
+					</tr>
+					
+					</table>
+					</div>
+				
+				
 			</form>
-			<form action="LoginController" method="GET">
+			<form action="Login.jsp" method="GET">
 				<table>
 					<tr>
-						<td><input type="submit" value="Back to login" /></td>
+						<td><input type="submit" value="Retour" /></td>
 						<td></td>
 					</tr>
 				</table>
 			</form>
 		</div>
-	</div>
+	
 </body>
 </html>

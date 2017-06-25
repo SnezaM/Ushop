@@ -14,6 +14,7 @@ import dao.DatenBankProduktDAO;
 import dao.DatenBankProduktgruppeDAO;
 import dao.ProduktDAO;
 import dao.ProduktgruppeDAO;
+import management.Produktgruppenverwaltung;
 import management.Produktverwaltung;
 import modell.Produkt;
 import modell.Produktgruppe;
@@ -74,7 +75,9 @@ public class Produktverwaltungscontroller extends HttpServlet {
 					String produktID = request.getParameter("loescheProduktmitID");
 					int produktid = Integer.parseInt(produktID);
 					Produktverwaltung benver = Produktverwaltung.getInstance();
+					System.out.println(produktid+" Hallo das ist die Produktid die gelöscht werden soll");
 					benver.loescheProdukt(produktid);
+					
 					
 					response.sendRedirect(request.getContextPath() + "/AlleProdukteAnzeigen.jsp");
 					response.setContentType("text/html");
@@ -87,12 +90,16 @@ public class Produktverwaltungscontroller extends HttpServlet {
 						
 						request.getSession(true).setAttribute("zeigeID", pID);
 						int produktid = Integer.parseInt(pID);
+
 						
-						ProduktDAO dao = new DatenBankProduktDAO();
-						Produkt temp = dao.getProduktByProduktID(produktid);
+						Produktverwaltung pro = Produktverwaltung.getInstance();
+						Produkt temp = pro.getProduktByProduktID(produktid); 
 						
-						ProduktgruppeDAO daoGruppe = new DatenBankProduktgruppeDAO();
-						Produktgruppe tempgruppe = daoGruppe.getProduktgruppeByID(temp.getProduktgruppeID());
+						Produktgruppenverwaltung prodverGruppe = Produktgruppenverwaltung.getInstance();
+						Produktgruppe tempgruppe = prodverGruppe.getProdukgruppeByProduktID(temp.getProduktgruppeID());
+						
+							
+				
 
 						String pKat = tempgruppe.getProduktgruppenname();
 						int gruppeid = temp.getProduktgruppeID();

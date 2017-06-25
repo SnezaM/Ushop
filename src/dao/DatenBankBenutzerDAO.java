@@ -1,4 +1,5 @@
 /**
+ /**
  * Das Paket dient zum persistenten speichern und lesen in der 
  * Datenbank um spaeter wieder darauf zugreifen zu koennen.
  * 
@@ -96,7 +97,7 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Verbindungsaufbau zur DB nicht möglich!! ("+e.getMessage()+")");
+			System.out.println("Verbindungsaufbau zur DB nicht mÃ¶glich!! ("+e.getMessage()+")");
 		}
 
 	}
@@ -555,6 +556,5 @@ public class DatenBankBenutzerDAO implements BenutzerDAO {
 	
 
 	}
-
 
 
