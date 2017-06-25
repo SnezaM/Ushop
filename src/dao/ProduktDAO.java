@@ -23,5 +23,9 @@ public interface ProduktDAO {
 	public List<Produkt> getProduktList();
 	
 	public Produkt getProduktByProduktID(int produktID);
+	
+	public Produkt getProduktByName(String pname);
+	
+	public List<Produkt> sucheProdukt(String lis);
 
 }

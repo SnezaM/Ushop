@@ -4,6 +4,7 @@ import java.util.List;
 
 import dao.BestellungsDAO;
 import dao.DBBestellungsDAO;
+import dao.MongoDBBestellungsDAO;
 import modell.Bestellung;
 import modell.Position;
 
@@ -36,7 +37,8 @@ public class Bestellungsverwaltung {
 	}
 
 	private Bestellungsverwaltung() {
-		dao = new DBBestellungsDAO();
+		//dao = new DBBestellungsDAO();
+		dao = new MongoDBBestellungsDAO();
 	}
 
 	/**

@@ -44,7 +44,7 @@ public class AdminRegistrierungsController extends HttpServlet {
 		}
 		
 		/**
-		 * Hier wird geprüft ob die eingegebenen Daten korrekt sind, falls ja, war die Registrierung erfolgreich und es wird ein Administrator angelegt,
+		 * Hier wird geprÃ¼ft ob die eingegebenen Daten korrekt sind, falls ja, war die Registrierung erfolgreich und es wird ein Administrator angelegt,
 		 * falls nein, dann wird die jeweilige Fehlermeldung ausgegeben.
 		 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 		 */
@@ -130,7 +130,7 @@ public class AdminRegistrierungsController extends HttpServlet {
 			
 				if(b.adminAnlegen(email, vorname, nachname, username, password, gehalt, geburtsdatum)){
 					
-					Administrator a = b.getAdminByUserName(username);
+				
 				
 					HttpSession session = request.getSession(true);
 					session.setAttribute("message",username+" wurde nun als Administrator gespeichert");
@@ -142,7 +142,7 @@ public class AdminRegistrierungsController extends HttpServlet {
 				//eingabe nicht erfolgreich:
 				else{
 					System.out.println("AdminRegistrierungsController: Person konnte nicht angelegt werden: "+vorname+" "+nachname+" "+email+" "+username+" "+password);
-					request.getSession(true).setAttribute("fehler", "Fehler: Prüfen Sie das Datum(Jahr-Monat-Tag) oder der Username ist schon vergeben!");
+					request.getSession(true).setAttribute("fehler", "Fehler: PrÃ¼fen Sie das Datum(Jahr-Monat-Tag) oder der Username ist schon vergeben!");
 					response.sendRedirect("AdminRegistrieren.jsp");
 				}
 			}
@@ -150,6 +150,5 @@ public class AdminRegistrierungsController extends HttpServlet {
 		}
 
 	}
-
 
 

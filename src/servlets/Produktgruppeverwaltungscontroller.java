@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import dao.DatenBankProduktDAO;
 import dao.ProduktDAO;
 import management.Produktgruppenverwaltung;
+import management.Produktverwaltung;
 import modell.Produkt;
 
 /**
@@ -60,9 +61,10 @@ public class Produktgruppeverwaltungscontroller extends HttpServlet {
 				int produktgrID = Integer.parseInt(produktgruppeID);
 				
 				Produktgruppenverwaltung prodverGruppe = Produktgruppenverwaltung.getInstance();
-				
-				ProduktDAO dao = new DatenBankProduktDAO();
-				List<Produkt> liste = dao.getProduktList(); 
+				Produktverwaltung pro = Produktverwaltung.getInstance();
+				//ProduktDAO dao = new DatenBankProduktDAO();
+				//List<Produkt> liste = dao.getProduktList(); 
+				List <Produkt> liste = pro.getAlleProdukt();
 				
 				int count = 0;
 				for(Produkt x: liste){
@@ -89,4 +91,3 @@ public class Produktgruppeverwaltungscontroller extends HttpServlet {
 	}
 
 }
-

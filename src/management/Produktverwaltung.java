@@ -6,6 +6,7 @@ package management;
 
 import java.util.List;
 import dao.DatenBankProduktDAO;
+import dao.MongoDBProdukteDAO;
 import dao.ProduktDAO;
 import modell.Produkt;
 
@@ -22,7 +23,8 @@ public class Produktverwaltung {
 	private ProduktDAO dao;
 	
 	private Produktverwaltung() {
-		dao = new DatenBankProduktDAO();
+		//dao = new DatenBankProduktDAO();
+		dao = new MongoDBProdukteDAO();
 	}
 	
 	
@@ -83,6 +85,10 @@ public class Produktverwaltung {
     public boolean loescheProdukt(int produktID){
 		return dao.loescheProduktByID(produktID);
 	}
+    
+    public Produkt getProduktByName(String pname){
+ 		return dao.getProduktByName(pname);
+ 	}
     
     
 }

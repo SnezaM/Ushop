@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
+<%@page import="management.*"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="UTF-8"%>
@@ -38,8 +39,8 @@
 		<th></th></tr> 
 		
 <%
-BenutzerDAO dao = new DatenBankBenutzerDAO();
-for(Administrator i:dao.getAdministratorListe()){%>
+Benutzerverwaltung bver = Benutzerverwaltung.getInstance();
+for(Administrator i:bver.getAdministratorListe()){%>
 
 		<tr>
 			<td><%=i.getBenutzerid()%></td>
@@ -61,7 +62,7 @@ for(Administrator i:dao.getAdministratorListe()){%>
 	</table>
 	</form>
 	<form method="get" action="HauptseiteAdmin.jsp">
-			    <button type="submit">Back</button>
+			    <button type="submit">Retour</button>
 			</form>
 </div>
 </div>

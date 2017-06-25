@@ -3,6 +3,9 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import org.bson.BsonDocument;
 import org.bson.Document;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -39,9 +42,13 @@ public class MongoDBProdukteDAO implements ProduktDAO, ProduktgruppeDAO {
 	@Override
 	public boolean speichereProdukt(Produkt p) {
 			
-			//int prodId = p.getProduktID(); Das wird benoetigt fuer die Migration
-			int prodId = getProduktgruppeList().size();
-			prodId++;
+			int prodId = p.getProduktID(); 
+			if(prodId==0){
+				Random randomGenerator = new Random();
+				prodId = randomGenerator.nextInt(Integer.MAX_VALUE);
+			}
+			System.out.println(prodId);
+			
 			String prodName = p.getProduktname();
 			double prodPreis = p.getPreis();
 			String beschreibung = p.getBeschreibung();
@@ -74,16 +81,26 @@ public class MongoDBProdukteDAO implements ProduktDAO, ProduktgruppeDAO {
 	public boolean loescheProduktByID(int produktID) {
 		
 		try {
+			System.out.println("Hallo Hallo bin hier");
 			Produkt prod = this.getProduktByProduktID(produktID);
 			int cat_id = prod.getProduktgruppeID();
+			System.out.println("Hallo Hallo bin hier222222");
+			System.out.println(cat_id + "Das ist die Produktgruppeid");
+			System.out.println(produktID + "Das ist die Produktid");
 			MongoCollection<Document> collection = db.getCollection(collectionName);
 
-			
+			System.out.println("Hallo ich bin jetzt da 3333333333333");
+				
 		      BasicDBObject sq = new BasicDBObject("_id", cat_id);
+		      System.out.println("Passt 1");
 		      BasicDBObject idoc=new BasicDBObject("ProduktID",produktID);
+		      System.out.println("Passt 2");
 		      BasicDBObject odoc =new BasicDBObject("Produkte",idoc);
+		      System.out.println("Passt 3");
 		      BasicDBObject delq=new BasicDBObject("$pull",odoc);
+		      System.out.println("Passt 4");
 		      collection.updateOne(sq, delq);
+		      System.out.println("Passt 5");
 	
 			return true;
 			
@@ -175,9 +192,12 @@ public class MongoDBProdukteDAO implements ProduktDAO, ProduktgruppeDAO {
 	
 	@Override
 	public boolean speichereProduktgruppe(Produktgruppe p) {
-		//int KategorieId = p.getProduktgruppeID(); Das wird benoetigt fuer die Migration
-		int kategorieId = getProduktgruppeList().size();
-		kategorieId++;
+		int kategorieId = p.getProduktgruppeID(); //Das wird benoetigt fuer die Migration
+		if(kategorieId==0){
+	        Random randomGenerator = new Random();
+			kategorieId = randomGenerator.nextInt(Integer.MAX_VALUE);
+		}
+		System.out.println(kategorieId);
 		String kategorieName = p.getProduktgruppenname();
 		String kategorieBez = p.getBezeichnung();
 		int adminID = p.getAdminID(); 

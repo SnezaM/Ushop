@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
+<%@page import="management.*"%>
 <%@page import="java.text.DecimalFormat"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -49,13 +50,13 @@
 			<tr><th>PositionsID</th><th>Menge</th><th>Produkt</th><th>Preis/Stk.</th><th>Gesamtpreis</th><th/></tr> 
 			
 			<%
-			BestellungsDAO dao = new DBBestellungsDAO();
-			ProduktDAO daoProd = new DatenBankProduktDAO();
+			Bestellungsverwaltung bestellver = Bestellungsverwaltung.getInstance();
+			Produktverwaltung prodver = Produktverwaltung.getInstance();
 			DecimalFormat formator = new DecimalFormat("####,####,###.00");
-			List<Position> pos = dao.readPositionenByBestellungID(bestellungsID);
+			List<Position> pos = bestellver.getAllPositionenByBestellungsID(bestellungsID);
 			double gesamtwert = 0;
 			for(Position p : pos) { 
-			Produkt prod = daoProd.getProduktByProduktID(p.getArtikel());
+			Produkt prod = prodver.getProduktByProduktID(p.getArtikel());
 			double preis = p.getGesamtpreis();
 			%>
 				<tr>
