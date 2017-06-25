@@ -60,7 +60,7 @@ public class DatenBankProduktDAO implements ProduktDAO{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Verbindungsaufbau zur Datenbank nicht möglich auf Grund des Fehlers: ("+e.getMessage()+")");
+			System.out.println("Verbindungsaufbau zur Datenbank nicht mÃ¶glich auf Grund des Fehlers: ("+e.getMessage()+")");
 		}
 		
 	}
@@ -177,4 +177,18 @@ public class DatenBankProduktDAO implements ProduktDAO{
 				return null;
 			}	
 		}
+
+
+@Override
+public Produkt getProduktByName(String pname) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public List<Produkt> sucheProdukt(String lis) {
+	// TODO Auto-generated method stub
+	return null;
+}
 }

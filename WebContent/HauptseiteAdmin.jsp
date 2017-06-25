@@ -51,10 +51,11 @@
 			<h2> UShop 24/7 </h2>
 				<h3>Herzlich Willkommen auf der Administrator Ansicht <%=session.getAttribute("username")%>!</h3> 
 			
-<%
+<%String fehler="";
+String fehler1="";
 session.setAttribute("profilbearbeiten", "");
-if(session.getAttribute("message")!=null){ %><h2><%=session.getAttribute("message") %></h2><% } 
-if(request.getSession().getAttribute("fehler")!=null){ %> <h2><%=request.getSession().getAttribute("fehler")%></h2><% } 
+if(session.getAttribute("message")!=null){fehler=(String)session.getAttribute("message"); session.setAttribute("message", "");%><h2><%=fehler %></h2><% } 
+if(request.getSession().getAttribute("fehler")!=null){fehler1=(String)session.getAttribute("fehler"); session.setAttribute("fehler", "");%> <h2><%=fehler1%></h2><% } 
 %>
 	
 		<div id="box1">

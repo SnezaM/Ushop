@@ -22,8 +22,9 @@ public class Benutzerverwaltung {
 	private static Benutzerverwaltung benutzerverwaltungInstance=null;
 	private BenutzerDAO dao;
 	
+	
 	private Benutzerverwaltung() {
-	//	dao = new DatenBankBenutzerDAO();
+		//dao = new DatenBankBenutzerDAO();
 		dao = new MongoDBBenutzerDAO();
 	}
 	

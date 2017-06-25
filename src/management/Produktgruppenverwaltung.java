@@ -6,6 +6,7 @@ package management;
 
 import java.util.List;
 import dao.DatenBankProduktgruppeDAO;
+import dao.MongoDBProdukteDAO;
 import dao.ProduktgruppeDAO;
 import modell.Produktgruppe;
 
@@ -21,7 +22,8 @@ public class Produktgruppenverwaltung {
 	private ProduktgruppeDAO dao;
 	
 	private Produktgruppenverwaltung() {
-		dao = new DatenBankProduktgruppeDAO();
+		//dao = new DatenBankProduktgruppeDAO();
+		dao = new MongoDBProdukteDAO();
 	}
 
 	

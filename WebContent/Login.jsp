@@ -60,7 +60,7 @@
 				</table>
 			</form>
 			<br />
-			<form action="RegistrierungsController" method="GET">
+			<form action="RegistrierungsController" method="POST">
 				<input class="btn btn-primary" type="submit"
 					value="Registrieren" />
 			</form>

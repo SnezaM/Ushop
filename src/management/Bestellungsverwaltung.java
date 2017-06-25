@@ -36,6 +36,7 @@ public class Bestellungsverwaltung {
 	}
 
 	private Bestellungsverwaltung() {
+		//dao = new DBBestellungsDAO();
 		dao = new MongoDBBestellungsDAO();
 	}
 

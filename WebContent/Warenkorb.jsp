@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
+<%@page import="management.*"%>
 <%@page import="management.Bestellungsverwaltung"%>
 <%@page import="java.text.DecimalFormat"%>
 
@@ -37,13 +38,12 @@
 	<h1>Mein Warenkorb:</h1>
 	<%
 	int kundenID = (int) session.getAttribute("kundenid");
-	ProduktDAO daoProd = new DatenBankProduktDAO();
-	BestellungsDAO dao = new DBBestellungsDAO();
+	Produktverwaltung prodver = Produktverwaltung.getInstance();
 	Bestellungsverwaltung bwver = Bestellungsverwaltung.getInstance();
 	DecimalFormat formator = new DecimalFormat("####,####,###.00");
 	Bestellung warenkorb = bwver.getWarenkorb(kundenID);
 	int bestellungsID = warenkorb.getBestellungID();
-	List<Position> positionen = dao.readPositionenByBestellungID(bestellungsID);
+	List<Position> positionen = bwver.getAllPositionenByBestellungsID(bestellungsID);
 	if(positionen.size()>0){
 	%>
 		<form action="Warenkorbcontroller" method="Post">
@@ -51,7 +51,7 @@
 				<tr><th>PositionsID</th><th/><th>Menge</th><th/><th>Produkt</th><th>Preis/Stk</th><th>Gesamtpreis</th><th/></tr> 
 			<%
 			for(Position p: positionen){
-			Produkt prod = daoProd.getProduktByProduktID(p.getArtikel());
+			Produkt prod = prodver.getProduktByProduktID(p.getArtikel());
 			double preis = p.getGesamtpreis();
 			int menge = p.getMenge();
 			%>

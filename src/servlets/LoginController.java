@@ -45,7 +45,7 @@ public class LoginController extends HttpServlet {
 	}
 
 	/**
-	 * Hier wird geprüft ob die eingegebenen Daten korrekt sind, falls ja, war der Login erfolgreich und es wird zur Hauptseite verwiesen,
+	 * Hier wird geprÃ¼ft ob die eingegebenen Daten korrekt sind, falls ja, war der Login erfolgreich und es wird zur Hauptseite verwiesen,
 	 * falls nein, dann wird die jeweilige Fehlermeldung ausgegeben.
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

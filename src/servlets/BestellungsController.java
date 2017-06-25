@@ -17,6 +17,8 @@ import dao.DatenBankProduktDAO;
 import dao.DatenBankProduktgruppeDAO;
 import dao.ProduktDAO;
 import dao.ProduktgruppeDAO;
+import management.Produktgruppenverwaltung;
+import management.Produktverwaltung;
 import modell.Bestellung;
 import modell.Produkt;
 import modell.Produktgruppe;
@@ -92,12 +94,13 @@ public class BestellungsController extends HttpServlet {
 			
 			request.getSession(true).setAttribute("zeigeIDProd", pID);
 			int produktid = Integer.parseInt(pID);
+			Produktverwaltung pro = Produktverwaltung.getInstance();
+			Produkt temp = pro.getProduktByProduktID(produktid);
 			
-			ProduktDAO dao = new DatenBankProduktDAO();
-			Produkt temp = dao.getProduktByProduktID(produktid);
-			
-			ProduktgruppeDAO daoGruppe = new DatenBankProduktgruppeDAO();
-			Produktgruppe tempgruppe = daoGruppe.getProduktgruppeByID(temp.getProduktgruppeID());
+			Produktgruppenverwaltung progruppe = Produktgruppenverwaltung.getInstance();
+		//	ProduktgruppeDAO daoGruppe = new DatenBankProduktgruppeDAO();
+			Produktgruppe tempgruppe = progruppe.getProdukgruppeByProduktID(temp.getProduktgruppeID());
+				//	getProduktgruppeByID(temp.getProduktgruppeID());
 
 			String pKat = tempgruppe.getProduktgruppenname();
 			int gruppeid = temp.getProduktgruppeID();

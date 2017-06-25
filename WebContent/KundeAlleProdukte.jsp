@@ -1,7 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
-<%@page import="management.Bestellungsverwaltung"%>
+<%@page import="management.*"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="UTF-8"%>
@@ -12,7 +12,7 @@
 		response.sendRedirect("Login.jsp");
 	}
 %>
-    <!-- Snezana Milutinovic a1349326-->
+    <!--Mirza Talic a1367543-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -37,6 +37,7 @@
 	<%
 	//Benotigt fuer Warenkorb adden
 	int kundenID = (int) session.getAttribute("kundenid");
+	
 	Bestellungsverwaltung bwver = Bestellungsverwaltung.getInstance();
 	int bestellungsID = bwver.getWarenkorb(kundenID).getBestellungID();
 	%>
@@ -44,10 +45,10 @@
 	<form action="Produktkundencontroller" method="Post">
 	<table class="table">
 		<tr><th>Name</th><th>Preis</th><th>ProduktID</th><th>Produktgruppe ID</th><th>Details</th><th></th></tr> 
-		<tr><td><input  name="bestellungsID" value="<%=bestellungsID %>" type="hidden"></td></tr>
+		<tr><td> <input name = "bestellungsID" value = "<%=bestellungsID %>" type="hidden"  ></td></tr>
 <%
-ProduktDAO dao = new DatenBankProduktDAO();
-for(Produkt i:dao.getProduktList()){
+Produktverwaltung prodver = Produktverwaltung.getInstance();
+for(Produkt i:prodver.getAlleProdukt()){
 %>
 
 		<tr>
@@ -64,9 +65,12 @@ for(Produkt i:dao.getProduktList()){
 		</tr>		
 <%} %>
 
-<tr><td><a href="HauptseiteKunde.jsp"><input type="submit" value="Retour" /></a></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
 	</table>
 	</form>
+		<form method="get" action="HauptseiteKunde.jsp">
+			    <button type="submit">Retour</button>
+			</form>
 </div>
 </div>
 </body>

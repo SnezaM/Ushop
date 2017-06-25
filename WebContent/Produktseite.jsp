@@ -61,7 +61,7 @@
 	</form>
 
 	
-	<td><a href="AlleProdukteAnzeigen.jsp"><input type="submit" value="back" /></a></td>
+	<td><a href="AlleProdukteAnzeigen.jsp"><input type="submit" value="Retour" /></a></td>
 </div>
 </div>
 </body>

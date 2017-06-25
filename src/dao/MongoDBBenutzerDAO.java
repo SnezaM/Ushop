@@ -3,6 +3,7 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.bson.Document;
 import com.mongodb.client.FindIterable;
@@ -48,8 +49,18 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 	@Override
 	public boolean speichereKunde(Kunde k) {
 		
-	//	int id = k.getBenutzerid();		wird gebraucht beim migrieren von postgresql zu mongoDB
-	//	int idKunde = k.getKundenID();
+		int id = k.getBenutzerid();
+		if(id==0){
+			Random randomGenerator = new Random();
+			id = randomGenerator.nextInt(Integer.MAX_VALUE);
+		}
+		System.out.println(id);
+		int idKunde = k.getKundenID();
+		if(idKunde==0){
+			Random randomGenerator = new Random();
+			idKunde = randomGenerator.nextInt(Integer.MAX_VALUE);
+		}
+		System.out.println(id);
 		String username = k.getUsername();
 		String passwort = k.getPasswort();
 		String vorname = k.getVorname();
@@ -59,13 +70,6 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		String strasse = k.getStrasse();
 		int plz = k.getPlz();
 		int hausnummer = k.getHausnummer();
-		
-		//ids für mongodb
-		int benutzer_id = getBenutzerListe().size();
-		benutzer_id++;
-		int kunde_id = getKundeListe().size();
-		kunde_id++;
-		
 		
 		if(this.getBenutzerByUname(username)!=null){
 			System.out.print("MongoDB: Kunde mit dem Username existiert schon");
@@ -77,8 +81,8 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 			Document adresse = new Document().append("plz",plz)
 										     .append("strasse", strasse)
 											 .append("hausnummer", hausnummer);
-			Document neuerKunde = new Document().append("_id", benutzer_id)
-												.append("kundeID", kunde_id)
+			Document neuerKunde = new Document().append("_id", id)
+												.append("kundeID", idKunde)
 												.append("uname", username)
 												.append("passwort",passwort)
 												.append("vorname", vorname)
@@ -98,8 +102,16 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 	@Override
 	public boolean speichereAdmin(Administrator a) {
 		
-	//	int id = a.getBenutzerid();
-	//	int idAdmin = a.getAdminID();  //  wird gebraucht für die Datenmigration von psql --> mongodb
+		int id = a.getBenutzerid();
+		if(id==0){
+			Random randomGenerator = new Random();
+			id = randomGenerator.nextInt(Integer.MAX_VALUE);
+		}
+		int idAdmin = a.getAdminID(); 
+		if(idAdmin==0){
+			Random randomGenerator = new Random();
+			idAdmin = randomGenerator.nextInt(Integer.MAX_VALUE);
+		}
 		String username = a.getUsername();
 		String passwort = a.getPasswort();
 		String vorname = a.getVorname();
@@ -108,13 +120,7 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		
 		double gehalt = a.getGehalt();
 		String geburtsdatum = a.getGeburtsdatum();
-		
-		//ids für den Administratoren
-		int benutzer_id = getBenutzerListe().size();
-		benutzer_id++;
-		int admin_id = getAdministratorListe().size();
-		admin_id++;
-		
+
 		if(this.getBenutzerByUname(username)!=null){
 			System.out.print("MongoDB: Administrator mit dem Username existiert schon");
 			return false;
@@ -125,8 +131,8 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 			Document adminDaten = new Document().append("gehalt",gehalt)
 												.append("geburtsdatum", geburtsdatum);
 												
-			Document neuerAdmin = new Document().append("_id", benutzer_id)
-												.append("adminID", admin_id)
+			Document neuerAdmin = new Document().append("_id", id)
+												.append("adminID", idAdmin)
 												.append("uname", username)
 												.append("passwort",passwort)
 												.append("vorname", vorname)
@@ -267,6 +273,7 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		
 		try {
 			for(Kunde k : kundenListe){
+				
 				if(k.getUsername().equals(kundeName)){
 					kunde = k;
 				}

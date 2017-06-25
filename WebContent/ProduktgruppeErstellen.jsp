@@ -44,10 +44,10 @@
 	
 			</table>
 			
-			<input type="submit" value="Send" />
+			<input type="submit" value="Absenden" />
 		</form>
 	
-		<a href="HauptseiteAdmin.jsp"><input type="submit" value="back" /></a>
+		<a href="HauptseiteAdmin.jsp"><input type="submit" value="Retour" /></a>
 </div>
 </div>	
 </body>

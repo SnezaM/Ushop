@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="dao.*"%>
 <%@page import="modell.*"%>
+<%@page import="management.*"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="UTF-8"%>
@@ -36,8 +37,8 @@
 		<tr><th>Name</th><th>ProduktgruppeID</th><th>Beschreibung</th><th>Produktgruppe Loeschen</th></tr>
 		
 <%
-ProduktgruppeDAO dao = new DatenBankProduktgruppeDAO();
-for(Produktgruppe i:dao.getProduktgruppeList()){%>
+Produktgruppenverwaltung prodverGruppe = Produktgruppenverwaltung.getInstance();
+for(Produktgruppe i:prodverGruppe.getAlleProduktgruppen()){%>
 
 		<tr>
 			<td><%=i.getProduktgruppenname()%></td>
@@ -48,7 +49,7 @@ for(Produktgruppe i:dao.getProduktgruppeList()){%>
 		</tr>		
 <%} %>
 
-<tr><td><a href="HauptseiteAdmin.jsp"><input type="submit" value="back" /></a></td><td></td><td></td></tr>
+<tr><td><a href="HauptseiteAdmin.jsp"><input type="submit" value="Retour" /></a></td><td></td><td></td></tr>
 	</table>
 	</form>
 </div>

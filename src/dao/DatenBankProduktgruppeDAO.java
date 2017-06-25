@@ -54,7 +54,7 @@ public class DatenBankProduktgruppeDAO implements ProduktgruppeDAO{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Verbindungsaufbau zur Datenbank nicht möglich auf Grund des Fehlers: ("+e.getMessage()+")");
+			System.out.println("Verbindungsaufbau zur Datenbank nicht mÃ¶glich auf Grund des Fehlers: ("+e.getMessage()+")");
 		}
 	}
 	
