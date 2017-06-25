@@ -69,7 +69,7 @@ public class Datenmigration {
 
 		// -----------------------Bestellungen und Positionen--------------------------------------------
 		
-		/*
+		
 		List<Bestellung> bestellungKundeList = null;
 				
 		for(Kunde k : kundenListe){
@@ -97,11 +97,11 @@ public class Datenmigration {
 				}
 			}
 		}
-		*/
+		
 		
 		//--------------------------Warenkorb und Postionen ------------------------------------------------
 		
-		
+		/*
 		Bestellung warenkorb = null;
 		
 		for(Kunde k : kundenListe){
@@ -129,7 +129,7 @@ public class Datenmigration {
 				}
 			}
 		}
-		
+		*/
 	}
 
 }

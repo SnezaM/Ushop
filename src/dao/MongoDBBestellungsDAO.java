@@ -99,7 +99,7 @@ public class MongoDBBestellungsDAO implements BestellungsDAO {
 		try {
 
 			Document neueBestellung = new Document().append("_id", id).append("gesamtpreis", gesamtpreis)
-					.append("abgeschlossen", abgeschlossen).append("lieferant", lieferart).append("vermerk", vermerkt)
+					.append("abgeschlossen", true).append("lieferant", lieferart).append("vermerk", vermerkt)
 					.append("datum", datum).append("kundenid", kundenid);
 
 			db.getCollection(collectionName).insertOne(neueBestellung);
