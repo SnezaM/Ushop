@@ -35,7 +35,7 @@ public class AdminRegistrierungsController extends HttpServlet {
 
 		/**
 		 * Falls ein Get request kommt, soll auf die Loginseite verwiesen werden.
-		 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+		 * @see HttpServlet doGet(HttpServletRequest request, HttpServletResponse response)
 		 */
 		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			request.getRequestDispatcher("Login.jsp").include(request, response);
