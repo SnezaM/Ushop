@@ -140,7 +140,6 @@ public class MongoDBProdukteDAO implements ProduktDAO, ProduktgruppeDAO {
 	/**
 	 * 
 	 * Diese Methode dient zum Laden aller Produkte aus der Datenbank.
-	 * Die Variable result bekommt das Ergebnis der Abfrage
 	 * Mittels get werden die Daten dann verwendent um Produkte zu erzeugen und diese in ein Liste zu speichern
 	 * Return eine Liste mit alles Produkten.
 	 * 
@@ -236,7 +235,6 @@ public class MongoDBProdukteDAO implements ProduktDAO, ProduktgruppeDAO {
 	 * 
 	 * Diese Methode dient zum speichern von Produktgruppen in die Datenbank.
 	 * Der Parameter ist eine Produktgruppe, welche angelegt werden soll.
-	 * Mittels set werden die Parameter der Produktgruppe dem Statement uebergeben
 	 * Return true wenn die Transaktion erfolgreich abgeschlossen ist.
 	 * 
 	 */
@@ -269,7 +267,7 @@ public class MongoDBProdukteDAO implements ProduktDAO, ProduktgruppeDAO {
 			return true;
 			
 		} catch (Exception e) {
-			System.err.println("MongoProduktDAO: speichereProduktgruppe: Fehler beim Einfügen einer neuen Kategorie("+p.getProduktgruppenname()+")!");
+			System.err.println("MongoProduktDAO: speichereProduktgruppe: Fehler beim Einfügen einer neuen Kategorie!");
 			return false;
 		}
 	}
@@ -279,7 +277,6 @@ public class MongoDBProdukteDAO implements ProduktDAO, ProduktgruppeDAO {
 	 * 
 	 * Diese Methode dient zum Loeschen von Produktgruppen aus der Datenbank.
 	 * Der Parameter ist die ID der Produktgruppe, welche geloescht werden soll.
-	 * Mittels set wird der Parameter der Produktgruppe dem Statement uebergeben
 	 * Return true wenn die Transaktion erfolgreich abgeschlossen ist.
 	 * 
 	 */

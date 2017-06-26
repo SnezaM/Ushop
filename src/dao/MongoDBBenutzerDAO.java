@@ -21,8 +21,8 @@ import modell.Kunde;
 
 /**
  * 
- * @author Snezana Milutinovic a1349326
- * Die Klasse MonogDBBenutzerDAO, dient zur Kommunikation mit der Datenbank in Bezug 
+ *  @author Snezana Milutinovic a1349326
+ *  Die Klasse MonogDBBenutzerDAO, dient zur Kommunikation mit der Datenbank in Bezug 
  *  auf Benutzer. Hier werden die Befehle zum Speichern und Laden der Daten in noSQL 
  *  angegeben.
  */
@@ -236,7 +236,7 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 	 * 
 	 * Diese Methode dient zum Laden aller Kunden aus der NoSQL.
 	 * Die Variable documents bekommt das Ergebnis der Abfrage
-	 * Mittels get werden die Daten dann verwendent um Kunde zu erzeugen und diese in einer Liste zu speichern
+	 * Die Daten werden dann verwendent um Kunde zu erzeugen und diese in einer Liste zu speichern
 	 * Return eine Liste mit aller in der Datenbank gespeicherten Kunden.
 	 * 
 	 */
@@ -283,7 +283,7 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 	 * 
 	 * Diese Methode dient zum Laden aller Administratoren aus der NoSQL.
 	 * Die Variable documents bekommt das Ergebnis der Abfrage
-	 * Mittels get werden die Daten dann verwendent um Administratoren zu erzeugen und diese in einer Liste zu speichern
+	 * Die Daten werden dann verwendent um Administratoren zu erzeugen und diese in einer Liste zu speichern
 	 * Return eine Liste mit aller in der Datenbank gespeicherten Administratoren.
 	 * 
 	 */
@@ -464,7 +464,6 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 	 * 
 	 * Diese Methode dient zum Loeschen von Administratoren aus der NoSQL.
 	 * Der Parameter ist die ID des Benutzers, welcher geloescht werden soll.
-	 * Mittels set wird der Parameter des Administrators dem Statement uebergeben
 	 * Return true wenn die Transaktion erfolgreich abgeschlossen ist.
 	 */
 
@@ -482,7 +481,6 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 	 * 
 	 * Diese Methode dient zum Loeschen von Kunden aus der NoSQL.
 	 * Der Parameter ist die ID des Benutzer, welcher geloescht werden soll.
-	 * Mittels set wird der Parameter des Kunden dem Statement uebergeben
 	 * Return true wenn die Transaktion erfolgreich abgeschlossen ist.
 	 */
 

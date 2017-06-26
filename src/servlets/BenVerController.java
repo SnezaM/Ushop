@@ -68,9 +68,7 @@ public class BenVerController extends HttpServlet {
 		}
 		
 		if(request.getParameter("alleAdminsAnzeigen")!=null){
-			List<Administrator> adminliste = b.getAdministratorListe();
-			request.getSession().setAttribute("adminliste", adminliste); 
-			request.getRequestDispatcher("AdminSeite.jsp").include(request, response);
+			response.sendRedirect(request.getContextPath() + "/AdminSeite.jsp");
 			response.setContentType("text/html");
 			return;
 		}

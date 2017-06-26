@@ -23,14 +23,16 @@ public class Datenmigration {
 		ProduktgruppeDAO postgreSQL2 = new DatenBankProduktgruppeDAO();
 		BestellungsDAO postgreSQL3 = new DBBestellungsDAO();
 		BestellungsDAO mongoDB3 = new MongoDBBestellungsDAO();
-
+		
+		//------------------Benutzer-Kunde-Administrator-----------------------
 		@SuppressWarnings("unused")
 		List<Kunde> kundenListe = postgreSQL.getKundeListe();
 		List<Administrator> adminListe = postgreSQL.getAdministratorListe();
 		
 		/*
-		for(Benutzer k : kundenListe) if(k instanceof Kunde)
-		mongoDB.speichereKunde((Kunde)k);
+		for(Benutzer k : kundenListe)
+			if(k instanceof Kunde)
+			mongoDB.speichereKunde((Kunde)k);
 		System.out.println("DONE ---> Kunden gespeichert!");
 		*/
 		
