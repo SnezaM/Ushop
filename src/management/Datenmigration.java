@@ -69,7 +69,7 @@ public class Datenmigration {
 
 		// -----------------------Bestellungen und Positionen--------------------------------------------
 		
-		
+		/*
 		List<Bestellung> bestellungKundeList = null;
 				
 		for(Kunde k : kundenListe){
@@ -77,7 +77,7 @@ public class Datenmigration {
 			bestellungKundeList = postgreSQL3.readBestellungenByKundenID(k.getKundenID());
 			for (Bestellung b : bestellungKundeList){
 				int id = b.getBestellungID();
-				if(mongoDB3.createBestellungFromWarenkorb(b, b.getDatum())){
+				if(mongoDB3.createBestellung(b, k.getKundenID())){
 					System.out.println("Bestellung " + id + " erfolgreich migriert!");
 					System.out.println("Migration der Positionen zur zuvor erstellten Bestellung");
 					List<Position> positionBestellungList = null;
@@ -97,11 +97,11 @@ public class Datenmigration {
 				}
 			}
 		}
-		
+		*/
 		
 		//--------------------------Warenkorb und Postionen ------------------------------------------------
 		
-		/*
+		
 		Bestellung warenkorb = null;
 		
 		for(Kunde k : kundenListe){
@@ -129,7 +129,7 @@ public class Datenmigration {
 				}
 			}
 		}
-		*/
+		
 	}
 
 }
