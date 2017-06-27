@@ -75,7 +75,7 @@ public class Benutzerverwaltung {
 	
 	/**
 	 * 
-	 * @param benutzerid  ist die ID des Kundes die geloescht werden soll 
+	 * @param benutzerid  ist die ID des Benutzers die geloescht werden soll 
 	 * @return true oder false
 	 */
 	
@@ -85,7 +85,7 @@ public class Benutzerverwaltung {
 	
 	/**
 	 * 
-	 * @param benutzerid  ist die ID des Admins die geloescht werden soll 
+	 * @param benutzerid  ist die ID des Benutzers die geloescht werden soll 
 	 * @return true oder false
 	 */
 	

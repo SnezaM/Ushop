@@ -1,3 +1,8 @@
+/**
+ * Das Paket dient zum persistenten speichern und lesen in der 
+ * Datenbank um spaeter wieder darauf zugreifen zu koennen.
+ * 
+ */
 package dao;
 
 
@@ -14,7 +19,13 @@ import modell.Administrator;
 import modell.Benutzer;
 import modell.Kunde;
 
-
+/**
+ * 
+ *  @author Snezana Milutinovic a1349326
+ *  Die Klasse MonogDBBenutzerDAO, dient zur Kommunikation mit der Datenbank in Bezug 
+ *  auf Benutzer. Hier werden die Befehle zum Speichern und Laden der Daten in noSQL 
+ *  angegeben.
+ */
 
 public class MongoDBBenutzerDAO implements BenutzerDAO {
 	
@@ -25,7 +36,10 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 	private String dbName;
 	private String mongoLocation;
 	  
-
+	 /* Im Konstruktor wird eine Verbindung zur Datenbank erzeugt und die NoSQL Statements
+	    * definiert damit in den weiteren Methoden leichter darauf zugegriffen werden kann.
+	    * 
+	    */
 	public MongoDBBenutzerDAO() {
 		
 		this.mongoLocation = "localhost";
@@ -45,6 +59,14 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		this.collectionName = collectionName;
 		this.db = mongoClient.getDatabase(dbName);
 	}
+	
+	/**
+	 * 
+	 * Diese Methode dient zum speichern von Kunde in die NoSQL.
+	 * Der Parameter ist ein Kunde, welcher angelegt werden soll.
+	 * Return true wenn die Transaktion erfolgreich abgeschlossen ist.
+	 * 
+	 */
 
 	@Override
 	public boolean speichereKunde(Kunde k) {
@@ -54,13 +76,13 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 			Random randomGenerator = new Random();
 			id = randomGenerator.nextInt(Integer.MAX_VALUE);
 		}
-		System.out.println(id);
+		
 		int idKunde = k.getKundenID();
 		if(idKunde==0){
 			Random randomGenerator = new Random();
 			idKunde = randomGenerator.nextInt(Integer.MAX_VALUE);
 		}
-		System.out.println(id);
+		
 		String username = k.getUsername();
 		String passwort = k.getPasswort();
 		String vorname = k.getVorname();
@@ -98,6 +120,14 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		}
 		
 	}
+	/**
+	 * 
+	 * Diese Methode dient zum speichern von Administrator in die NoSQL.
+	 * Der Parameter ist ein Administrator, welcher angelegt werden soll.
+	 * Return true wenn die Transaktion erfolgreich abgeschlossen ist.
+	 * 
+	 */
+	
 
 	@Override
 	public boolean speichereAdmin(Administrator a) {
@@ -149,6 +179,13 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		
 		
 	}
+	/**
+	 * 
+	 * Diese Methode dient zum Laden aller Benutzer aus der NoSQL.
+	 * Mittels get werden die Daten dann verwendent um Benutzer zu erzeugen und diese in einer Liste zu speichern
+	 * Return eine Liste mit aller in der Datenbank gespeicherten Benutzer.
+	 * 
+	 */
 
 	@Override
 	public List<Benutzer> getBenutzerListe() {
@@ -195,6 +232,14 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		
 		
 	}
+	/**
+	 * 
+	 * Diese Methode dient zum Laden aller Kunden aus der NoSQL.
+	 * Die Variable documents bekommt das Ergebnis der Abfrage
+	 * Die Daten werden dann verwendent um Kunde zu erzeugen und diese in einer Liste zu speichern
+	 * Return eine Liste mit aller in der Datenbank gespeicherten Kunden.
+	 * 
+	 */
 
 	@Override
 	public List<Kunde> getKundeListe() {
@@ -234,6 +279,14 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		
 		
 	}
+	/**
+	 * 
+	 * Diese Methode dient zum Laden aller Administratoren aus der NoSQL.
+	 * Die Variable documents bekommt das Ergebnis der Abfrage
+	 * Die Daten werden dann verwendent um Administratoren zu erzeugen und diese in einer Liste zu speichern
+	 * Return eine Liste mit aller in der Datenbank gespeicherten Administratoren.
+	 * 
+	 */
 
 	@Override
 	public List<Administrator> getAdministratorListe() {
@@ -264,6 +317,13 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		return adminListe;
 	}
 
+	/**
+	 * 
+	 * Diese Methode dient zum Laden eines bestimmten Kundes aus der NoSQL.
+	 * Der Parameter ist der Name des gesuchten Kunden
+	 * Return einen Kunde 
+	 * 
+	 */
 
 		
 	@Override
@@ -287,6 +347,14 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		
 		return kunde;
 	}
+	/**
+	 * 
+	 * Diese Methode dient zum Laden eines bestimmten Benutzer aus der NoSQL.
+	 * Der Parameter ist der Benutzer ID  des gesuchten Benutzer
+	 * Return einen Benutzer 
+	 * 
+	 */
+
 	
 
 	@Override
@@ -311,6 +379,14 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		
 		return benutzer;
 	}
+	/**
+	 * 
+	 * Diese Methode dient zum Laden eines bestimmten Benutzers aus der NoSQL.
+	 * Der Parameter ist der Name des gesuchten Benutzers
+	 * Return einen Benutzer 
+	 * 
+	 */
+	
 
 	@Override
 	public Benutzer getBenutzerByUname(String benutzername) {
@@ -354,6 +430,13 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 			}
 		
 	}
+	/**
+	 * 
+	 * Diese Methode dient zum Laden eines bestimmten Administrators aus der NoSQL.
+	 * Der Parameter ist der Name des gesuchten Administrators
+	 * Return einen Administrator 
+	 * 
+	 */
 
 	@Override
 	public Administrator getAdminByUName(String username) {
@@ -376,6 +459,13 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		}
 		return admin;
 	}
+	
+	/**
+	 * 
+	 * Diese Methode dient zum Loeschen von Administratoren aus der NoSQL.
+	 * Der Parameter ist die ID des Benutzers, welcher geloescht werden soll.
+	 * Return true wenn die Transaktion erfolgreich abgeschlossen ist.
+	 */
 
 	@Override
 	public boolean loescheAdminByID(int benutzerid) {
@@ -385,6 +475,14 @@ public class MongoDBBenutzerDAO implements BenutzerDAO {
 		}
 		return false;
 	}
+	
+
+	/**
+	 * 
+	 * Diese Methode dient zum Loeschen von Kunden aus der NoSQL.
+	 * Der Parameter ist die ID des Benutzer, welcher geloescht werden soll.
+	 * Return true wenn die Transaktion erfolgreich abgeschlossen ist.
+	 */
 
 	@Override
 	public boolean loescheKundeByID(int benutzerid) {

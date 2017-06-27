@@ -43,7 +43,7 @@ import modell.Kunde;
 		}
 
 		/**
-		 * Hier wird geprüft ob die eingegebenen Daten korrekt sind, falls ja, war die Registrieren erfolgreich und es wird zur Hauptseite verwiesen,
+		 * Hier wird geprÃ¼ft ob die eingegebenen Daten korrekt sind, falls ja, war die Registrieren erfolgreich und es wird zur Hauptseite verwiesen,
 		 * falls nein, dann wird die jeweilige Fehlermeldung ausgegeben.
 		 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 		 */
@@ -51,22 +51,15 @@ import modell.Kunde;
 			Benutzerverwaltung b = Benutzerverwaltung.getInstance();
 			
 			
-		
 			if(request.getParameter("username")==null){
 				System.out.println("RegistrierungsController: keinUsername:Weiterleiten zum Registrieren!");
 				request.getRequestDispatcher("KundeRegistrieren.jsp").include(request, response);
+			//	response.sendRedirect("KundeRegistrieren.jsp");
 				response.setContentType("text/html");
 				return;
 				
 				
-			}
-			
-			if(request.getParameter("Registrieren")!=null){
-				response.sendRedirect(request.getContextPath() + "/KundeRegistrieren.jsp");
-				response.setContentType("text/html");
-				return;
-			}
-			
+			}else{
 				String email=request.getParameter("email");
 				String vorname=request.getParameter("vorname");
 				String nachname=request.getParameter("nachname");
@@ -93,7 +86,7 @@ import modell.Kunde;
 				}
 				
 				if(username.length()<2  || password.length()<2 ){
-					request.getSession(true).setAttribute("fehler", "Username od. Passwort zu kurz(mindestens 2 Zeichen benötigt)!");
+					request.getSession(true).setAttribute("fehler", "Username od. Passwort zu kurz(mindestens 2 Zeichen benÃ¶tigt)!");
 					System.out.println("RegistrierungsController: Pwd od. Username  <  2 Zeichen!");
 					request.getRequestDispatcher("KundeRegistrieren.jsp").include(request, response);
 					response.setContentType("text/html");
@@ -109,7 +102,7 @@ import modell.Kunde;
 					return;
 				}
 				
-				//Username enthält Abstände
+				//Username enthÃ¤lt AbstÃ¤nde
 				if(username.length()!=username.replaceAll(" ","").length()){
 					request.getSession(true).setAttribute("fehler", "Fehler: Username darf keine Leerzeichen enthalten!");
 					System.out.println("RegistrierungsController: Leerzeichen im Username!");
@@ -146,3 +139,4 @@ import modell.Kunde;
 			
 		
 		}
+	}

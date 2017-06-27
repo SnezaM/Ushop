@@ -40,7 +40,12 @@
 	<div class="container theme-showcase" role="main">
 		<div class="jumbotron">
 			<h1>Administrator registrieren</h1>
-
+<%String fehler="";
+String fehler1="";
+session.setAttribute("profilbearbeiten", "");
+if(session.getAttribute("message")!=null){fehler=(String)session.getAttribute("message"); session.setAttribute("message", "");%><h2><%=fehler %></h2><% } 
+if(request.getSession().getAttribute("fehler")!=null){fehler1=(String)session.getAttribute("fehler"); session.setAttribute("fehler", "");%> <h2><%=fehler1%></h2><% } 
+%>
 
 <!-- Eingaben zum Registrieren -->
 			<form action="AdminRegistrierungsController" method="POST">

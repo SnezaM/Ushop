@@ -35,7 +35,7 @@ public class AdminRegistrierungsController extends HttpServlet {
 
 		/**
 		 * Falls ein Get request kommt, soll auf die Loginseite verwiesen werden.
-		 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+		 * @see HttpServlet doGet(HttpServletRequest request, HttpServletResponse response)
 		 */
 		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			request.getRequestDispatcher("Login.jsp").include(request, response);
@@ -53,7 +53,8 @@ public class AdminRegistrierungsController extends HttpServlet {
 			
 			
 			if(request.getParameter("regBest")!=null){
-				request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
+				response.sendRedirect("AdminRegistrieren.jsp");
+				//request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
 				response.setContentType("text/html");
 				return;
 			}
@@ -85,9 +86,10 @@ public class AdminRegistrierungsController extends HttpServlet {
 					gehaltDouble = Double.parseDouble(gehaltString); 
 					gehalt = gehaltDouble.intValue();
 				}catch(Exception e){
-					request.getSession(true).setAttribute("fehler", "Keine Nummer(HausNr oder Plz  oder gehalt) oder zu lang!");
+					request.getSession(true).setAttribute("fehler", "Keine Nummer(HausNr oder Plz  oder Gehalt) oder zu lang!");
 					System.out.println("AdminRegistrierungsController: Hausnummer oder PLZ ist keine Nummer!");
-					request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
+				//	request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
+					response.sendRedirect("AdminRegistrieren.jsp");
 					response.setContentType("text/html");
 					return;
 				}
@@ -104,7 +106,7 @@ public class AdminRegistrierungsController extends HttpServlet {
 				if(username.length()<=2  || password.length()<=2 ){
 					request.getSession(true).setAttribute("fehler", "Fehler: Username od. Passwort zu kurz!");
 					System.out.println("AdminRegistrierungsController: Pwd od. Username  <  2 Zeichen!");
-					request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
+					response.sendRedirect("AdminRegistrieren.jsp");
 					response.setContentType("text/html");
 					return;
 				}
@@ -113,7 +115,7 @@ public class AdminRegistrierungsController extends HttpServlet {
 				if(!password.equals(passwordW) ){
 					request.getSession(true).setAttribute("fehler", "Fehler: Passwortwiederholung nicht korrekt!");
 					System.out.println("AdminRegistrierungsController: Passwortwiederholung nicht korrekt!!");
-					request.getRequestDispatcher("AdminRegistrieren.jsp").include(request, response);
+					response.sendRedirect("AdminRegistrieren.jsp");
 					response.setContentType("text/html");
 					return;
 				}
@@ -128,7 +130,7 @@ public class AdminRegistrierungsController extends HttpServlet {
 				
 				
 			
-				if(b.adminAnlegen(email, vorname, nachname, username, password, gehalt, geburtsdatum)){
+				if(b.adminAnlegen(email, vorname, nachname, username, password, gehaltDouble, geburtsdatum)){
 					
 				
 				
@@ -142,7 +144,7 @@ public class AdminRegistrierungsController extends HttpServlet {
 				//eingabe nicht erfolgreich:
 				else{
 					System.out.println("AdminRegistrierungsController: Person konnte nicht angelegt werden: "+vorname+" "+nachname+" "+email+" "+username+" "+password);
-					request.getSession(true).setAttribute("fehler", "Fehler: Prüfen Sie das Datum(Jahr-Monat-Tag) oder der Username ist schon vergeben!");
+					request.getSession(true).setAttribute("fehler", "Fehler: Pruefen Sie das Datum(Jahr-Monat-Tag) oder der Username ist schon vergeben!");
 					response.sendRedirect("AdminRegistrieren.jsp");
 				}
 			}

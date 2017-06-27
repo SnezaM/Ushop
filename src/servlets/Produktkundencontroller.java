@@ -7,7 +7,6 @@ package servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -72,11 +71,6 @@ public class Produktkundencontroller extends HttpServlet {
 					int produktid = Integer.parseInt(pID);
 					
 					
-				//	ProduktDAO dao = new DatenBankProduktDAO();
-				//	Produkt temp = dao.getProduktByProduktID(produktid);
-				//	ProduktgruppeDAO daoGruppe = new DatenBankProduktgruppeDAO();
-				//	Produktgruppe tempgruppe = daoGruppe.getProduktgruppeByID(temp.getProduktgruppeID());
-					
 					Produktgruppenverwaltung prodverGruppe = Produktgruppenverwaltung.getInstance();
 					Produktverwaltung pro = Produktverwaltung.getInstance();
 					
@@ -103,7 +97,6 @@ public class Produktkundencontroller extends HttpServlet {
 				if(request.getParameter("ZumWarenkorbGeben")!=null){
 					Bestellungsverwaltung bverw = Bestellungsverwaltung.getInstance();
 					
-					//ProduktDAO dao = new DatenBankProduktDAO();
 					
 					Produktverwaltung pro = Produktverwaltung.getInstance();
 					String pID = request.getParameter("ZumWarenkorbGeben");
